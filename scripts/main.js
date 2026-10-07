@@ -41,13 +41,57 @@ class Game {
   }
 
   initInput() {
+    // Unlock BGM on first user interaction
+    const unlockAudio = () => {
+      if (window.audioManager && !window.audioManager.isPlayingBGM && !window.audioManager.isMuted) {
+        window.audioManager.startBGM();
+      }
+    };
+    window.addEventListener('click', unlockAudio, { once: true });
+    window.addEventListener('keydown', unlockAudio, { once: true });
+
     window.addEventListener('keydown', (e) => {
       // Prevent browser scrolling
       if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space', ' '].includes(e.key)) {
         e.preventDefault();
       }
 
-      // 1. If Dialogue is active, Z, Enter, Space, or E advances dialogue
+      // 0. If modals (About, Options) are open, X, B, or Esc closes them
+      if (window.uiManager && window.uiManager.isModalOpen()) {
+        if (['KeyX', 'KeyB', 'Escape'].includes(e.code)) {
+          window.uiManager.closeModals();
+          return;
+        }
+      }
+
+      // 1. If Character Selection screen is open
+      if (window.uiManager && window.uiManager.isCharSelectOpen()) {
+        if (['ArrowLeft', 'ArrowRight', 'KeyA', 'KeyD', 'ArrowUp', 'ArrowDown', 'KeyW', 'KeyS'].includes(e.code)) {
+          const cur = window.uiManager.selectedArchetype;
+          window.uiManager.selectArchetype(cur === 'vanar' ? 'riksha' : 'vanar');
+          return;
+        }
+        if (['Enter', 'KeyZ', 'Space'].includes(e.code)) {
+          window.uiManager.confirmCharacterAndStart();
+          return;
+        }
+        if (['KeyX', 'KeyB', 'Escape'].includes(e.code)) {
+          window.uiManager.closeCharacterSelect();
+          return;
+        }
+        return;
+      }
+
+      // 2. If Title Screen is open
+      if (window.uiManager && window.uiManager.isTitleScreenOpen()) {
+        if (['Enter', 'KeyZ', 'Space'].includes(e.code)) {
+          window.uiManager.openCharacterSelect();
+          return;
+        }
+        return;
+      }
+
+      // 3. If Dialogue is active, Z, Enter, Space, or E advances dialogue
       if (window.uiManager && window.uiManager.isDialogueOpen()) {
         if (['KeyZ', 'KeyE', 'Enter', 'Space'].includes(e.code)) {
           window.uiManager.advanceDialogue();
@@ -55,7 +99,7 @@ class Game {
         }
       }
 
-      // 2. If GBA Start Menu is open, Up/Down navigates, Z/Enter selects, X/Esc closes
+      // 4. If GBA Start Menu is open, Up/Down navigates, Z/Enter selects, X/Esc closes
       if (window.uiManager && window.uiManager.isMenuOpen()) {
         if (e.code === 'KeyW' || e.code === 'ArrowUp') {
           window.uiManager.navigateMenu(-1);
@@ -72,7 +116,7 @@ class Game {
         }
       }
 
-      // 3. If Bag or Sevaka Card is open, X, Esc, or B closes it
+      // 5. If Bag or Sevaka Card is open, X, Esc, or B closes it
       if (window.uiManager && window.uiManager.isBagOpen()) {
         if (['KeyX', 'KeyB', 'Escape'].includes(e.code)) {
           window.uiManager.closeBag();
@@ -87,7 +131,7 @@ class Game {
         }
       }
 
-      // 4. Overworld Controls
+      // 6. Overworld Controls
       if (this.state !== window.GAME_STATES.OVERWORLD) return;
 
       // Start Button: Opens GBA Start Menu (Image 2)

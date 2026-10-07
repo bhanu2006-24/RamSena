@@ -28,6 +28,7 @@ class UIManager {
     this.optVanar = document.getElementById('opt-vanar');
     this.optRiksha = document.getElementById('opt-riksha');
     this.btnConfirmArchetype = document.getElementById('btn-confirm-archetype');
+    this.btnBackToTitle = document.getElementById('btn-back-to-title');
 
     // 3. Modals
     this.aboutModal = document.getElementById('about-modal');
@@ -35,6 +36,7 @@ class UIManager {
     this.optionsModal = document.getElementById('options-modal');
     this.btnCloseOptions = document.getElementById('btn-close-options');
     this.optBgmToggle = document.getElementById('opt-bgm-toggle');
+    this.optBhajanSelect = document.getElementById('opt-bhajan-select');
     this.optTextSpeed = document.getElementById('opt-text-speed');
 
     // 4. GBA Pokemon Start Menu (Matching Image 2 Reference)
@@ -68,6 +70,7 @@ class UIManager {
     this.textSpeed = 12;
 
     this.initListeners();
+    this.updateOptionsDisplay();
   }
 
   initListeners() {
@@ -86,7 +89,11 @@ class UIManager {
 
     if (this.btnTitleOptions) {
       this.btnTitleOptions.addEventListener('click', () => {
+        this.updateOptionsDisplay();
         this.optionsModal.classList.remove('hidden');
+        if (window.audioManager && !window.audioManager.isPlayingBGM && !window.audioManager.isMuted) {
+          window.audioManager.startBGM();
+        }
       });
     }
 
@@ -129,6 +136,15 @@ class UIManager {
       });
     }
 
+    if (this.optBhajanSelect) {
+      this.optBhajanSelect.addEventListener('click', () => {
+        if (window.audioManager) {
+          window.audioManager.nextTrack();
+          this.updateOptionsDisplay();
+        }
+      });
+    }
+
     if (this.optTextSpeed) {
       this.optTextSpeed.addEventListener('click', () => {
         if (this.textSpeed === 12) {
@@ -145,23 +161,27 @@ class UIManager {
     }
 
     // Character Selection
-    if (this.optVanar && this.optRiksha) {
+    if (this.optVanar) {
       this.optVanar.addEventListener('click', () => {
-        this.optVanar.classList.add('selected');
-        this.optRiksha.classList.remove('selected');
-        this.selectedArchetype = 'vanar';
+        this.selectArchetype('vanar');
       });
+    }
 
+    if (this.optRiksha) {
       this.optRiksha.addEventListener('click', () => {
-        this.optRiksha.classList.add('selected');
-        this.optVanar.classList.remove('selected');
-        this.selectedArchetype = 'riksha';
+        this.selectArchetype('riksha');
       });
     }
 
     if (this.btnConfirmArchetype) {
       this.btnConfirmArchetype.addEventListener('click', () => {
         this.confirmCharacterAndStart();
+      });
+    }
+
+    if (this.btnBackToTitle) {
+      this.btnBackToTitle.addEventListener('click', () => {
+        this.closeCharacterSelect();
       });
     }
 
@@ -199,8 +219,43 @@ class UIManager {
     }
   }
 
+  selectArchetype(type) {
+    this.selectedArchetype = type;
+    if (type === 'vanar') {
+      if (this.optVanar) this.optVanar.classList.add('selected');
+      if (this.optRiksha) this.optRiksha.classList.remove('selected');
+    } else {
+      if (this.optRiksha) this.optRiksha.classList.add('selected');
+      if (this.optVanar) this.optVanar.classList.remove('selected');
+    }
+  }
+
+  updateOptionsDisplay() {
+    if (this.optBgmToggle && window.audioManager) {
+      this.optBgmToggle.textContent = window.audioManager.isMuted ? 'OFF' : 'ON';
+    }
+    if (this.optBhajanSelect && window.audioManager) {
+      const track = window.audioManager.getCurrentTrack();
+      this.optBhajanSelect.textContent = track ? track.name : 'Bhajan 1';
+    }
+    if (this.optTextSpeed) {
+      if (this.textSpeed === 24) this.optTextSpeed.textContent = 'MEDIUM';
+      else if (this.textSpeed === 6) this.optTextSpeed.textContent = 'INSTANT';
+      else this.optTextSpeed.textContent = 'FAST';
+    }
+  }
+
   openCharacterSelect() {
-    this.charSelectScreen.classList.remove('hidden');
+    if (this.titleScreen) this.titleScreen.classList.add('hidden');
+    if (this.charSelectScreen) this.charSelectScreen.classList.remove('hidden');
+    if (window.audioManager && !window.audioManager.isPlayingBGM && !window.audioManager.isMuted) {
+      window.audioManager.startBGM();
+    }
+  }
+
+  closeCharacterSelect() {
+    if (this.charSelectScreen) this.charSelectScreen.classList.add('hidden');
+    if (this.titleScreen) this.titleScreen.classList.remove('hidden');
   }
 
   confirmCharacterAndStart() {
@@ -256,6 +311,25 @@ class UIManager {
 
   isDialogueOpen() {
     return this.textboxWrapper && !this.textboxWrapper.classList.contains('hidden');
+  }
+
+  isModalOpen() {
+    const aboutOpen = this.aboutModal && !this.aboutModal.classList.contains('hidden');
+    const optOpen = this.optionsModal && !this.optionsModal.classList.contains('hidden');
+    return !!(aboutOpen || optOpen);
+  }
+
+  closeModals() {
+    if (this.aboutModal) this.aboutModal.classList.add('hidden');
+    if (this.optionsModal) this.optionsModal.classList.add('hidden');
+  }
+
+  isCharSelectOpen() {
+    return this.charSelectScreen && !this.charSelectScreen.classList.contains('hidden');
+  }
+
+  isTitleScreenOpen() {
+    return this.titleScreen && !this.titleScreen.classList.contains('hidden');
   }
 
   toggleStartMenu() {
@@ -315,6 +389,7 @@ class UIManager {
     } else if (action === 'save') {
       this.saveGame();
     } else if (action === 'option') {
+      this.updateOptionsDisplay();
       this.optionsModal.classList.remove('hidden');
     } else if (action === 'exit') {
       this.closeStartMenu();

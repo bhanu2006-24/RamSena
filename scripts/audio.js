@@ -85,8 +85,6 @@ class AudioManager {
     this.currentTrackIndex = (index + this.tracks.length) % this.tracks.length;
     localStorage.setItem('ram_sena_track_idx', this.currentTrackIndex);
 
-    const wasPlaying = this.isPlayingBGM;
-
     if (this.bgmAudio) {
       this.bgmAudio.pause();
     }
@@ -95,10 +93,15 @@ class AudioManager {
     this.bgmAudio.loop = true;
     this.bgmAudio.volume = this.bgmVolume;
 
-    if (wasPlaying && !this.isMuted) {
-      this.bgmAudio.play().then(() => {
-        this.isPlayingBGM = true;
-      }).catch(() => {});
+    if (!this.isMuted) {
+      const p = this.bgmAudio.play();
+      if (p !== undefined) {
+        p.then(() => {
+          this.isPlayingBGM = true;
+        }).catch(() => {
+          this.isPlayingBGM = false;
+        });
+      }
     }
 
     return this.tracks[this.currentTrackIndex];
