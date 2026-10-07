@@ -1,38 +1,36 @@
 /**
  * RAM SENA - Audio Engine (scripts/audio.js)
- * Manages background devotional music, sacred chants, and procedural Web Audio fallbacks.
- * Uses assets/audio/ram.mp3 and assets/audio/hail.mp3 if present, with graceful procedural synthesis.
+ * Manages background devotional bhajans (Bhajan1, Bhajan2, Bhajan3)
+ * with user selection, looping, volume control, and sacred chimes.
  */
 
 class AudioManager {
   constructor() {
     this.isMuted = false;
-    this.bgmVolume = 0.22; // Low gentle devotional volume
+    this.bgmVolume = 0.35; // Comfortable, serene devotional volume
     this.audioContext = null;
 
-    // Background Audio Element
-    this.bgmAudio = new Audio('assets/audio/ram.mp3');
+    // Available Devotional Bhajans in /assets/
+    this.tracks = [
+      { id: 0, name: 'Bhajan 1 (श्री राम स्तुति)', file: 'assets/Bhajan1.mp3' },
+      { id: 1, name: 'Bhajan 2 (राम भजन तरंग)', file: 'assets/Bhajan2.mp3' },
+      { id: 2, name: 'Bhajan 3 (जय श्री राम संकीर्तन)', file: 'assets/Bhajan3.mp3' }
+    ];
+
+    // Load saved track preference if any
+    const savedTrack = localStorage.getItem('ram_sena_track_idx');
+    this.currentTrackIndex = savedTrack !== null ? (parseInt(savedTrack, 10) || 0) : 0;
+    if (this.currentTrackIndex < 0 || this.currentTrackIndex >= this.tracks.length) {
+      this.currentTrackIndex = 0;
+    }
+
+    this.bgmAudio = new Audio(this.tracks[this.currentTrackIndex].file);
     this.bgmAudio.loop = true;
     this.bgmAudio.volume = this.bgmVolume;
-    this.bgmAudioFailed = false;
-
-    this.bgmAudio.addEventListener('error', () => {
-      this.bgmAudioFailed = true;
-      // Procedural synthesizer will take over seamlessly if desired
-    });
-
-    // Hail Audio Element
-    this.hailAudio = new Audio('assets/audio/hail.mp3');
-    this.hailAudio.volume = 0.6;
-    this.hailAudioFailed = false;
-    this.hailAudio.addEventListener('error', () => {
-      this.hailAudioFailed = true;
-    });
-
-    // Procedural ambient generator state
-    this.proceduralOsc = null;
-    this.proceduralGain = null;
     this.isPlayingBGM = false;
+
+    // Hail Audio (falls back to sacred temple chime)
+    this.hailAudio = new Audio('assets/Bhajan1.mp3');
   }
 
   getAudioContext() {
@@ -49,10 +47,9 @@ class AudioManager {
   }
 
   startBGM() {
-    if (this.isMuted || this.isPlayingBGM) return;
+    if (this.isMuted) return;
 
-    // Try playing MP3 first
-    if (!this.bgmAudioFailed) {
+    if (this.bgmAudio) {
       const playPromise = this.bgmAudio.play();
       if (playPromise !== undefined) {
         playPromise
@@ -60,49 +57,16 @@ class AudioManager {
             this.isPlayingBGM = true;
           })
           .catch(() => {
-            // Autoplay policy or missing file -> fall back to Web Audio drone
-            this.startProceduralAmbience();
+            // Browser autoplay restrictions until user interacts
+            this.isPlayingBGM = false;
           });
       }
-    } else {
-      this.startProceduralAmbience();
-    }
-  }
-
-  startProceduralAmbience() {
-    if (this.isPlayingBGM || this.isMuted) return;
-    try {
-      const ctx = this.getAudioContext();
-      if (!ctx) return;
-
-      // Create warm Tanpura-like meditative multi-harmonic drone (Sa-Pa fundamental)
-      const baseFreq = 136.1; // Om frequency / C#
-
-      this.proceduralGain = ctx.createGain();
-      this.proceduralGain.gain.setValueAtTime(0.04, ctx.currentTime);
-      this.proceduralGain.connect(ctx.destination);
-
-      const freqs = [baseFreq, baseFreq * 1.5, baseFreq * 2];
-      freqs.forEach(f => {
-        const osc = ctx.createOscillator();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(f, ctx.currentTime);
-        osc.connect(this.proceduralGain);
-        osc.start();
-      });
-
-      this.isPlayingBGM = true;
-    } catch (e) {
-      // Audio not permitted yet
     }
   }
 
   stopBGM() {
     if (this.bgmAudio) {
       this.bgmAudio.pause();
-    }
-    if (this.proceduralGain) {
-      this.proceduralGain.gain.setValueAtTime(0, this.audioContext.currentTime);
     }
     this.isPlayingBGM = false;
   }
@@ -117,34 +81,62 @@ class AudioManager {
     return this.isMuted;
   }
 
+  setTrack(index) {
+    this.currentTrackIndex = (index + this.tracks.length) % this.tracks.length;
+    localStorage.setItem('ram_sena_track_idx', this.currentTrackIndex);
+
+    const wasPlaying = this.isPlayingBGM;
+
+    if (this.bgmAudio) {
+      this.bgmAudio.pause();
+    }
+
+    this.bgmAudio = new Audio(this.tracks[this.currentTrackIndex].file);
+    this.bgmAudio.loop = true;
+    this.bgmAudio.volume = this.bgmVolume;
+
+    if (wasPlaying && !this.isMuted) {
+      this.bgmAudio.play().then(() => {
+        this.isPlayingBGM = true;
+      }).catch(() => {});
+    }
+
+    return this.tracks[this.currentTrackIndex];
+  }
+
+  nextTrack() {
+    return this.setTrack(this.currentTrackIndex + 1);
+  }
+
+  prevTrack() {
+    return this.setTrack(this.currentTrackIndex - 1);
+  }
+
+  getCurrentTrack() {
+    return this.tracks[this.currentTrackIndex];
+  }
+
   /**
    * Hail Shri Ram! (जय श्री राम)
-   * Plays hail audio or resonant temple bell chime and triggers chant echo
    */
   hailShriRam() {
-    if (!this.hailAudioFailed) {
-      this.hailAudio.currentTime = 0;
-      this.hailAudio.play().catch(() => {
-        this.playTempleBell();
-      });
-    } else {
-      this.playTempleBell();
-    }
+    this.playTempleBell();
 
-    // Trigger visual chant notification in UI
     if (window.uiManager) {
-      window.uiManager.showChantAura('जय श्री राम! (Jai Shri Ram!)');
-      window.uiManager.addLog('You raised your voice with pure Bhakti: "जय श्री राम!"', 'divine');
+      window.uiManager.showDialogue(
+        'Devotional Hail',
+        'You raise your voice with deep Bhakti: "जय श्री राम!" The whole camp echoes with reverence.',
+        '🚩'
+      );
     }
 
-    // Nearby army soldiers echo the chant
     if (window.npcManager) {
       window.npcManager.echoChant();
     }
   }
 
   /**
-   * Procedural resonant temple bell / shankha chime
+   * Resonant temple bell chime via Web Audio API
    */
   playTempleBell() {
     try {
@@ -155,11 +147,11 @@ class AudioManager {
       const gain = ctx.createGain();
 
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(528, ctx.currentTime); // Solfeggio 528Hz love/sacred frequency
+      osc.frequency.setValueAtTime(528, ctx.currentTime);
       osc.frequency.exponentialRampToValueAtTime(1056, ctx.currentTime + 0.1);
       osc.frequency.exponentialRampToValueAtTime(528, ctx.currentTime + 1.2);
 
-      gain.gain.setValueAtTime(0.2, ctx.currentTime);
+      gain.gain.setValueAtTime(0.25, ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.8);
 
       osc.connect(gain);

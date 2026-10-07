@@ -47,25 +47,67 @@ class Game {
         e.preventDefault();
       }
 
-      // 1. If Dialogue is active, Space or Enter advances dialogue
-      if (window.uiManager && window.uiManager.textboxWrapper && !window.uiManager.textboxWrapper.classList.contains('hidden')) {
-        if (e.code === 'Space' || e.code === 'Enter') {
+      // 1. If Dialogue is active, Z, Enter, Space, or E advances dialogue
+      if (window.uiManager && window.uiManager.isDialogueOpen()) {
+        if (['KeyZ', 'KeyE', 'Enter', 'Space'].includes(e.code)) {
           window.uiManager.advanceDialogue();
           return;
         }
       }
 
-      // 2. Start Menu Toggle (Enter or Escape)
-      if (e.code === 'Enter' || e.code === 'Escape') {
-        if (this.state === window.GAME_STATES.OVERWORLD) {
-          window.uiManager.toggleStartMenu();
+      // 2. If GBA Start Menu is open, Up/Down navigates, Z/Enter selects, X/Esc closes
+      if (window.uiManager && window.uiManager.isMenuOpen()) {
+        if (e.code === 'KeyW' || e.code === 'ArrowUp') {
+          window.uiManager.navigateMenu(-1);
+          return;
+        } else if (e.code === 'KeyS' || e.code === 'ArrowDown') {
+          window.uiManager.navigateMenu(1);
+          return;
+        } else if (e.code === 'KeyZ' || e.code === 'Enter' || e.code === 'KeyE') {
+          window.uiManager.triggerSelectedMenuAction();
+          return;
+        } else if (e.code === 'KeyX' || e.code === 'Escape') {
+          window.uiManager.closeStartMenu();
           return;
         }
       }
 
+      // 3. If Bag or Sevaka Card is open, X, Esc, or B closes it
+      if (window.uiManager && window.uiManager.isBagOpen()) {
+        if (['KeyX', 'KeyB', 'Escape'].includes(e.code)) {
+          window.uiManager.closeBag();
+          return;
+        }
+      }
+
+      if (window.uiManager && window.uiManager.isSevakaCardOpen()) {
+        if (['KeyX', 'Escape'].includes(e.code)) {
+          window.uiManager.closeSevakaCard();
+          return;
+        }
+      }
+
+      // 4. Overworld Controls
       if (this.state !== window.GAME_STATES.OVERWORLD) return;
 
-      // 3. Movement
+      // Start Button: Opens GBA Start Menu (Image 2)
+      if (e.code === 'Enter') {
+        window.uiManager.openStartMenu();
+        return;
+      }
+
+      // A Button: Interact (Z or E)
+      if (e.code === 'KeyZ' || e.code === 'KeyE') {
+        this.handleInteract();
+        return;
+      }
+
+      // B Button / Escape: Closes menu or does nothing in overworld
+      if (e.code === 'KeyX' || e.code === 'Escape') {
+        return;
+      }
+
+      // Movement: Arrows or WASD
       if (e.code === 'KeyW' || e.code === 'ArrowUp') {
         window.player.tryMove(0, -1);
       } else if (e.code === 'KeyS' || e.code === 'ArrowDown') {
@@ -76,16 +118,10 @@ class Game {
         window.player.tryMove(1, 0);
       }
 
-      // 4. Quick Hotkeys
-      if (e.code === 'KeyE') {
-        this.handleInteract();
-      } else if (e.code === 'KeyH') {
+      // Hail Shortcut (H)
+      if (e.code === 'KeyH') {
         if (window.audioManager) {
           window.audioManager.hailShriRam();
-        }
-      } else if (e.code === 'KeyB' || e.code === 'KeyI') {
-        if (window.uiManager) {
-          window.uiManager.openBag();
         }
       }
     });
