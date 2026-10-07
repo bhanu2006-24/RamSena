@@ -441,7 +441,7 @@ class UIManager {
     const inv = window.inventory ? window.inventory.items : {};
 
     const itemDetails = {
-      stones: { name: 'Sacred Stone', icon: '🪨', desc: 'Heavy stone for Nal & Neel to inscribe with "RAM" to construct the Setu bridge across the sea.' },
+      stones: { name: 'Sacred Stone', icon: '🪨', desc: 'Heavy mountain stone. Offered with devotion to Nal & Neel, who sanctify each stone through the sacred remembrance of Ram Naam so the Setu floats without sinking.' },
       fruits: { name: 'Wild Fruit', icon: '🍎', desc: 'Ripe forest fruit. Offer to Shri Ram, Lakshman, Hanuman, or fellow soldiers for divine blessings.' },
       flowers: { name: 'Forest Flower', icon: '🌸', desc: 'Fragrant blossom. When you hold 5 or more flowers, you can weave a devotional garland (पुष्पमाला)!' },
       coconuts: { name: 'Fresh Coconut', icon: '🥥', desc: 'Sacred coastal coconut (श्रीफल). Ideal offering for prayer and sustenance.' },

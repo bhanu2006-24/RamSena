@@ -169,7 +169,7 @@ class NPCManager {
           title: 'Divine Architects of Ram Setu',
           isSetuArchitect: true,
           dialogues: [
-            'Jai Shri Ram! Bring us the gathered stones from the northern forest. By divine blessing, every stone touched with the name of Ram floats upon the ocean waves!'
+            'Jai Shri Ram! Bring us the gathered stones from the northern forest. By divine blessing and sacred remembrance of Ram Naam, every stone placed upon the ocean waves floats without sinking!'
           ]
         },
         {
@@ -418,7 +418,7 @@ class NPCManager {
 
   getArmyLore(index) {
     const lores = [
-      'Nal and Neel discovered a sacred blessing: every stone inscribed with "RAM" floats upon the waves without sinking! The Setu grows steadily!',
+      'Nal and Neel possess the sacred boon: by remembering and chanting the holy name of Shri Ram, every stone offered with pure Bhakti floats upon the waves without sinking! The Setu grows steadily!',
       'I heard the elder Jambavan say that Hanuman leaped across the sea in a single boundless bound to find Mother Sita in Lanka!',
       'Mother Sita waits with supreme patience under the Ashoka tree. Soon, the vanar vanguard will liberate Lanka and restore Dharma!',
       'Did you hear? The titan Kumbhakarna attacked with fury, but fell before Shri Ram\'s golden arrow! The rakshasa kingdom shudders!',
@@ -459,50 +459,73 @@ class NPCManager {
 
       // Drop shadow
       ctx.beginPath();
-      ctx.ellipse(sx + tileSize / 2, sy + tileSize * 0.85, tileSize * 0.32, tileSize * 0.16, 0, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+      ctx.ellipse(sx + tileSize / 2, sy + tileSize * 0.88, tileSize * 0.36, tileSize * 0.18, 0, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
       ctx.fill();
 
       // Aura if divine / leader
       if (npc.aura) {
         const auraGrad = ctx.createRadialGradient(
           sx + tileSize / 2, sy + tileSize / 2, tileSize * 0.1,
-          sx + tileSize / 2, sy + tileSize / 2, tileSize * 0.8
+          sx + tileSize / 2, sy + tileSize / 2, tileSize * 0.85
         );
         auraGrad.addColorStop(0, npc.aura);
         auraGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
         ctx.fillStyle = auraGrad;
         ctx.beginPath();
-        ctx.arc(sx + tileSize / 2, sy + tileSize / 2, tileSize * 0.75, 0, Math.PI * 2);
+        ctx.arc(sx + tileSize / 2, sy + tileSize / 2, tileSize * 0.8, 0, Math.PI * 2);
         ctx.fill();
       }
 
-      // Base Body Box
-      const size = tileSize * 0.76;
-      const padding = (tileSize - size) / 2;
-      const rx = sx + padding;
-      const ry = sy + padding;
+      // Check if real sprite is available from SpriteManager
+      const spriteKey = window.spriteManager ? window.spriteManager.getSpriteKeyForNPC(npc.id) : null;
+      const spriteImg = spriteKey && window.spriteManager ? window.spriteManager.getImage(spriteKey) : null;
+      const isLoaded = spriteKey && window.spriteManager ? window.spriteManager.isLoaded(spriteKey) : false;
 
-      ctx.fillStyle = npc.color || '#854d0e';
-      ctx.strokeStyle = npc.isDivine ? '#fde047' : '#f59e0b';
-      ctx.lineWidth = npc.isDivine ? 3 : 2;
+      if (isLoaded && spriteImg) {
+        // Draw real high-res character sprite with gentle breathing bob!
+        const clock = window.game ? window.game.animClock : 0;
+        const bob = Math.sin(clock * 0.003 + (npc.x * 2 + npc.y)) * 2.2;
+        const drawH = tileSize * 0.98;
+        const aspect = (spriteImg.naturalWidth && spriteImg.naturalHeight) ? (spriteImg.naturalWidth / spriteImg.naturalHeight) : 1;
+        const drawW = drawH * aspect;
+        
+        ctx.drawImage(
+          spriteImg,
+          sx + (tileSize - drawW) / 2,
+          sy + tileSize - drawH + bob - 2,
+          drawW,
+          drawH
+        );
 
-      ctx.beginPath();
-      ctx.roundRect(rx, ry, size, size, 8);
-      ctx.fill();
-      ctx.stroke();
+        // Radiant divine halo spark if divine figure
+        if (npc.isDivine) {
+          ctx.fillStyle = '#fef08a';
+          ctx.beginPath();
+          ctx.arc(sx + tileSize / 2, sy + 4 + bob, 3, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      } else {
+        // High-aesthetic fallback
+        const size = tileSize * 0.78;
+        const padding = (tileSize - size) / 2;
+        const rx = sx + padding;
+        const ry = sy + padding;
 
-      // Tilak
-      ctx.fillStyle = '#ef4444';
-      ctx.beginPath();
-      ctx.ellipse(rx + size / 2, ry + size * 0.2, 2.5, 4, 0, 0, Math.PI * 2);
-      ctx.fill();
+        ctx.fillStyle = npc.color || '#854d0e';
+        ctx.strokeStyle = npc.isDivine ? '#fde047' : '#f59e0b';
+        ctx.lineWidth = npc.isDivine ? 3 : 2;
 
-      // Symbol / Emoji
-      ctx.font = `${Math.floor(size * 0.52)}px sans-serif`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(npc.symbol, rx + size / 2, ry + size * 0.58);
+        ctx.beginPath();
+        ctx.roundRect(rx, ry, size, size, 10);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.font = `${Math.floor(size * 0.52)}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(npc.symbol, rx + size / 2, ry + size * 0.58);
+      }
     });
 
     // Render floating chant shouts

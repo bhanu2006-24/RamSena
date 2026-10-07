@@ -7,14 +7,19 @@
 class AudioManager {
   constructor() {
     this.isMuted = false;
-    this.bgmVolume = 0.35; // Comfortable, serene devotional volume
+    // Load saved volume preference if any
+    const savedVol = localStorage.getItem('ram_sena_bgm_vol');
+    this.bgmVolume = savedVol !== null ? parseFloat(savedVol) : 0.40;
+    if (isNaN(this.bgmVolume) || this.bgmVolume < 0) this.bgmVolume = 0.40;
+    if (this.bgmVolume > 1) this.bgmVolume = 1;
+
     this.audioContext = null;
 
     // Available Devotional Bhajans in /assets/
     this.tracks = [
-      { id: 0, name: 'Bhajan 1 (श्री राम स्तुति)', file: 'assets/Bhajan1.mp3' },
-      { id: 1, name: 'Bhajan 2 (राम भजन तरंग)', file: 'assets/Bhajan2.mp3' },
-      { id: 2, name: 'Bhajan 3 (जय श्री राम संकीर्तन)', file: 'assets/Bhajan3.mp3' }
+      { id: 0, name: 'Bhajan 1', file: 'assets/music/Bhajan1.mp3' },
+      { id: 1, name: 'Bhajan 2 ', file: 'assets/music/Bhajan2.mp3' },
+      { id: 2, name: 'Bhajan 3 ', file: 'assets/music/Bhajan3.mp3' }
     ];
 
     // Load saved track preference if any
@@ -30,7 +35,28 @@ class AudioManager {
     this.isPlayingBGM = false;
 
     // Hail Audio (falls back to sacred temple chime)
-    this.hailAudio = new Audio('assets/Bhajan1.mp3');
+    this.hailAudio = new Audio('assets/music/Bhajan1.mp3');
+  }
+
+  setVolume(volume) {
+    this.bgmVolume = Math.max(0, Math.min(1, volume));
+    localStorage.setItem('ram_sena_bgm_vol', this.bgmVolume);
+    if (this.bgmAudio) {
+      this.bgmAudio.volume = this.isMuted ? 0 : this.bgmVolume;
+    }
+    return this.bgmVolume;
+  }
+
+  getVolumePercent() {
+    return Math.round(this.bgmVolume * 100);
+  }
+
+  volumeUp(step = 0.05) {
+    return this.setVolume(this.bgmVolume + step);
+  }
+
+  volumeDown(step = 0.05) {
+    return this.setVolume(this.bgmVolume - step);
   }
 
   getAudioContext() {

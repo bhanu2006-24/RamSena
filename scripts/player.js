@@ -166,55 +166,73 @@ class Player {
     ctx.fill();
 
     // 2. Devotional Aura
-    const size = tileSize * 0.78;
-    const padding = (tileSize - size) / 2;
-    const rx = sx + padding;
-    const ry = sy + padding + bobY;
-
     const auraGrad = ctx.createRadialGradient(
-      rx + size / 2, ry + size / 2, size * 0.15,
-      rx + size / 2, ry + size / 2, size * 0.85
+      sx + tileSize / 2, sy + tileSize / 2 + bobY, tileSize * 0.15,
+      sx + tileSize / 2, sy + tileSize / 2 + bobY, tileSize * 0.75
     );
     auraGrad.addColorStop(0, this.auraColor);
     auraGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
     ctx.fillStyle = auraGrad;
     ctx.beginPath();
-    ctx.arc(rx + size / 2, ry + size / 2, size * 0.8, 0, Math.PI * 2);
+    ctx.arc(sx + tileSize / 2, sy + tileSize / 2 + bobY, tileSize * 0.72, 0, Math.PI * 2);
     ctx.fill();
 
-    // 3. Body Box
-    ctx.fillStyle = this.color;
-    ctx.strokeStyle = this.borderColor;
-    ctx.lineWidth = 2.5;
+    // 3. Check if real sprite is available
+    const spriteKey = this.typeId === 'riksha' ? 'bear' : 'vanar';
+    const spriteImg = window.spriteManager ? window.spriteManager.getImage(spriteKey) : null;
+    const isLoaded = window.spriteManager ? window.spriteManager.isLoaded(spriteKey) : false;
 
-    ctx.beginPath();
-    ctx.roundRect(rx, ry, size, size, 8);
-    ctx.fill();
-    ctx.stroke();
+    if (isLoaded && spriteImg) {
+      const drawH = tileSize * 0.96;
+      const aspect = (spriteImg.naturalWidth && spriteImg.naturalHeight) ? (spriteImg.naturalWidth / spriteImg.naturalHeight) : 1;
+      const drawW = drawH * aspect;
+      const posX = sx + (tileSize - drawW) / 2;
+      const posY = sy + tileSize - drawH + bobY - 2;
 
-    // 4. Sacred Tilak Mark (Red Kumkum & Chandan)
-    ctx.fillStyle = '#ef4444';
-    ctx.beginPath();
-    ctx.ellipse(rx + size / 2, ry + size * 0.22, 2.2, 4, 0, 0, Math.PI * 2);
-    ctx.fill();
+      ctx.save();
+      // Mirror horizontally if facing left
+      if (this.direction === 'left') {
+        ctx.translate(posX + drawW, posY);
+        ctx.scale(-1, 1);
+        ctx.drawImage(spriteImg, 0, 0, drawW, drawH);
+      } else {
+        ctx.drawImage(spriteImg, posX, posY, drawW, drawH);
+      }
+      ctx.restore();
 
-    ctx.fillStyle = '#fde047';
-    ctx.beginPath();
-    ctx.arc(rx + size / 2, ry + size * 0.22, 1.2, 0, Math.PI * 2);
-    ctx.fill();
+      // Devotional Tilak on head
+      ctx.fillStyle = '#ef4444';
+      ctx.beginPath();
+      ctx.ellipse(sx + tileSize / 2, posY + 10, 2.5, 4, 0, 0, Math.PI * 2);
+      ctx.fill();
+    } else {
+      // Fallback stylized box
+      const size = tileSize * 0.78;
+      const padding = (tileSize - size) / 2;
+      const rx = sx + padding;
+      const ry = sy + padding + bobY;
 
-    // 5. Archetype Symbol
-    ctx.font = `${Math.floor(size * 0.54)}px sans-serif`;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(this.symbol, rx + size / 2, ry + size * 0.58);
+      ctx.fillStyle = this.color;
+      ctx.strokeStyle = this.borderColor;
+      ctx.lineWidth = 2.5;
 
-    // 6. Directional Pip
+      ctx.beginPath();
+      ctx.roundRect(rx, ry, size, size, 10);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.font = `${Math.floor(size * 0.54)}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(this.symbol, rx + size / 2, ry + size * 0.58);
+    }
+
+    // Directional indicator dot
     ctx.fillStyle = '#fef08a';
     ctx.beginPath();
-    let indX = rx + size / 2;
-    let indY = ry + size / 2;
-    const indDist = size * 0.46;
+    let indX = sx + tileSize / 2;
+    let indY = sy + tileSize / 2 + bobY;
+    const indDist = tileSize * 0.42;
 
     if (this.direction === 'up') indY -= indDist;
     else if (this.direction === 'down') indY += indDist;

@@ -22,30 +22,12 @@ class InputHandler {
         this.justPressed[e.code] = true;
       }
       this.keys[e.code] = true;
-
-      this.handleGlobalHotkeys(e.code);
     });
 
     window.addEventListener('keyup', (e) => {
       this.keys[e.code] = false;
       this.justPressed[e.code] = false;
     });
-  }
-
-  handleGlobalHotkeys(code) {
-    // Space to skip dialogue typewriter or advance dialogue
-    if (code === 'Space') {
-      if (window.uiManager && window.uiManager.isTyping) {
-        window.uiManager.skipTypewriter();
-      }
-    }
-
-    // Interact Key
-    if (code === 'KeyE' || code === 'Enter') {
-      if (window.game && window.game.handleInteract) {
-        window.game.handleInteract();
-      }
-    }
   }
 
   isDown(code) {

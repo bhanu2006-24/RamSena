@@ -40,7 +40,7 @@ The game is divided into two distinct phases, focusing on simple daily routines,
 The Sena is camped at the beach. You must help gather materials to cross the ocean.
 
 - **⛺ The Camp:** Meet static members of the army, including Shri Ram, Lakshman, Hanuman, Sugreev, and Jambavan. You can speak with them or offer them items.
-- **🌳 The Forest:** Walk among the trees and mountains. Shake trees to gather apples 🍎, oranges 🍊, and flowers 🌸. Search the ground for un-inscribed stones 🪨.
+- **🌳 The Forest:** Walk among the trees and mountains. Shake trees to gather apples 🍎, oranges 🍊, and flowers 🌸. Search the ground for sacred stones 🪨.
 - **🏖️ The Beach:** Gather coconuts 🥥 from the trees. Bring your gathered stones to Nal and Neel so they can construct the bridge.
 - **📿 Crafting:** If you collect enough flowers, you can weave a beautiful garland to offer at the camp.
 

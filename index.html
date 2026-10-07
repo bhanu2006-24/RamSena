@@ -4,23 +4,75 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RAM SENA | The Sacred Vanguard (राम सेना)</title>
-  <meta name="description" content="A top-down 2D Pokemon RPG-style web game of devotion and service in Shri Ram's army.">
+  <meta name="description" content="A top-down 2D modern RPG web game of devotion and service in Shri Ram's army.">
   
-  <!-- Retro & Sanskrit Typography -->
+  <!-- Modern & Sacred Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Press+Start+2P&family=Outfit:wght@400;500;600;700&family=VT323&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Press+Start+2P&family=Outfit:wght@300;400;500;600;700&family=VT323&display=swap" rel="stylesheet">
   
   <!-- Stylesheet -->
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <div id="game-app">
-    <!-- 1. PURE CLEAN GAME WORLD VIEWPORT (NOTHING SHOWING DURING EXPLORATION) -->
+    <!-- 1. FULLSCREEN MODERN RPG VIEWPORT -->
     <main id="canvas-container">
       <canvas id="gameCanvas"></canvas>
 
-      <!-- 2. AUTHENTIC GBA POKEMON START MENU (POPS UP ON PRESSING ENTER / START) -->
+      <!-- MODERN TOP RPG HUD -->
+      <header id="rpg-top-hud">
+        <!-- Hero Profile & Map Location -->
+        <div class="hud-profile-card">
+          <div class="hud-avatar-box">
+            <img id="hud-avatar-img" class="hud-avatar-img" src="assets/images/vanar.png" alt="Devotee Avatar">
+          </div>
+          <div class="hud-profile-meta">
+            <div class="hud-hero-line">
+              <span class="hud-hero-name" id="hud-hero-name">VANAR SEVAKA</span>
+              <span class="hud-role-tag">ARMY OF RAM</span>
+            </div>
+            <div class="hud-map-line">
+              <span class="hud-pin">📍</span>
+              <span class="hud-map-title" id="hud-map-name">Southern Camp (Phase 1)</span>
+            </div>
+            <div class="hud-hp-wrap">
+              <div class="hud-hp-bar" id="hud-hp-bar" style="width: 100%;"></div>
+              <span class="hud-hp-label" id="hud-hp-text">100/100 HP</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Action Nav (Clickable & Keyboard Hotkeys) -->
+        <nav class="hud-actions-nav">
+          <button id="hud-btn-bag" class="hud-action-btn" title="Open Inventory Bag (B / I)">
+            <span class="hud-btn-icon">🎒</span>
+            <span class="hud-btn-txt">BAG</span>
+            <kbd class="hud-btn-kbd">B</kbd>
+          </button>
+          <button id="hud-btn-menu" class="hud-action-btn" title="Open Start Menu (M / Enter)">
+            <span class="hud-btn-icon">📜</span>
+            <span class="hud-btn-txt">MENU</span>
+            <kbd class="hud-btn-kbd">M</kbd>
+          </button>
+          <button id="hud-btn-options" class="hud-action-btn" title="Game Options & Audio (O)">
+            <span class="hud-btn-icon">⚙️</span>
+            <span class="hud-btn-txt">OPTIONS</span>
+            <kbd class="hud-btn-kbd">O</kbd>
+          </button>
+          <button id="hud-btn-hail" class="hud-action-btn" title="Hail Shri Ram! (H)">
+            <span class="hud-btn-icon">🚩</span>
+            <span class="hud-btn-txt">HAIL</span>
+            <kbd class="hud-btn-kbd">H</kbd>
+          </button>
+          <button id="hud-btn-fullscreen" class="hud-action-btn" title="Toggle Fullscreen">
+            <span class="hud-btn-icon">⛶</span>
+            <span class="hud-btn-txt">EXPAND</span>
+          </button>
+        </nav>
+      </header>
+
+      <!-- 2. AUTHENTIC GBA POKEMON START MENU (POPS UP ON PRESSING M / ENTER) -->
       <div id="pokemon-start-menu" class="hidden">
         <div class="gba-menu-box">
           <div class="gba-menu-row selected" data-index="0" data-action="bag">
@@ -41,9 +93,12 @@
         </div>
       </div>
 
-      <!-- 3. AUTHENTIC POKEMON EMERALD DIALOGUE BOX (POPS UP ON TALKING / EVENTS) -->
+      <!-- 3. MODERN RPG DIALOGUE BOX (WITH SPEAKER PORTRAIT) -->
       <div id="pokemon-textbox-wrapper" class="hidden">
-        <div class="poke-speaker-tag" id="poke-speaker-name">Shri Ram</div>
+        <div class="poke-speaker-header">
+          <img id="poke-speaker-img" class="poke-speaker-portrait" src="assets/images/ram.png" alt="Speaker">
+          <div class="poke-speaker-tag" id="poke-speaker-name">Shri Ram</div>
+        </div>
         <div class="poke-box">
           <div class="poke-text-content" id="poke-dialogue-text">
             Hi! Sorry to keep you waiting!
@@ -56,47 +111,61 @@
       </div>
     </main>
 
-    <!-- BOTTOM EMULATOR CONTROLS BAR (Clean GBA Frame below screen) -->
+    <!-- BOTTOM CONTROLS HINT BAR -->
     <footer id="emulator-bar">
-      <button id="btn-fullscreen-toggle" class="emu-btn">⛶ Fullscreen</button>
       <div class="emu-controls-hint">
-        Move: <strong>Arrows / WASD</strong> &nbsp;|&nbsp; A: <strong>Z / Enter</strong> &nbsp;|&nbsp; B: <strong>X / Esc</strong> &nbsp;|&nbsp; Start: <strong>Enter</strong> &nbsp;|&nbsp; Hail: <strong>H</strong>
+        Move: <strong>Arrows / WASD</strong> &nbsp;|&nbsp; Interact: <strong>Z / E</strong> &nbsp;|&nbsp; Bag: <strong>B / I</strong> &nbsp;|&nbsp; Menu: <strong>M / Enter</strong> &nbsp;|&nbsp; Options: <strong>O</strong> &nbsp;|&nbsp; Volume: <strong>+ / -</strong> &nbsp;|&nbsp; Hail: <strong>H</strong>
       </div>
     </footer>
 
-    <!-- 4. AUTHENTIC POKEMON BAG (INVENTORY MODAL) -->
+    <!-- 4. MODERN POKEMON BAG (WITH DIRECT GARLAND CRAFTING) -->
     <div id="pokemon-bag-modal" class="hidden">
       <div class="poke-bag-frame">
         <div class="poke-bag-header">
-          <span class="poke-bag-title">🎒 SEVAKA POCKETS (ITEMS)</span>
-          <span style="font-family: var(--font-retro); font-size: 0.65rem; color: var(--gold);">DEVOTION</span>
+          <span class="poke-bag-title">🎒 SEVAKA POCKETS (ITEMS & CRAFTING)</span>
+          <span style="font-family: var(--font-retro); font-size: 0.65rem; color: var(--gold);">BHAKTI SEVA</span>
         </div>
         <div class="poke-bag-body">
           <!-- Left: Items List -->
           <div class="poke-bag-list" id="bag-item-list">
             <!-- Populated dynamically -->
           </div>
-          <!-- Right: Item Detail View -->
+          <!-- Right: Item Detail & Garland Weaving Card -->
           <div class="poke-bag-detail">
             <div>
               <div class="item-detail-icon" id="bag-detail-icon">🪨</div>
               <div class="item-detail-name" id="bag-detail-name">Sacred Stone</div>
               <div class="item-detail-desc" id="bag-detail-desc">
-                Heavy mountain stone for Nal & Neel to inscribe and construct the Setu bridge across the southern ocean.
+                Heavy mountain stone gathered in devotion. Handed to architects Nal & Neel, who sanctify each stone through the holy remembrance of Ram Naam so the Setu floats without sinking.
               </div>
             </div>
+
+            <!-- PROMINENT GARLAND WEAVING CRAFTING SECTION -->
+            <div class="bag-craft-card">
+              <div class="craft-card-top">
+                <span class="craft-card-title">📿 WEAVE SACRED GARLAND</span>
+                <span class="craft-card-count" id="craft-flower-count">Flowers: 0 / 5</span>
+              </div>
+              <p class="craft-card-hint">
+                Weave 5 fragrant forest blossoms (🌸) into a blessed garland (पुष्पमाला) to offer to Shri Ram or the army commanders for divine darshan!
+              </p>
+              <button class="btn-poke-action btn-craft-hero" id="btn-quick-craft-garland">
+                🌸 WEAVE GARLAND NOW
+              </button>
+            </div>
+
             <div class="poke-bag-actions" id="bag-actions-container">
-              <!-- Action button like Craft Garland -->
+              <!-- Context actions -->
             </div>
           </div>
         </div>
         <div class="poke-bag-footer">
-          <button class="btn-poke-action" id="btn-close-bag">BACK [B / X]</button>
+          <button class="btn-poke-action" id="btn-close-bag">BACK [B / X / Esc]</button>
         </div>
       </div>
     </div>
 
-    <!-- 5. SEVAKA STATS CARD (TRAINER INFO) -->
+    <!-- 5. SEVAKA STATS CARD -->
     <div id="sevaka-card-modal" class="hidden">
       <div class="sevaka-card-frame">
         <div class="card-header">
@@ -109,16 +178,16 @@
           <div class="stat-box"><strong>DEFENSE:</strong> <span id="card-def">10</span></div>
           <div class="stat-box"><strong>AGILITY:</strong> <span id="card-agi">26</span></div>
           <div class="stat-box" style="grid-column: span 2;">
-            <strong>SETU PROGRESS:</strong> <span id="card-setu">0</span> / 10 Stones Placed
+            <strong>SETU SERVICE:</strong> <span id="card-setu">0</span> / 10 Stones Delivered
           </div>
         </div>
         <button class="btn-poke-action" id="btn-close-sevaka-card" style="align-self: center; padding: 0.5rem 2rem;">
-          BACK [B / X]
+          BACK [B / X / Esc]
         </button>
       </div>
     </div>
 
-    <!-- 6. FULLSCREEN TITLE SCREEN (Inspired by Contract Demon Reference Image) -->
+    <!-- 6. FULLSCREEN TITLE SCREEN -->
     <div id="title-screen">
       <div class="title-bg-scenery"></div>
       
@@ -135,7 +204,7 @@
         <div class="title-author">AN EPIC OF DEVOTION (BHAKTI) • BY A FELLOW BHAKT</div>
       </div>
 
-      <!-- Bottom Navigation Ribbon matching Contract Demon -->
+      <!-- Bottom Navigation Ribbon -->
       <nav class="title-nav-ribbon">
         <button class="title-nav-btn" id="btn-title-start">START</button>
         <button class="title-nav-btn" id="btn-title-load">LOAD</button>
@@ -144,39 +213,109 @@
       </nav>
     </div>
 
-    <!-- 7. CHARACTER SELECTION (PROFESSOR INTRO STYLE - PERMANENT CHOICE) -->
+    <!-- 7. STATE-OF-THE-ART MODERN RPG CHARACTER SELECTION -->
     <div id="character-select-screen" class="hidden">
-      <div class="char-select-card">
-        <div class="char-select-prompt">
-          Welcome to the era of Treta Yuga!<br>
-          Before stepping into the sacred vanguard, choose your devotee:
-        </div>
+      <div class="char-select-modern-frame">
+        <header class="char-select-modern-header">
+          <div class="char-sacred-subtitle">TRETA YUGA • THE HOLY VANGUARD OF SHRI RAM</div>
+          <h2 class="char-select-modern-title">CHOOSE YOUR DEVOTEE ROLE</h2>
+          <p class="char-select-modern-desc">
+            Enter the sacred army of Maryada Purushottam Shri Ram. Choose your devotee:
+          </p>
+        </header>
 
         <div class="char-options-grid">
-          <div class="char-option-btn selected" id="opt-vanar">
-            <div class="char-icon">🐒</div>
-            <div class="char-name">VANAR (वानर)</div>
-            <div class="char-desc">Agile & devoted monkey soldier of Kishkindha. High speed and critical strikes.</div>
+          <!-- Option 1: VANAR -->
+          <div class="char-card selected" id="opt-vanar">
+            <div class="char-card-glow"></div>
+            <div class="char-badge">KISHKINDHA SCOUT</div>
+            <div class="char-portrait-wrap">
+              <img src="assets/images/vanar.png" alt="Vanar Devotee" class="char-portrait-img">
+            </div>
+            <div class="char-name-title">VANAR SEVAKA</div>
+            <div class="char-hindi-name">वानर सेवक (सुग्रीव सेना)</div>
+            <p class="char-card-summary">
+              Agile and devoted monkey soldier of Kishkindha. High speed across terrain, rapid harvesting of forest fruits and flowers, and lightning critical strikes in combat.
+            </p>
+            <div class="char-stat-meter-group">
+              <div class="stat-bar-row">
+                <span class="stat-lbl">HEALTH (HP)</span>
+                <div class="stat-track"><div class="stat-prog" style="width: 77%;"></div></div>
+                <span class="stat-num">100</span>
+              </div>
+              <div class="stat-bar-row">
+                <span class="stat-lbl">ATTACK (ATK)</span>
+                <div class="stat-track"><div class="stat-prog" style="width: 78%;"></div></div>
+                <span class="stat-num">22</span>
+              </div>
+              <div class="stat-bar-row">
+                <span class="stat-lbl">DEFENSE (DEF)</span>
+                <div class="stat-track"><div class="stat-prog" style="width: 61%;"></div></div>
+                <span class="stat-num">11</span>
+              </div>
+              <div class="stat-bar-row">
+                <span class="stat-lbl">AGILITY (SPD)</span>
+                <div class="stat-track"><div class="stat-prog" style="width: 95%;"></div></div>
+                <span class="stat-num">26</span>
+              </div>
+            </div>
+            <div class="char-blessing-pill">
+              ✦ BLESSING: VAYU-GATI (Swift Grid Movement & High Agility)
+            </div>
           </div>
-          <div class="char-option-btn" id="opt-riksha">
-            <div class="char-icon">🐻</div>
-            <div class="char-name">RIKSHA / BEAR (ऋक्ष - भालू)</div>
-            <div class="char-desc">Sturdy bear warrior of Jambavan's clan. Massive HP (130) and heavy attack power.</div>
+
+          <!-- Option 2: RIKSHA (BEAR) -->
+          <div class="char-card" id="opt-riksha">
+            <div class="char-card-glow"></div>
+            <div class="char-badge">JAMBAVAN CLAN</div>
+            <div class="char-portrait-wrap">
+              <img src="assets/images/bear.png" alt="Riksha Bear Devotee" class="char-portrait-img">
+            </div>
+            <div class="char-name-title">RIKSHA SEVAKA</div>
+            <div class="char-hindi-name">ऋक्ष सेवक (भालू वीर)</div>
+            <p class="char-card-summary">
+              Stalwart warrior of elder Jambavan’s ancient clan. Endowed with colossal health reserves, patient mountain endurance, and crushing attack power against demonic forces.
+            </p>
+            <div class="char-stat-meter-group">
+              <div class="stat-bar-row">
+                <span class="stat-lbl">HEALTH (HP)</span>
+                <div class="stat-track"><div class="stat-prog" style="width: 100%;"></div></div>
+                <span class="stat-num">130</span>
+              </div>
+              <div class="stat-bar-row">
+                <span class="stat-lbl">ATTACK (ATK)</span>
+                <div class="stat-track"><div class="stat-prog" style="width: 98%;"></div></div>
+                <span class="stat-num">28</span>
+              </div>
+              <div class="stat-bar-row">
+                <span class="stat-lbl">DEFENSE (DEF)</span>
+                <div class="stat-track"><div class="stat-prog" style="width: 90%;"></div></div>
+                <span class="stat-num">18</span>
+              </div>
+              <div class="stat-bar-row">
+                <span class="stat-lbl">AGILITY (SPD)</span>
+                <div class="stat-track"><div class="stat-prog" style="width: 50%;"></div></div>
+                <span class="stat-num">14</span>
+              </div>
+            </div>
+            <div class="char-blessing-pill">
+              ✦ BLESSING: VAJRA-BALA (Colossal Strength & Heavy Defense)
+            </div>
           </div>
         </div>
 
         <div class="permanent-notice">
-          ⚠ ATTENTION: Your choice is locked for this playthrough until you start a New Game!
+          🔒 SACRED PLEDGE: Your devotee choice is locked for this playthrough until a New Game is started.
         </div>
 
-        <div style="display: flex; gap: 1rem; justify-content: center;">
-          <button class="btn-poke-action" id="btn-confirm-archetype" style="padding: 0.8rem 2rem; font-size: 0.75rem;">
-            CONFIRM & ENTER WORLD (Z / Enter)
+        <footer class="char-select-footer">
+          <button class="btn-poke-action btn-confirm-hero" id="btn-confirm-archetype">
+            ⚔️ ENTER THE SACRED ARMY (Enter / Z)
           </button>
-          <button class="btn-poke-action" id="btn-back-to-title" style="padding: 0.8rem 1.5rem; font-size: 0.75rem; background: #334155; border-color: #64748b;">
-            BACK [X / Esc]
+          <button class="btn-poke-action btn-back-hero" id="btn-back-to-title">
+            ↩ RETURN TO TITLE [Esc / X]
           </button>
-        </div>
+        </footer>
       </div>
     </div>
 
@@ -186,41 +325,57 @@
         <div class="retro-modal-title">ABOUT RAM SENA (राम सेना)</div>
         <div class="retro-modal-body">
           <p style="margin-bottom: 0.6rem;">
-            <strong>✦ Sacred Philosophy:</strong> Based on the sacred Hindu history of The Ramayana. You are a humble generic Vanar or Bear devotee. You do NOT play as or alter the stories of Shri Ram, Lakshman, or Hanuman.
+            <strong>✦ Sacred Philosophy:</strong> Based on the sacred history of The Ramayana. You are a humble generic Vanar or Bear devotee in the army of Shri Ram. Divine figures (Shri Ram, Lakshman, Hanuman) are revered and never altered.
           </p>
           <p style="margin-bottom: 0.6rem;">
-            <strong>✦ Pure Service (Bhakti):</strong> Lift stones for Nal & Neel to build Ram Setu, gather wild fruits and flowers, and offer them with folded hands.
+            <strong>✦ Pure Service (Bhakti):</strong> Lift stones for Nal & Neel to construct Ram Setu, gather wild fruits and flowers, and weave sacred garlands to offer with folded hands.
           </p>
           <p style="margin-bottom: 0.6rem;">
             <strong>✦ Divine Intervention:</strong> In battle, there is NO Game Over. If your HP drops to 0, an arrow from Shri Ram strikes the foe and preserves your life.
           </p>
           <p>
-            <strong>✦ Controls:</strong> Move: <strong>Arrows / WASD</strong> • A: <strong>Z / Enter</strong> (Interact/Advance) • B: <strong>X / Esc</strong> (Back) • Start: <strong>Enter</strong> (Menu) • <strong>[H]</strong>: Hail "जय श्री राम!".
+            <strong>✦ Controls:</strong> Move: <strong>Arrows / WASD</strong> • Interact: <strong>Z / E</strong> • Bag: <strong>B / I</strong> • Menu: <strong>M / Enter</strong> • Options: <strong>O</strong> • Volume: <strong>+ / -</strong> • <strong>[H]</strong>: Hail "जय श्री राम!".
           </p>
         </div>
-        <button class="retro-btn" id="btn-close-about">CLOSE [B / X]</button>
+        <button class="retro-btn" id="btn-close-about">CLOSE [B / X / Esc]</button>
       </div>
     </div>
 
-    <!-- 9. OPTIONS MODAL -->
+    <!-- 9. OPTIONS & VOLUME MODAL -->
     <div id="options-modal" class="retro-modal-backdrop hidden">
       <div class="retro-modal-frame">
-        <div class="retro-modal-title">OPTIONS</div>
-        <div class="retro-modal-body" style="display: flex; flex-direction: column; gap: 1rem;">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span>DEVOTIONAL MUSIC:</span>
-            <button class="btn-poke-action" id="opt-bgm-toggle" style="padding: 0.4rem 1rem;">ON</button>
+        <div class="retro-modal-title">OPTIONS & AUDIO</div>
+        <div class="retro-modal-body" style="display: flex; flex-direction: column; gap: 1.1rem;">
+          <!-- Volume Slider -->
+          <div class="opt-row">
+            <span>MUSIC VOLUME:</span>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <button class="btn-poke-action" id="btn-vol-down" style="padding: 0.3rem 0.6rem; font-size: 0.75rem;">➖</button>
+              <input type="range" id="opt-volume-slider" min="0" max="100" value="40" style="width: 120px; accent-color: var(--gold); cursor: pointer;">
+              <button class="btn-poke-action" id="btn-vol-up" style="padding: 0.3rem 0.6rem; font-size: 0.75rem;">➕</button>
+              <span id="opt-volume-val" style="min-width: 44px; text-align: right; font-family: var(--font-retro); font-size: 0.75rem; color: var(--gold);">40%</span>
+            </div>
           </div>
-          <div style="display: flex; justify-content: space-between; align-items: center;">
+
+          <!-- Bhajan Track Selector -->
+          <div class="opt-row">
             <span>SELECT BHAJAN:</span>
-            <button class="btn-poke-action" id="opt-bhajan-select" style="padding: 0.4rem 1rem; min-width: 170px;">Bhajan 1</button>
+            <button class="btn-poke-action" id="opt-bhajan-select" style="padding: 0.45rem 1rem; min-width: 190px;">Bhajan 1</button>
           </div>
-          <div style="display: flex; justify-content: space-between; align-items: center;">
+
+          <!-- Mute Toggle -->
+          <div class="opt-row">
+            <span>DEVOTIONAL MUSIC:</span>
+            <button class="btn-poke-action" id="opt-bgm-toggle" style="padding: 0.4rem 1.2rem;">ON</button>
+          </div>
+
+          <!-- Text Speed -->
+          <div class="opt-row">
             <span>TEXT SPEED:</span>
-            <button class="btn-poke-action" id="opt-text-speed" style="padding: 0.4rem 1rem;">FAST</button>
+            <button class="btn-poke-action" id="opt-text-speed" style="padding: 0.4rem 1.2rem;">FAST</button>
           </div>
         </div>
-        <button class="retro-btn" id="btn-close-options">CLOSE [B / X]</button>
+        <button class="retro-btn" id="btn-close-options" style="margin-top: 1rem;">CLOSE [B / X / Esc]</button>
       </div>
     </div>
   </div>
@@ -234,6 +389,7 @@
   <script src="maps/forest2.js"></script>
   <script src="maps/beach2.js"></script>
   <script src="maps/field.js"></script>
+  <script src="scripts/spriteManager.js"></script>
   <script src="scripts/audio.js"></script>
   <script src="scripts/camera.js"></script>
   <script src="scripts/input.js"></script>

@@ -1,0 +1,11 @@
+.DS_Store
+__pycache__/
+
+# Keep the roms folder but maybe ignore large roms if you want, 
+# for now usually we want to commit them for github pages
+# unless they are huge. But for user request "minimal files" and "add gitignore":
+# usually we ignore system files.
+
+# If using python virtual env
+venv/
+env/

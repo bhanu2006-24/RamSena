@@ -139,10 +139,10 @@ class MapManager {
       if (window.uiManager) {
         window.uiManager.showDialogue(
           'Nal & Neel (Divine Architects)',
-          `Jai Shri Ram! You placed ${amount} sacred stones into our hands. We inscribe "RAM" upon each stone and place them upon the waves—behold, they float! (${this.stonesDelivered}/${this.targetStones} stones in place. Need ${remaining} more).`,
+          `Jai Shri Ram! You placed ${amount} sacred stones into our hands. By holding the holy name of Shri Ram in our hearts with pure devotion, every stone placed upon the ocean waves floats without sinking! (${this.stonesDelivered}/${this.targetStones} stones in place. Need ${remaining} more).`,
           '🌊'
         );
-        window.uiManager.addLog(`Placed ${amount} stones for Ram Setu (${this.stonesDelivered}/${this.targetStones}).`, 'service');
+        window.uiManager.addLog(`Offered ${amount} stones for Ram Setu (${this.stonesDelivered}/${this.targetStones}).`, 'service');
       }
     }
   }
