@@ -1,7 +1,7 @@
 /**
- * RAM SENA - UI & Start Menu Controller (scripts/ui.js)
- * Manages the start menu character selection (Vanar vs Riksha/Bear),
- * bottom 30% dialogue box, typewriter animation, and action logs.
+ * RAM SENA - UI & Menu Controller (scripts/ui.js)
+ * Manages Title Menu, About Modal, Character Selection, Prologue Story,
+ * Inventory Modal, Dialogue Box, Typewriter animation, and HUD elements.
  */
 
 class UIManager {
@@ -24,12 +24,29 @@ class UIManager {
     this.dialogueView = document.getElementById('dialogue-view');
     this.logView = document.getElementById('log-view');
 
-    // Start Menu Modal
-    this.startMenuModal = document.getElementById('start-menu-modal');
+    // Modals
+    this.mainMenuModal = document.getElementById('main-menu-modal');
+    this.aboutModal = document.getElementById('about-modal');
+    this.characterModal = document.getElementById('character-modal');
+    this.prologueModal = document.getElementById('prologue-modal');
+    this.inventoryModal = document.getElementById('inventory-modal');
+
+    // Buttons
+    this.btnStartJourney = document.getElementById('btn-start-journey');
+    this.btnOpenAbout = document.getElementById('btn-open-about');
+    this.btnCloseAbout = document.getElementById('btn-close-about');
     this.btnChooseVanar = document.getElementById('choose-vanar');
     this.btnChooseRiksha = document.getElementById('choose-riksha');
-    this.btnStartGame = document.getElementById('btn-start-game');
-    this.btnOpenMenu = document.getElementById('btn-open-menu');
+    this.btnConfirmCharacter = document.getElementById('btn-confirm-character');
+    this.btnBeginFromPrologue = document.getElementById('btn-begin-from-prologue');
+    this.btnOpenInventory = document.getElementById('btn-open-inventory');
+    this.btnCloseInventory = document.getElementById('btn-close-inventory');
+    this.btnCraftGarland = document.getElementById('btn-craft-garland-modal');
+    this.btnHailHUD = document.getElementById('btn-hail-ram');
+    this.btnAudioToggle = document.getElementById('btn-audio-toggle');
+    this.btnMapTravel = document.getElementById('btn-map-travel');
+    this.travelModal = document.getElementById('travel-modal');
+    this.btnCloseTravel = document.getElementById('btn-close-travel');
 
     this.selectedArchetype = 'vanar';
     this.logCount = 0;
@@ -37,37 +54,98 @@ class UIManager {
     this.isTyping = false;
     this.currentFullText = '';
 
-    this.initTabs();
-    this.initStartMenu();
+    this.initListeners();
   }
 
-  initTabs() {
+  initListeners() {
+    // Tabs
     if (this.tabDialogueBtn && this.tabLogBtn) {
       this.tabDialogueBtn.addEventListener('click', () => this.switchTab('dialogue'));
       this.tabLogBtn.addEventListener('click', () => this.switchTab('log'));
     }
-  }
 
-  initStartMenu() {
-    if (this.btnChooseVanar && this.btnChooseRiksha) {
-      this.btnChooseVanar.addEventListener('click', () => {
-        this.selectArchetype('vanar');
-      });
-      this.btnChooseRiksha.addEventListener('click', () => {
-        this.selectArchetype('riksha');
+    // Title Screen Buttons
+    if (this.btnStartJourney) {
+      this.btnStartJourney.addEventListener('click', () => {
+        this.openCharacterSelect();
       });
     }
 
-    if (this.btnStartGame) {
-      this.btnStartGame.addEventListener('click', () => {
+    if (this.btnOpenAbout) {
+      this.btnOpenAbout.addEventListener('click', () => {
+        this.aboutModal.classList.remove('hidden');
+      });
+    }
+
+    if (this.btnCloseAbout) {
+      this.btnCloseAbout.addEventListener('click', () => {
+        this.aboutModal.classList.add('hidden');
+      });
+    }
+
+    // Character Select
+    if (this.btnChooseVanar && this.btnChooseRiksha) {
+      this.btnChooseVanar.addEventListener('click', () => this.selectArchetype('vanar'));
+      this.btnChooseRiksha.addEventListener('click', () => this.selectArchetype('riksha'));
+    }
+
+    if (this.btnConfirmCharacter) {
+      this.btnConfirmCharacter.addEventListener('click', () => {
+        this.characterModal.classList.add('hidden');
+        this.openPrologue();
+      });
+    }
+
+    // Prologue Button
+    if (this.btnBeginFromPrologue) {
+      this.btnBeginFromPrologue.addEventListener('click', () => {
+        this.prologueModal.classList.add('hidden');
+        this.mainMenuModal.classList.add('hidden');
         this.startGameSession();
       });
     }
 
-    if (this.btnOpenMenu) {
-      this.btnOpenMenu.addEventListener('click', () => {
-        this.showStartMenu();
+    // Inventory Modal
+    if (this.btnOpenInventory) {
+      this.btnOpenInventory.addEventListener('click', () => this.openInventory());
+    }
+    if (this.btnCloseInventory) {
+      this.btnCloseInventory.addEventListener('click', () => this.inventoryModal.classList.add('hidden'));
+    }
+    if (this.btnCraftGarland) {
+      this.btnCraftGarland.addEventListener('click', () => {
+        if (window.inventory) {
+          window.inventory.craftGarland();
+          this.refreshInventoryUI();
+        }
       });
+    }
+
+    // Hail Button
+    if (this.btnHailHUD) {
+      this.btnHailHUD.addEventListener('click', () => {
+        if (window.audioManager) {
+          window.audioManager.hailShriRam();
+        }
+      });
+    }
+
+    // Audio Toggle
+    if (this.btnAudioToggle) {
+      this.btnAudioToggle.addEventListener('click', () => {
+        if (window.audioManager) {
+          const muted = window.audioManager.toggleMute();
+          this.btnAudioToggle.textContent = muted ? '🔇 Muted' : '🎵 Sound ON';
+        }
+      });
+    }
+
+    // Travel Modal
+    if (this.btnMapTravel) {
+      this.btnMapTravel.addEventListener('click', () => this.openTravelModal());
+    }
+    if (this.btnCloseTravel) {
+      this.btnCloseTravel.addEventListener('click', () => this.travelModal.classList.add('hidden'));
     }
   }
 
@@ -86,55 +164,97 @@ class UIManager {
     }
   }
 
-  showStartMenu() {
-    if (this.startMenuModal) {
-      this.startMenuModal.classList.remove('hidden');
-      if (window.game) {
-        window.game.state = window.GAME_STATES.MENU;
-      }
-    }
+  openCharacterSelect() {
+    this.characterModal.classList.remove('hidden');
   }
 
-  hideStartMenu() {
-    if (this.startMenuModal) {
-      this.startMenuModal.classList.add('hidden');
-    }
+  openPrologue() {
+    this.prologueModal.classList.remove('hidden');
   }
 
   startGameSession() {
-    this.hideStartMenu();
+    if (window.audioManager) {
+      window.audioManager.startBGM();
+    }
+
+    if (window.mapManager) {
+      window.mapManager.registerMaps();
+    }
 
     if (window.player) {
       window.player.setCharacterType(this.selectedArchetype);
-      // Spawn player at camp center
-      window.player.x = window.mapManager.spawnX;
-      window.player.y = window.mapManager.spawnY;
-      window.player.visualX = window.mapManager.spawnX;
-      window.player.visualY = window.mapManager.spawnY;
-
-      // Snap camera directly to player
-      if (window.camera && window.game) {
-        window.camera.snapTo(
-          window.player,
-          window.game.tileSize,
-          window.mapManager.width,
-          window.mapManager.height
-        );
-      }
     }
 
     if (window.game) {
       window.game.state = window.GAME_STATES.OVERWORLD;
     }
 
-    const archData = window.CHARACTER_TYPES[this.selectedArchetype.toUpperCase()];
-    const introText = 
-      `You enter the camp as a ${archData.name}. ${archData.lore} ` +
-      `The mighty ocean roars in the distance as Shri Ram's vanguard prepares for the sacred crossing. ` +
-      `Use WASD or Arrow Keys to explore the encampment.`;
+    const arch = window.player.role;
+    this.addLog(`Joined Shri Ram's vanguard as ${arch}.`, 'service');
+  }
 
-    this.showDialogue('Southern Camp of the Sena', introText, archData.symbol);
-    this.addLog(`Joined the army as ${archData.name}.`, 'service');
+  openInventory() {
+    this.refreshInventoryUI();
+    this.inventoryModal.classList.remove('hidden');
+  }
+
+  refreshInventoryUI() {
+    if (!window.inventory || !window.player) return;
+
+    document.getElementById('inv-stones').textContent = window.inventory.items.stones;
+    document.getElementById('inv-fruits').textContent = window.inventory.items.fruits;
+    document.getElementById('inv-flowers').textContent = window.inventory.items.flowers;
+    document.getElementById('inv-coconuts').textContent = window.inventory.items.coconuts;
+    document.getElementById('inv-garlands').textContent = window.inventory.items.garlands;
+    document.getElementById('inv-wood').textContent = window.inventory.items.wood;
+
+    document.getElementById('stat-hp').textContent = `${window.player.hp}/${window.player.maxHp}`;
+    document.getElementById('stat-atk').textContent = window.player.attackStat;
+    document.getElementById('stat-def').textContent = window.player.defenseStat;
+    document.getElementById('stat-agi').textContent = window.player.agilityStat;
+    document.getElementById('stat-role').textContent = window.player.role;
+
+    document.getElementById('stat-setu-stones').textContent = window.mapManager ? window.mapManager.stonesDelivered : 0;
+  }
+
+  openTravelModal() {
+    const listEl = document.getElementById('travel-map-list');
+    listEl.innerHTML = '';
+
+    const maps = [
+      { id: 'camp1', name: 'Phase 1: Camp (Southern Shores)' },
+      { id: 'forest1', name: 'Phase 1: Forest (Fruit Trees & Stones)' },
+      { id: 'beach1', name: 'Phase 1: Beach (Nal & Neel Setu Site)' },
+      { id: 'camp2', name: 'Phase 2: Lanka Camp (Sushena Vaidya)' },
+      { id: 'forest2', name: 'Phase 2: Lanka Forest (No Stones)' },
+      { id: 'beach2', name: 'Phase 2: Lanka Beach (View Setu)' },
+      { id: 'field', name: 'Phase 2: The Battlefield (Rakshasa Encounters)' }
+    ];
+
+    maps.forEach(m => {
+      const btn = document.createElement('button');
+      btn.className = 'travel-btn';
+      btn.textContent = m.name;
+      btn.addEventListener('click', () => {
+        this.travelModal.classList.add('hidden');
+        window.mapManager.loadMap(m.id, null, null, true);
+      });
+      listEl.appendChild(btn);
+    });
+
+    this.travelModal.classList.remove('hidden');
+  }
+
+  showChantAura(text) {
+    const banner = document.createElement('div');
+    banner.className = 'chant-screen-banner';
+    banner.innerHTML = `<span class="chant-glow">ॐ ${text} ॐ</span>`;
+    document.getElementById('viewport-section').appendChild(banner);
+
+    setTimeout(() => {
+      banner.classList.add('fade-out');
+      setTimeout(() => banner.remove(), 600);
+    }, 1200);
   }
 
   switchTab(tabName) {
@@ -191,7 +311,7 @@ class UIManager {
     }
 
     let charIndex = 0;
-    const typingSpeed = 15;
+    const typingSpeed = 14;
 
     this.typewriterTimer = setInterval(() => {
       if (charIndex < text.length) {

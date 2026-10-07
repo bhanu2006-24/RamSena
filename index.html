@@ -6,7 +6,7 @@
   <title>Ram Sena | The Sacred Vanguard (राम सेना)</title>
   <meta name="description" content="A minimalist top-down 2D Pokemon RPG-style web game of devotion and service in Shri Ram's army.">
   
-  <!-- Google Fonts: Vedic Epic Typography -->
+  <!-- Google Fonts: Vedic Epic & Modern Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -31,15 +31,35 @@
       </div>
 
       <div class="header-right">
+        <!-- Hail Shri Ram Button -->
+        <button class="btn-hud hail-btn" id="btn-hail-ram" title="Hail Shri Ram! (Press H)">
+          🚩 जय श्री राम! [H]
+        </button>
+
+        <!-- Inventory Modal Button -->
+        <button class="btn-hud" id="btn-open-inventory" title="Open Inventory & Stats (Press I)">
+          🎒 Inventory [I]
+        </button>
+
+        <!-- Map Travel Selector -->
+        <button class="btn-hud" id="btn-map-travel" title="Travel to other Scenarios (Press M)">
+          🗺️ Travel [M]
+        </button>
+
+        <!-- Audio Toggle -->
+        <button class="btn-hud" id="btn-audio-toggle" title="Toggle Devotional Music">
+          🎵 Sound ON
+        </button>
+
+        <!-- Current Role & Coordinates -->
         <div class="hud-stat" id="hud-role">
           <span class="stat-label">Sevaka:</span>
           <span class="stat-val" id="hud-role-icon">🐒</span>
           <span class="stat-val" id="hud-role-name">Vanar (सेवक)</span>
         </div>
-        <button class="btn-hud" id="btn-open-menu" title="Switch Character Archetype">Archetype</button>
         <div class="hud-stat" id="hud-coords">
           <span class="stat-label">Pos:</span>
-          <span class="stat-val" id="coord-display">(18, 15)</span>
+          <span class="stat-val" id="coord-display">(17, 14)</span>
         </div>
       </div>
     </header>
@@ -48,7 +68,7 @@
       <div id="canvas-container">
         <canvas id="gameCanvas" width="960" height="540"></canvas>
         <div id="canvas-overlay-hints">
-          <span class="key-pill">W</span><span class="key-pill">A</span><span class="key-pill">S</span><span class="key-pill">D</span> or <span class="key-pill">↑</span><span class="key-pill">←</span><span class="key-pill">↓</span><span class="key-pill">→</span> Walk • <span class="key-pill">E</span> Interact
+          <span class="key-pill">WASD / Arrows</span> Walk • <span class="key-pill">E</span> Interact • <span class="key-pill">H</span> Hail • <span class="key-pill">I</span> Bag • <span class="key-pill">M</span> Map
         </div>
       </div>
     </main>
@@ -75,7 +95,7 @@
           <!-- Active Dialogue View -->
           <div id="dialogue-view" class="view-panel active">
             <div id="dialogue-text" class="dialogue-text">
-              The dawn sun casts golden rays over the shores of the southern ocean. Select your character from the menu to begin your humble service.
+              The dawn sun casts golden rays over the shores of the southern ocean. Select your humble sevaka to begin your sacred journey.
             </div>
             <div id="dialogue-prompt" class="dialogue-prompt">
               <span class="prompt-key">[Space]</span> Continue reading
@@ -97,9 +117,16 @@
       </div>
     </footer>
 
-    <!-- Start Menu & Character Selection Modal -->
-    <div id="start-menu-modal" class="modal-backdrop">
-      <div class="menu-card">
+    <!-- 1. MAIN MENU MODAL (SCENIC TITLE SCREEN) -->
+    <div id="main-menu-modal" class="modal-backdrop">
+      <div class="menu-card scenic-card">
+        <!-- Atmospheric Sunrise Scenery Backdrop -->
+        <div class="scenic-backdrop-art">
+          <div class="scenery-sun"></div>
+          <div class="scenery-mountains">⛰️ ⛰️ ⛰️ ⛰️</div>
+          <div class="scenery-ocean-waves">🌊 🌊 🌊 🌊 🌊 🌊 🌊 🌊</div>
+        </div>
+
         <div class="menu-header">
           <div class="menu-om">ॐ</div>
           <h2 class="menu-title">RAM SENA</h2>
@@ -107,44 +134,207 @@
         </div>
 
         <p class="menu-description">
-          You are a humble sevaka in the army of Shri Ram. Your path is not glory, but pure devotion (Bhakti) through service—gathering stones for the Setu bridge, weaving garlands, and marching with the faithful.
+          A minimalist top-down devotional RPG. Walk as a humble Vanar or Bear devotee in the army of Maryada Purushottam Shri Ram. Offer fruits, gather Setu stones, and march with the faithful.
         </p>
 
-        <div class="selection-title">Choose Your Humble Archetype</div>
+        <div class="menu-btn-group">
+          <button id="btn-start-journey" class="btn-primary">
+            START JOURNEY • यात्रा आरंभ करें (जय श्री राम)
+          </button>
+          <button id="btn-open-about" class="btn-secondary">
+            ABOUT & SACRED LORE • परिचय एवं कथा
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. ABOUT & PHILOSOPHY MODAL -->
+    <div id="about-modal" class="modal-backdrop hidden">
+      <div class="menu-card">
+        <div class="menu-header">
+          <div class="menu-om">ॐ</div>
+          <h2 class="menu-title">ABOUT RAM SENA</h2>
+          <div class="menu-subtitle">The Sacred Philosophy of Bhakti (Devotion)</div>
+        </div>
+
+        <div class="menu-description" style="text-align: left; max-height: 280px; overflow-y: auto;">
+          <p style="margin-bottom: 0.6rem;">
+            <strong>✦ Sacred Context:</strong> This game is inspired by the timeless sacred epic, the Ramayana. The player is a humble, generic soldier—either a nimble Vanar from Kishkindha or a steadfast Bear of Jambavan’s clan.
+          </p>
+          <p style="margin-bottom: 0.6rem;">
+            <strong>✦ Immutable Rule:</strong> The player is NOT a divine figure. Shri Ram, Lakshman, and Hanuman are revered avatars and ideals of Dharma. The game never animates grand divine events or alters their sacred narratives; all epics are experienced through pure dialogue and humble service.
+          </p>
+          <p style="margin-bottom: 0.6rem;">
+            <strong>✦ Divine Intervention:</strong> In battle, the player never faces a game over. If strength falters, an arrow from Shri Ram strikes the foe, protecting the devotee with eternal grace.
+          </p>
+          <p>
+            <strong>✦ Controls:</strong> Move with <strong>WASD / Arrow Keys</strong> • Press <strong>[E]</strong> to Interact / Talk / Gather • Press <strong>[H]</strong> to Hail "जय श्री राम!" • Press <strong>[I]</strong> for Bag & Stats • Press <strong>[M]</strong> for Map Travel.
+          </p>
+        </div>
+
+        <button id="btn-close-about" class="btn-primary">
+          Back to Menu (वापस जाएँ)
+        </button>
+      </div>
+    </div>
+
+    <!-- 3. CHARACTER SELECTION MODAL -->
+    <div id="character-modal" class="modal-backdrop hidden">
+      <div class="menu-card">
+        <div class="menu-header">
+          <div class="menu-om">ॐ</div>
+          <h2 class="menu-title">CHOOSE YOUR SEVAKA</h2>
+          <div class="menu-subtitle">Select your character archetype</div>
+        </div>
 
         <div class="archetype-cards-grid">
           <!-- Option 1: Vanar -->
           <div class="archetype-card selected" id="choose-vanar">
             <div class="archetype-icon">🐒</div>
             <div class="archetype-name">Vanar (वानर)</div>
-            <div class="archetype-desc">Agile & devoted monkey soldier of Kishkindha. Swift in gathering fruits and carrying rocks.</div>
-            <div class="archetype-stat">HP: 100 • Agility: High</div>
+            <div class="archetype-desc">Agile & devoted monkey soldier of Kishkindha. Swift in foraging wild fruits and carrying stones.</div>
+            <div class="archetype-stat">HP: 100 • Agility: High • Crit: 22%</div>
           </div>
 
-          <!-- Option 2: Riksha / Rich (Bear) -->
+          <!-- Option 2: Riksha / Bear -->
           <div class="archetype-card" id="choose-riksha">
             <div class="archetype-icon">🐻</div>
             <div class="archetype-name">Riksha (ऋक्ष - भालू)</div>
-            <div class="archetype-desc">Sturdy bear warrior from Jambavan’s clan. Steadfast strength, lifting heavy boulders.</div>
-            <div class="archetype-stat">HP: 120 • Endurance: High</div>
+            <div class="archetype-desc">Stalwart warrior from Jambavan’s bear clan. Mighty strength, heavy attack power, and endurance.</div>
+            <div class="archetype-stat">HP: 130 • Defense: High • Atk: 28</div>
           </div>
         </div>
 
-        <button id="btn-start-game" class="btn-primary">
-          BEGIN SEVA • सेवा आरंभ करें (जय श्री राम)
+        <button id="btn-confirm-character" class="btn-primary">
+          Confirm Sevaka (चयन पुष्टि)
+        </button>
+      </div>
+    </div>
+
+    <!-- 4. STORY PROLOGUE MODAL -->
+    <div id="prologue-modal" class="modal-backdrop hidden">
+      <div class="menu-card">
+        <div class="menu-header">
+          <div class="menu-om">ॐ</div>
+          <h2 class="menu-title">THE PROLOGUE</h2>
+          <div class="menu-subtitle">From Kishkindha to the Southern Shores</div>
+        </div>
+
+        <p class="menu-description" style="text-align: left; line-height: 1.6;">
+          Following the friendship forged between Shri Ram and King Sugreev, millions of Vanars and Bears answered the call of Dharma. 
+          <br><br>
+          Marching across forests, rivers, and rugged mountains, the great vanguard has arrived at the southern ocean at Rameshwaram. 
+          Ahead lies the roaring ocean, and across the waves lies Lanka, where Mother Sita remains steadfast in faith. 
+          <br><br>
+          You step into the camp not for fame, but with folded hands, ready to lift every stone and offer every blossom in pure devotion.
+        </p>
+
+        <button id="btn-begin-from-prologue" class="btn-primary">
+          Enter The Camp • शिविर में प्रवेश करें (जय श्री राम)
+        </button>
+      </div>
+    </div>
+
+    <!-- 5. INVENTORY & STATS MODAL -->
+    <div id="inventory-modal" class="modal-backdrop hidden">
+      <div class="menu-card" style="max-width: 580px;">
+        <div class="menu-header">
+          <div class="menu-om">🎒</div>
+          <h2 class="menu-title">SEVA BAG & STATS</h2>
+          <div class="menu-subtitle">Gathered Offerings & Character Attributes</div>
+        </div>
+
+        <!-- Inventory Grid -->
+        <div class="inv-grid">
+          <div class="inv-slot">
+            <span class="inv-slot-icon">🪨</span>
+            <span class="inv-slot-name">Setu Stones</span>
+            <span class="inv-slot-count" id="inv-stones">0</span>
+          </div>
+          <div class="inv-slot">
+            <span class="inv-slot-icon">🍎</span>
+            <span class="inv-slot-name">Wild Fruits</span>
+            <span class="inv-slot-count" id="inv-fruits">0</span>
+          </div>
+          <div class="inv-slot">
+            <span class="inv-slot-icon">🌸</span>
+            <span class="inv-slot-name">Forest Flowers</span>
+            <span class="inv-slot-count" id="inv-flowers">0</span>
+          </div>
+          <div class="inv-slot">
+            <span class="inv-slot-icon">🥥</span>
+            <span class="inv-slot-name">Coconuts</span>
+            <span class="inv-slot-count" id="inv-coconuts">0</span>
+          </div>
+          <div class="inv-slot">
+            <span class="inv-slot-icon">📿</span>
+            <span class="inv-slot-name">Garlands</span>
+            <span class="inv-slot-count" id="inv-garlands">0</span>
+          </div>
+          <div class="inv-slot">
+            <span class="inv-slot-icon">🪵</span>
+            <span class="inv-slot-name">Wood</span>
+            <span class="inv-slot-count" id="inv-wood">0</span>
+          </div>
+        </div>
+
+        <!-- Combat & Seva Stats Box -->
+        <div class="stats-card-box">
+          <div><strong>Archetype:</strong> <span id="stat-role">Vanar</span></div>
+          <div><strong>Health (HP):</strong> <span id="stat-hp">100/100</span></div>
+          <div><strong>Attack Power:</strong> <span id="stat-atk">22</span></div>
+          <div><strong>Defense:</strong> <span id="stat-def">10</span></div>
+          <div><strong>Agility / Speed:</strong> <span id="stat-agi">26</span></div>
+          <div><strong>Setu Stones Placed:</strong> <span id="stat-setu-stones">0</span>/10</div>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; justify-content: center;">
+          <button id="btn-craft-garland-modal" class="btn-secondary" style="color: var(--gold); border-color: var(--saffron);">
+            🌸 Craft Garland (Weave 5 Flowers)
+          </button>
+          <button id="btn-close-inventory" class="btn-primary">
+            Close (बंद करें)
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. FAST TRAVEL MODAL -->
+    <div id="travel-modal" class="modal-backdrop hidden">
+      <div class="menu-card" style="max-width: 500px;">
+        <div class="menu-header">
+          <div class="menu-om">🗺️</div>
+          <h2 class="menu-title">SCENARIO TRAVEL</h2>
+          <div class="menu-subtitle">Visit Unlocked Maps & Scenarios</div>
+        </div>
+
+        <div class="travel-grid" id="travel-map-list">
+          <!-- Populated by ui.js -->
+        </div>
+
+        <button id="btn-close-travel" class="btn-secondary" style="margin-top: 0.5rem;">
+          Close (वापस जाएँ)
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Modular Scripts in Organized Folders -->
+  <!-- Modular Scripts in Order of Dependency -->
   <script src="scripts/constants.js"></script>
-  <script src="maps/campMap.js"></script>
-  <script src="scripts/mapManager.js"></script>
+  <script src="maps/camp1.js"></script>
+  <script src="maps/forest1.js"></script>
+  <script src="maps/beach1.js"></script>
+  <script src="maps/camp2.js"></script>
+  <script src="maps/forest2.js"></script>
+  <script src="maps/beach2.js"></script>
+  <script src="maps/field.js"></script>
+  <script src="scripts/audio.js"></script>
   <script src="scripts/camera.js"></script>
   <script src="scripts/input.js"></script>
   <script src="scripts/inventory.js"></script>
   <script src="scripts/combat.js"></script>
+  <script src="scripts/npcManager.js"></script>
+  <script src="scripts/mapManager.js"></script>
   <script src="scripts/player.js"></script>
   <script src="scripts/ui.js"></script>
   <script src="scripts/main.js"></script>
