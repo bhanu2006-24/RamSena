@@ -165,22 +165,6 @@ class Player {
         this.auraColor
       );
     }
-
-    // Directional indicator dot
-    ctx.fillStyle = '#fef08a';
-    ctx.beginPath();
-    let indX = sx + tileSize / 2;
-    let indY = sy + tileSize / 2 + bobY;
-    const indDist = tileSize * 0.42;
-
-    if (this.direction === 'up') indY -= indDist;
-    else if (this.direction === 'down') indY += indDist;
-    else if (this.direction === 'left') indX -= indDist;
-    else if (this.direction === 'right') indX += indDist;
-
-    ctx.arc(indX, indY, 3, 0, Math.PI * 2);
-    ctx.fill();
-
     ctx.restore();
   }
 

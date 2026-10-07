@@ -25,8 +25,10 @@ class Game {
   }
 
   calculateTileSize() {
-    // Authentic GBA Pokemon Scale: Target ~15 tiles across screen
-    return Math.max(105, Math.min(130, Math.floor(window.innerWidth / 15)));
+    // Authentic GBA Pokemon Scale: Target ~13-14 tiles across screen, ~8-9 vertically
+    const sizeByW = Math.floor(window.innerWidth / 14);
+    const sizeByH = Math.floor(window.innerHeight / 8.8);
+    return Math.max(110, Math.min(145, Math.min(sizeByW, sizeByH)));
   }
 
   initCanvas() {
@@ -424,498 +426,64 @@ class Game {
     const grid = window.mapManager.grid;
     const cols = window.mapManager.width;
     const rows = window.mapManager.height;
+    const ar = window.assetRenderer;
 
     const bounds = window.camera.getVisibleBounds(ts, cols, rows);
 
     for (let r = bounds.startRow; r <= bounds.endRow; r++) {
       for (let c = bounds.startCol; c <= bounds.endCol; c++) {
         const tileType = grid[r][c];
-        const props = window.TILE_PROPERTIES[tileType] || window.TILE_PROPERTIES[window.TILE_TYPES.GRASS];
-
         const screenPos = window.camera.worldToScreen(c * ts, r * ts);
         const sx = screenPos.x;
         const sy = screenPos.y;
 
-        // Base ground fill
-        ctx.fillStyle = props.color;
-        ctx.fillRect(sx, sy, ts, ts);
-
-        // Modern Procedural Tile Rendering
-        switch (tileType) {
-          case window.TILE_TYPES.GRASS:
-            this.drawGrass(ctx, sx, sy, ts, r, c);
-            break;
-          case window.TILE_TYPES.GRASS_FLOWERS:
-            this.drawFlowers(ctx, sx, sy, ts, r, c);
-            break;
-          case window.TILE_TYPES.DIRT_PATH:
-            if ((r + c) % 2 === 0) {
-              ctx.fillStyle = props.altColor || '#533e21';
-              ctx.fillRect(sx, sy, ts, ts);
-            }
-            ctx.fillStyle = 'rgba(217, 119, 6, 0.18)';
-            ctx.fillRect(sx + ts * 0.45, sy + ts * 0.45, 4, 3);
-            break;
-          case window.TILE_TYPES.SAND:
-            if ((r + c) % 3 === 0) {
-              ctx.fillStyle = 'rgba(254, 243, 199, 0.15)';
-              ctx.fillRect(sx + ts * 0.3, sy + ts * 0.3, 3, 3);
-            }
-            break;
-          case window.TILE_TYPES.WATER:
-            this.drawWater(ctx, sx, sy, ts, this.animClock, c, r);
-            break;
-          case window.TILE_TYPES.TREE:
-            this.drawTree(ctx, sx, sy, ts, this.animClock, c, r);
-            break;
-          case window.TILE_TYPES.COCONUT_TREE:
-            this.drawCoconutTree(ctx, sx, sy, ts, this.animClock, c, r);
-            break;
-          case window.TILE_TYPES.ROCK:
-            this.drawRock(ctx, sx, sy, ts);
-            break;
-          case window.TILE_TYPES.MOUNTAIN:
-            this.drawMountain(ctx, sx, sy, ts);
-            break;
-          case window.TILE_TYPES.SACRED_FIRE:
-            this.drawSacredFire(ctx, sx, sy, ts, this.animClock, c);
-            break;
-          case window.TILE_TYPES.FLAG_BANNER:
-            this.drawFlagBanner(ctx, sx, sy, ts, this.animClock);
-            break;
-          case window.TILE_TYPES.CAMP_TENT:
-            this.drawCampTent(ctx, sx, sy, ts);
-            break;
-          default:
-            if (props.symbol) {
-              ctx.font = `${Math.floor(ts * 0.56)}px sans-serif`;
-              ctx.textAlign = 'center';
-              ctx.textBaseline = 'middle';
-              ctx.fillText(props.symbol, sx + ts / 2, sy + ts / 2);
-            }
-            break;
+        if (ar) {
+          switch (tileType) {
+            case window.TILE_TYPES.GRASS:
+              ar.drawGrass(ctx, sx, sy, ts, c, r);
+              break;
+            case window.TILE_TYPES.GRASS_FLOWERS:
+              ar.drawFlowers(ctx, sx, sy, ts, c, r);
+              break;
+            case window.TILE_TYPES.DIRT_PATH:
+              ar.drawPath(ctx, sx, sy, ts, c, r);
+              break;
+            case window.TILE_TYPES.SAND:
+              ar.drawSand(ctx, sx, sy, ts, c, r);
+              break;
+            case window.TILE_TYPES.WATER:
+              ar.drawWater(ctx, sx, sy, ts, this.animClock, c, r);
+              break;
+            case window.TILE_TYPES.TREE:
+              ar.drawBaseGround(ctx, sx, sy, ts, c, r, window.mapManager.currentMapId);
+              ar.drawTree(ctx, sx, sy, ts, this.animClock, c, r);
+              break;
+            case window.TILE_TYPES.COCONUT_TREE:
+              ar.drawBaseGround(ctx, sx, sy, ts, c, r, window.mapManager.currentMapId);
+              ar.drawCoconutPalm(ctx, sx, sy, ts, this.animClock, c, r);
+              break;
+            case window.TILE_TYPES.ROCK:
+              ar.drawBaseGround(ctx, sx, sy, ts, c, r, window.mapManager.currentMapId);
+              ar.drawRock(ctx, sx, sy, ts, c, r);
+              break;
+            case window.TILE_TYPES.SACRED_FIRE:
+              ar.drawBaseGround(ctx, sx, sy, ts, c, r, window.mapManager.currentMapId);
+              ar.drawYajnaAltar(ctx, sx, sy, ts, this.animClock, c);
+              break;
+            case window.TILE_TYPES.FLAG_BANNER:
+              ar.drawBaseGround(ctx, sx, sy, ts, c, r, window.mapManager.currentMapId);
+              ar.drawFlag(ctx, sx, sy, ts, this.animClock);
+              break;
+            case window.TILE_TYPES.CAMP_TENT:
+              ar.drawBaseGround(ctx, sx, sy, ts, c, r, window.mapManager.currentMapId);
+              ar.drawTent(ctx, sx, sy, ts, this.animClock, c, r);
+              break;
+            default:
+              ar.drawGrass(ctx, sx, sy, ts, c, r);
+              break;
+          }
         }
-
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
-        ctx.lineWidth = 1;
-        ctx.strokeRect(sx, sy, ts, ts);
       }
-    }
-  }
-
-  drawGrass(ctx, sx, sy, ts, r, c) {
-    if ((r + c) % 2 === 0) {
-      ctx.fillStyle = '#22461e';
-      ctx.fillRect(sx, sy, ts, ts);
-    }
-    ctx.fillStyle = 'rgba(74, 222, 128, 0.22)';
-    ctx.fillRect(sx + ts * 0.2, sy + ts * 0.4, 2, 5);
-    ctx.fillRect(sx + ts * 0.24, sy + ts * 0.36, 2, 6);
-    ctx.fillRect(sx + ts * 0.7, sy + ts * 0.65, 2, 5);
-    ctx.fillRect(sx + ts * 0.74, sy + ts * 0.61, 2, 7);
-  }
-
-  drawFlowers(ctx, sx, sy, ts, r, c) {
-    this.drawGrass(ctx, sx, sy, ts, r, c);
-    const flowers = [
-      { x: sx + ts * 0.28, y: sy + ts * 0.32, color: '#f472b6', size: 3.5 },
-      { x: sx + ts * 0.72, y: sy + ts * 0.45, color: '#fb7185', size: 4 },
-      { x: sx + ts * 0.45, y: sy + ts * 0.75, color: '#fbcfe8', size: 3 }
-    ];
-
-    flowers.forEach(f => {
-      ctx.fillStyle = f.color;
-      for (let i = 0; i < 5; i++) {
-        const ang = (i * 2 * Math.PI) / 5;
-        ctx.beginPath();
-        ctx.arc(f.x + Math.cos(ang) * (f.size * 0.8), f.y + Math.sin(ang) * (f.size * 0.8), f.size * 0.6, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      ctx.fillStyle = '#fef08a';
-      ctx.beginPath();
-      ctx.arc(f.x, f.y, f.size * 0.45, 0, Math.PI * 2);
-      ctx.fill();
-    });
-  }
-
-  drawTree(ctx, sx, sy, ts, clock, c, r) {
-    const cx = sx + ts / 2;
-    const cy = sy + ts / 2;
-    const sway = Math.sin(clock * 0.002 + c * 1.5 + r) * 2;
-
-    // Drop Shadow
-    ctx.beginPath();
-    ctx.ellipse(cx, sy + ts * 0.86, ts * 0.38, ts * 0.16, 0, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
-    ctx.fill();
-
-    // Trunk
-    ctx.fillStyle = '#451a03';
-    ctx.beginPath();
-    ctx.moveTo(cx - ts * 0.12, sy + ts * 0.85);
-    ctx.lineTo(cx - ts * 0.07, cy);
-    ctx.lineTo(cx + ts * 0.07, cy);
-    ctx.lineTo(cx + ts * 0.12, sy + ts * 0.85);
-    ctx.closePath();
-    ctx.fill();
-
-    // Bark highlight
-    ctx.fillStyle = '#78350f';
-    ctx.fillRect(cx - ts * 0.04, cy + ts * 0.08, ts * 0.05, ts * 0.28);
-
-    // Deep Canopy Layer 1 (Dark Shadow Green)
-    ctx.fillStyle = '#14532d';
-    ctx.beginPath();
-    ctx.arc(cx - ts * 0.2 + sway * 0.5, cy - ts * 0.05, ts * 0.26, 0, Math.PI * 2);
-    ctx.arc(cx + ts * 0.2 + sway * 0.5, cy - ts * 0.05, ts * 0.26, 0, Math.PI * 2);
-    ctx.arc(cx + sway * 0.5, cy - ts * 0.22, ts * 0.32, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Mid Foliage Layer 2 (Lush Emerald)
-    ctx.fillStyle = '#15803d';
-    ctx.beginPath();
-    ctx.arc(cx - ts * 0.14 + sway, cy - ts * 0.1, ts * 0.24, 0, Math.PI * 2);
-    ctx.arc(cx + ts * 0.14 + sway, cy - ts * 0.1, ts * 0.24, 0, Math.PI * 2);
-    ctx.arc(cx + sway, cy - ts * 0.24, ts * 0.27, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Canopy Highlight Layer 3 (Golden Sunlit Crest)
-    ctx.fillStyle = '#22c55e';
-    ctx.beginPath();
-    ctx.arc(cx - ts * 0.08 + sway, cy - ts * 0.22, ts * 0.16, 0, Math.PI * 2);
-    ctx.arc(cx + ts * 0.08 + sway, cy - ts * 0.26, ts * 0.14, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Scattered Ripe Wild Fruits
-    if ((c + r) % 2 === 0) {
-      ctx.fillStyle = '#fbbf24';
-      ctx.beginPath();
-      ctx.arc(cx - ts * 0.16 + sway, cy - ts * 0.12, 3, 0, Math.PI * 2);
-      ctx.arc(cx + ts * 0.15 + sway, cy - ts * 0.06, 3, 0, Math.PI * 2);
-      ctx.fill();
-    }
-  }
-
-  drawCoconutTree(ctx, sx, sy, ts, clock, c, r) {
-    const cx = sx + ts / 2;
-    const baseCy = sy + ts * 0.88;
-    const sway = Math.sin(clock * 0.0025 + c * 2) * 2.5;
-
-    // Drop Shadow
-    ctx.beginPath();
-    ctx.ellipse(cx, baseCy, ts * 0.32, ts * 0.14, 0, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
-    ctx.fill();
-
-    // Curved Trunk
-    ctx.strokeStyle = '#78350f';
-    ctx.lineWidth = ts * 0.14;
-    ctx.lineCap = 'round';
-    ctx.beginPath();
-    ctx.moveTo(cx, baseCy);
-    ctx.quadraticCurveTo(cx - ts * 0.12, sy + ts * 0.45, cx + sway, sy + ts * 0.26);
-    ctx.stroke();
-
-    // Trunk ridges
-    ctx.strokeStyle = '#92400e';
-    ctx.lineWidth = 2;
-    for (let i = 1; i <= 3; i++) {
-      const ty = baseCy - (i * ts * 0.18);
-      ctx.beginPath();
-      ctx.moveTo(cx - ts * 0.08, ty);
-      ctx.lineTo(cx + ts * 0.04, ty - 2);
-      ctx.stroke();
-    }
-
-    const crownX = cx + sway;
-    const crownY = sy + ts * 0.24;
-
-    // Coconuts
-    ctx.fillStyle = '#451a03';
-    ctx.beginPath();
-    ctx.arc(crownX - 4, crownY + 4, 3.5, 0, Math.PI * 2);
-    ctx.arc(crownX + 4, crownY + 4, 3.5, 0, Math.PI * 2);
-    ctx.arc(crownX, crownY + 7, 3.5, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Palm Fronds
-    ctx.strokeStyle = '#15803d';
-    ctx.lineWidth = 3.5;
-    const angles = [-2.4, -1.8, -1.2, -0.6, 0.2];
-    angles.forEach(ang => {
-      ctx.beginPath();
-      ctx.moveTo(crownX, crownY);
-      const endX = crownX + Math.cos(ang) * (ts * 0.45);
-      const endY = crownY + Math.sin(ang) * (ts * 0.35) + 4;
-      ctx.quadraticCurveTo(crownX + Math.cos(ang) * (ts * 0.25), crownY - ts * 0.1, endX, endY);
-      ctx.stroke();
-    });
-  }
-
-  drawRock(ctx, sx, sy, ts) {
-    const cx = sx + ts / 2;
-    const cy = sy + ts / 2;
-
-    // Drop Shadow
-    ctx.beginPath();
-    ctx.ellipse(cx, sy + ts * 0.82, ts * 0.38, ts * 0.18, 0, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.52)';
-    ctx.fill();
-
-    // Sacred Boulder (Angular chiseled facets)
-    ctx.beginPath();
-    ctx.moveTo(cx - ts * 0.34, cy + ts * 0.25);
-    ctx.lineTo(cx - ts * 0.3, cy - ts * 0.15);
-    ctx.lineTo(cx - ts * 0.1, cy - ts * 0.35);
-    ctx.lineTo(cx + ts * 0.2, cy - ts * 0.32);
-    ctx.lineTo(cx + ts * 0.35, cy - ts * 0.05);
-    ctx.lineTo(cx + ts * 0.3, cy + ts * 0.25);
-    ctx.closePath();
-
-    ctx.fillStyle = '#475569';
-    ctx.fill();
-
-    // Shadow facet
-    ctx.fillStyle = '#334155';
-    ctx.beginPath();
-    ctx.moveTo(cx - ts * 0.34, cy + ts * 0.25);
-    ctx.lineTo(cx - ts * 0.05, cy);
-    ctx.lineTo(cx + ts * 0.3, cy + ts * 0.25);
-    ctx.closePath();
-    ctx.fill();
-
-    // Lit top facet & highlight ridge
-    ctx.strokeStyle = '#94a3b8';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(cx - ts * 0.3, cy - ts * 0.15);
-    ctx.lineTo(cx - ts * 0.1, cy - ts * 0.35);
-    ctx.lineTo(cx + ts * 0.2, cy - ts * 0.32);
-    ctx.stroke();
-
-    // Sacred golden dust aura
-    ctx.fillStyle = 'rgba(245, 158, 11, 0.18)';
-    ctx.beginPath();
-    ctx.arc(cx, cy, ts * 0.38, 0, Math.PI * 2);
-    ctx.fill();
-  }
-
-  drawMountain(ctx, sx, sy, ts) {
-    const cx = sx + ts / 2;
-
-    // Drop Shadow
-    ctx.beginPath();
-    ctx.ellipse(cx, sy + ts * 0.88, ts * 0.44, ts * 0.15, 0, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-    ctx.fill();
-
-    // Left Peak
-    ctx.fillStyle = '#1e293b';
-    ctx.beginPath();
-    ctx.moveTo(cx - ts * 0.42, sy + ts * 0.86);
-    ctx.lineTo(cx - ts * 0.18, sy + ts * 0.15);
-    ctx.lineTo(cx + ts * 0.05, sy + ts * 0.86);
-    ctx.closePath();
-    ctx.fill();
-
-    // Right Peak
-    ctx.fillStyle = '#334155';
-    ctx.beginPath();
-    ctx.moveTo(cx - ts * 0.2, sy + ts * 0.86);
-    ctx.lineTo(cx + ts * 0.15, sy + ts * 0.08);
-    ctx.lineTo(cx + ts * 0.44, sy + ts * 0.86);
-    ctx.closePath();
-    ctx.fill();
-
-    // Summit Crest
-    ctx.fillStyle = '#94a3b8';
-    ctx.beginPath();
-    ctx.moveTo(cx + ts * 0.15, sy + ts * 0.08);
-    ctx.lineTo(cx + ts * 0.08, sy + ts * 0.28);
-    ctx.lineTo(cx + ts * 0.15, sy + ts * 0.24);
-    ctx.lineTo(cx + ts * 0.24, sy + ts * 0.3);
-    ctx.closePath();
-    ctx.fill();
-  }
-
-  drawSacredFire(ctx, sx, sy, ts, clock, c) {
-    const cx = sx + ts / 2;
-    const cy = sy + ts * 0.62;
-
-    // Altar Hearth Base
-    ctx.fillStyle = '#78350f';
-    ctx.fillRect(cx - ts * 0.38, cy + ts * 0.08, ts * 0.76, ts * 0.22);
-    ctx.fillStyle = '#9a3412';
-    ctx.fillRect(cx - ts * 0.34, cy + ts * 0.05, ts * 0.68, ts * 0.06);
-
-    // Crossed Sacrificial Logs
-    ctx.strokeStyle = '#292524';
-    ctx.lineWidth = 5;
-    ctx.beginPath();
-    ctx.moveTo(cx - ts * 0.22, cy + ts * 0.12);
-    ctx.lineTo(cx + ts * 0.22, cy + ts * 0.02);
-    ctx.moveTo(cx + ts * 0.22, cy + ts * 0.12);
-    ctx.lineTo(cx - ts * 0.22, cy + ts * 0.02);
-    ctx.stroke();
-
-    // Ambient Radiant Glow Aura
-    const glow = ctx.createRadialGradient(cx, cy - ts * 0.1, ts * 0.05, cx, cy - ts * 0.1, ts * 0.75);
-    glow.addColorStop(0, 'rgba(249, 115, 22, 0.55)');
-    glow.addColorStop(1, 'rgba(0, 0, 0, 0)');
-    ctx.fillStyle = glow;
-    ctx.beginPath();
-    ctx.arc(cx, cy - ts * 0.1, ts * 0.75, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Animated Flame Tongues
-    const flicker1 = Math.sin(clock * 0.015 + c) * 3;
-    const flicker2 = Math.cos(clock * 0.012 + c) * 3;
-
-    // Outer Crimson Flame
-    ctx.fillStyle = '#dc2626';
-    ctx.beginPath();
-    ctx.moveTo(cx - ts * 0.24, cy + ts * 0.04);
-    ctx.quadraticCurveTo(cx - ts * 0.15, cy - ts * 0.25, cx + flicker1, cy - ts * 0.45);
-    ctx.quadraticCurveTo(cx + ts * 0.15, cy - ts * 0.25, cx + ts * 0.24, cy + ts * 0.04);
-    ctx.closePath();
-    ctx.fill();
-
-    // Mid Amber Flame
-    ctx.fillStyle = '#ea580c';
-    ctx.beginPath();
-    ctx.moveTo(cx - ts * 0.16, cy + ts * 0.04);
-    ctx.quadraticCurveTo(cx - ts * 0.1, cy - ts * 0.2, cx + flicker2, cy - ts * 0.35);
-    ctx.quadraticCurveTo(cx + ts * 0.1, cy - ts * 0.2, cx + ts * 0.16, cy + ts * 0.04);
-    ctx.closePath();
-    ctx.fill();
-
-    // Inner Radiant Golden Core
-    ctx.fillStyle = '#fef08a';
-    ctx.beginPath();
-    ctx.moveTo(cx - ts * 0.09, cy + ts * 0.04);
-    ctx.quadraticCurveTo(cx, cy - ts * 0.14, cx, cy - ts * 0.24);
-    ctx.quadraticCurveTo(cx, cy - ts * 0.14, cx + ts * 0.09, cy + ts * 0.04);
-    ctx.closePath();
-    ctx.fill();
-
-    // Rising Sacred Embers
-    for (let i = 0; i < 3; i++) {
-      const sparkAge = (clock * 0.0018 + i * 0.33) % 1;
-      const sparkY = cy - ts * 0.2 - (sparkAge * ts * 0.45);
-      const sparkX = cx + Math.sin(clock * 0.008 + i * 2) * (ts * 0.18);
-      ctx.fillStyle = `rgba(254, 240, 138, ${1 - sparkAge})`;
-      ctx.fillRect(sparkX, sparkY, 2.5, 2.5);
-    }
-  }
-
-  drawFlagBanner(ctx, sx, sy, ts, clock) {
-    const poleX = sx + ts * 0.28;
-    const baseCy = sy + ts * 0.88;
-    const wave = Math.sin(clock * 0.006) * 4;
-
-    // Drop Shadow
-    ctx.beginPath();
-    ctx.ellipse(poleX, baseCy, ts * 0.18, ts * 0.08, 0, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
-    ctx.fill();
-
-    // Wooden Staff Pole
-    ctx.strokeStyle = '#78350f';
-    ctx.lineWidth = 3.5;
-    ctx.beginPath();
-    ctx.moveTo(poleX, baseCy);
-    ctx.lineTo(poleX, sy + ts * 0.12);
-    ctx.stroke();
-
-    // Brass Finial Spearhead
-    ctx.fillStyle = '#f59e0b';
-    ctx.beginPath();
-    ctx.arc(poleX, sy + ts * 0.1, 4, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Saffron Triangular Dharma Dhwaja
-    ctx.fillStyle = '#ea580c';
-    ctx.beginPath();
-    ctx.moveTo(poleX + 2, sy + ts * 0.14);
-    ctx.quadraticCurveTo(poleX + ts * 0.3, sy + ts * 0.18 + wave * 0.5, poleX + ts * 0.58 + wave, sy + ts * 0.28);
-    ctx.quadraticCurveTo(poleX + ts * 0.3, sy + ts * 0.38 - wave * 0.5, poleX + 2, sy + ts * 0.46);
-    ctx.closePath();
-    ctx.fill();
-
-    // Gold trim edge
-    ctx.strokeStyle = '#fef08a';
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
-  }
-
-  drawCampTent(ctx, sx, sy, ts) {
-    const cx = sx + ts / 2;
-    const cy = sy + ts * 0.88;
-
-    // Drop Shadow
-    ctx.beginPath();
-    ctx.ellipse(cx, cy, ts * 0.42, ts * 0.16, 0, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
-    ctx.fill();
-
-    // Main Pavilion Canvas
-    ctx.fillStyle = '#b45309';
-    ctx.beginPath();
-    ctx.moveTo(cx - ts * 0.4, cy);
-    ctx.lineTo(cx, sy + ts * 0.16);
-    ctx.lineTo(cx + ts * 0.4, cy);
-    ctx.closePath();
-    ctx.fill();
-
-    // Golden Side Flaps
-    ctx.fillStyle = '#d97706';
-    ctx.beginPath();
-    ctx.moveTo(cx - ts * 0.4, cy);
-    ctx.lineTo(cx, sy + ts * 0.16);
-    ctx.lineTo(cx - ts * 0.1, cy);
-    ctx.closePath();
-    ctx.fill();
-
-    // Entrance Archway Curtain
-    ctx.fillStyle = '#451a03';
-    ctx.beginPath();
-    ctx.moveTo(cx - ts * 0.12, cy);
-    ctx.lineTo(cx, cy - ts * 0.28);
-    ctx.lineTo(cx + ts * 0.12, cy);
-    ctx.closePath();
-    ctx.fill();
-
-    // Guy Ropes
-    ctx.strokeStyle = '#fef3c7';
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.moveTo(cx - ts * 0.35, cy - ts * 0.05);
-    ctx.lineTo(cx - ts * 0.48, cy);
-    ctx.moveTo(cx + ts * 0.35, cy - ts * 0.05);
-    ctx.lineTo(cx + ts * 0.48, cy);
-    ctx.stroke();
-  }
-
-  drawWater(ctx, sx, sy, ts, clock, c, r) {
-    const waveShift = Math.sin((clock * 0.003) + (c * 0.6) + (r * 0.9)) * 5;
-
-    // Ocean Gradient
-    const waterGrad = ctx.createLinearGradient(sx, sy, sx, sy + ts);
-    waterGrad.addColorStop(0, '#1d4ed8');
-    waterGrad.addColorStop(1, '#1e3a8a');
-    ctx.fillStyle = waterGrad;
-    ctx.fillRect(sx, sy, ts, ts);
-
-    // Wave ripples
-    ctx.fillStyle = 'rgba(191, 219, 254, 0.35)';
-    ctx.fillRect(sx + ts * 0.1 + waveShift, sy + ts * 0.35, ts * 0.6, 3);
-    ctx.fillRect(sx + ts * 0.3 - waveShift * 0.5, sy + ts * 0.7, ts * 0.5, 2.5);
-
-    // Specular Sun Glint
-    const glint = Math.sin(clock * 0.005 + c + r);
-    if (glint > 0.7) {
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.65)';
-      ctx.fillRect(sx + ts * 0.5 + waveShift * 0.3, sy + ts * 0.5, 3, 3);
     }
   }
 
@@ -923,6 +491,7 @@ class Game {
     if (window.mapManager.currentMapId !== 'field' || !window.mapManager.encounters) return;
 
     const ts = this.tileSize;
+    const ar = window.assetRenderer;
     window.mapManager.encounters.forEach(enc => {
       if (enc.defeated) return;
 
@@ -930,21 +499,9 @@ class Game {
       const sx = screenPos.x;
       const sy = screenPos.y;
 
-      const auraGrad = ctx.createRadialGradient(
-        sx + ts / 2, sy + ts / 2, ts * 0.1,
-        sx + ts / 2, sy + ts / 2, ts * 0.75
-      );
-      auraGrad.addColorStop(0, 'rgba(225, 29, 72, 0.45)');
-      auraGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
-      ctx.fillStyle = auraGrad;
-      ctx.beginPath();
-      ctx.arc(sx + ts / 2, sy + ts / 2, ts * 0.7, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.font = `${Math.floor(ts * 0.65)}px sans-serif`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(enc.symbol || '👹', sx + ts / 2, sy + ts / 2);
+      if (ar && ar.drawDemonWarrior) {
+        ar.drawDemonWarrior(ctx, sx, sy, ts, enc, this.animClock);
+      }
     });
   }
 
