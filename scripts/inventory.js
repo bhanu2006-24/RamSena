@@ -1,6 +1,6 @@
 /**
- * RAM SENA - Inventory & Service Offerings (inventory.js)
- * Manages gathered items for seva (stones, fruits, flowers, coconuts, garlands).
+ * RAM SENA - Inventory & Devotional Crafting (scripts/inventory.js)
+ * Tracks seva resources: sacred stones, fruits, flowers, coconuts, and crafted garlands.
  */
 
 class Inventory {
@@ -18,7 +18,10 @@ class Inventory {
     if (this.items.hasOwnProperty(itemKey)) {
       this.items[itemKey] += amount;
       if (window.uiManager) {
-        window.uiManager.addLog(`Gathered +${amount} ${this.formatItemName(itemKey)}.`, 'service');
+        window.uiManager.addLog(
+          `Gathered +${amount} ${this.formatItemName(itemKey)}.`,
+          'service'
+        );
       }
       return true;
     }
@@ -42,7 +45,12 @@ class Inventory {
       this.items.flowers -= 5;
       this.items.garlands += 1;
       if (window.uiManager) {
-        window.uiManager.addLog('With humble hands, you crafted a sacred garland 🌸 from 5 flowers.', 'service');
+        window.uiManager.showDialogue(
+          'Devotional Offering Created',
+          'With mindful hands and a heart full of Bhakti, you wove 5 forest flowers into a sacred garland (पुष्पमाला 🌸).',
+          '📿'
+        );
+        window.uiManager.addLog('Crafted a devotional garland from 5 flowers.', 'service');
       }
       return true;
     }

@@ -4,15 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ram Sena | The Sacred Vanguard (राम सेना)</title>
-  <meta name="description" content="A minimalist top-down 2D grid-based web game of devotion and service in Shri Ram's army.">
+  <meta name="description" content="A minimalist top-down 2D Pokemon RPG-style web game of devotion and service in Shri Ram's army.">
+  
+  <!-- Google Fonts: Vedic Epic Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  
+  <!-- Modular Stylesheet in /css/ -->
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <div id="game-app">
-    <!-- Top 70%: Visual Game Canvas Viewport -->
+    <!-- Top 70%: Visual Game Canvas Viewport & Top HUD -->
     <header id="game-header">
       <div class="header-left">
         <span class="om-symbol">ॐ</span>
@@ -28,12 +32,14 @@
 
       <div class="header-right">
         <div class="hud-stat" id="hud-role">
-          <span class="stat-label">Role:</span>
-          <span class="stat-val">Humble Vanar (सेवक)</span>
+          <span class="stat-label">Sevaka:</span>
+          <span class="stat-val" id="hud-role-icon">🐒</span>
+          <span class="stat-val" id="hud-role-name">Vanar (सेवक)</span>
         </div>
+        <button class="btn-hud" id="btn-open-menu" title="Switch Character Archetype">Archetype</button>
         <div class="hud-stat" id="hud-coords">
           <span class="stat-label">Pos:</span>
-          <span class="stat-val" id="coord-display">(10, 7)</span>
+          <span class="stat-val" id="coord-display">(18, 15)</span>
         </div>
       </div>
     </header>
@@ -42,7 +48,7 @@
       <div id="canvas-container">
         <canvas id="gameCanvas" width="960" height="540"></canvas>
         <div id="canvas-overlay-hints">
-          <span class="key-pill">W</span><span class="key-pill">A</span><span class="key-pill">S</span><span class="key-pill">D</span> or <span class="key-pill">↑</span><span class="key-pill">←</span><span class="key-pill">↓</span><span class="key-pill">→</span> to Move
+          <span class="key-pill">W</span><span class="key-pill">A</span><span class="key-pill">S</span><span class="key-pill">D</span> or <span class="key-pill">↑</span><span class="key-pill">←</span><span class="key-pill">↓</span><span class="key-pill">→</span> Walk • <span class="key-pill">E</span> Interact
         </div>
       </div>
     </main>
@@ -69,7 +75,7 @@
           <!-- Active Dialogue View -->
           <div id="dialogue-view" class="view-panel active">
             <div id="dialogue-text" class="dialogue-text">
-              The dawn sun casts golden rays over the shores of the southern ocean. You stand among thousands of devoted Vanars in the encampment of Shri Ram, eager to offer whatever humble service you can.
+              The dawn sun casts golden rays over the shores of the southern ocean. Select your character from the menu to begin your humble service.
             </div>
             <div id="dialogue-prompt" class="dialogue-prompt">
               <span class="prompt-key">[Space]</span> Continue reading
@@ -90,14 +96,57 @@
         </div>
       </div>
     </footer>
+
+    <!-- Start Menu & Character Selection Modal -->
+    <div id="start-menu-modal" class="modal-backdrop">
+      <div class="menu-card">
+        <div class="menu-header">
+          <div class="menu-om">ॐ</div>
+          <h2 class="menu-title">RAM SENA</h2>
+          <div class="menu-subtitle">राम सेना • The Sacred Vanguard</div>
+        </div>
+
+        <p class="menu-description">
+          You are a humble sevaka in the army of Shri Ram. Your path is not glory, but pure devotion (Bhakti) through service—gathering stones for the Setu bridge, weaving garlands, and marching with the faithful.
+        </p>
+
+        <div class="selection-title">Choose Your Humble Archetype</div>
+
+        <div class="archetype-cards-grid">
+          <!-- Option 1: Vanar -->
+          <div class="archetype-card selected" id="choose-vanar">
+            <div class="archetype-icon">🐒</div>
+            <div class="archetype-name">Vanar (वानर)</div>
+            <div class="archetype-desc">Agile & devoted monkey soldier of Kishkindha. Swift in gathering fruits and carrying rocks.</div>
+            <div class="archetype-stat">HP: 100 • Agility: High</div>
+          </div>
+
+          <!-- Option 2: Riksha / Rich (Bear) -->
+          <div class="archetype-card" id="choose-riksha">
+            <div class="archetype-icon">🐻</div>
+            <div class="archetype-name">Riksha (ऋक्ष - भालू)</div>
+            <div class="archetype-desc">Sturdy bear warrior from Jambavan’s clan. Steadfast strength, lifting heavy boulders.</div>
+            <div class="archetype-stat">HP: 120 • Endurance: High</div>
+          </div>
+        </div>
+
+        <button id="btn-start-game" class="btn-primary">
+          BEGIN SEVA • सेवा आरंभ करें (जय श्री राम)
+        </button>
+      </div>
+    </div>
   </div>
 
-  <!-- Modular Scripts in Dependency Order -->
-  <script src="maps.js"></script>
-  <script src="inventory.js"></script>
-  <script src="ui.js"></script>
-  <script src="combat.js"></script>
-  <script src="player.js"></script>
-  <script src="main.js"></script>
+  <!-- Modular Scripts in Organized Folders -->
+  <script src="scripts/constants.js"></script>
+  <script src="maps/campMap.js"></script>
+  <script src="scripts/mapManager.js"></script>
+  <script src="scripts/camera.js"></script>
+  <script src="scripts/input.js"></script>
+  <script src="scripts/inventory.js"></script>
+  <script src="scripts/combat.js"></script>
+  <script src="scripts/player.js"></script>
+  <script src="scripts/ui.js"></script>
+  <script src="scripts/main.js"></script>
 </body>
 </html>
