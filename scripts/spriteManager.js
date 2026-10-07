@@ -8,12 +8,12 @@ class SpriteManager {
   constructor() {
     this.manifest = {
       angad: 'assets/images/angad.png',
-      bear: 'assets/images/bhaluu.png',
+      bear: 'assets/images/bear.png',
       hanuman: 'assets/images/hanuman.png',
       laxman: 'assets/images/laxman.png',
       ram: 'assets/images/ram.png',
       sugreev: 'assets/images/sugreev.png',
-      vanar: 'assets/images/vanarsena.png',
+      vanar: 'assets/images/vanar.png',
       vibhisan: 'assets/images/vibhisan.png',
       jambavan: 'assets/images/jambavan.png'
     };
@@ -25,13 +25,18 @@ class SpriteManager {
 
   loadAll() {
     for (const [key, path] of Object.entries(this.manifest)) {
+      const customOverride = localStorage.getItem(`ram_sena_custom_sprite_${key}`);
       const img = new Image();
-      img.src = path;
+      img.src = customOverride || path;
       img.onload = () => {
         this.loaded[key] = true;
       };
       img.onerror = () => {
-        console.warn(`Failed to load sprite: ${path}`);
+        if (customOverride) {
+          img.src = path;
+        } else {
+          console.warn(`Failed to load sprite: ${path}`);
+        }
       };
       this.images[key] = img;
     }

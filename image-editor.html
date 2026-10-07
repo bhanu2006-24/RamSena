@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ram Sena - Devotional Sprite & Image Studio</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Press+Start+2P&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/editor.css">
+</head>
+<body>
+
+  <!-- TOP HEADER -->
+  <header id="editor-header">
+    <div class="header-brand">
+      <span class="brand-icon">🚩</span>
+      <div>
+        <div class="brand-title">RAM SENA SPRITE STUDIO</div>
+        <div class="brand-sub">DEVOTIONAL ASSET OPTIMIZER & AUTO-TRIMMER</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <a href="index.html" class="btn-editor-nav btn-back-game">
+        🎮 BACK TO GAME
+      </a>
+      <button id="btn-top-apply" class="btn-editor-nav btn-action-secondary">
+        ⚡ APPLY TO GAME
+      </button>
+      <button id="btn-top-download" class="btn-editor-nav btn-export-top">
+        💾 DOWNLOAD PNG
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN 3-COLUMN WORKSPACE -->
+  <main id="studio-layout">
+
+    <!-- LEFT PANEL: SPRITE SOURCE SELECTOR -->
+    <aside id="left-panel">
+      
+      <!-- CUSTOM UPLOAD DROPZONE -->
+      <div>
+        <div class="panel-section-title">
+          <span>📁</span> UPLOAD IMAGE
+        </div>
+        <div id="dropzone" class="dropzone-box" style="margin-top: 0.6rem;">
+          <div class="dropzone-icon">📤</div>
+          <div class="dropzone-text">Click or Drop Image Here</div>
+          <div class="dropzone-sub">PNG with transparent background</div>
+          <input type="file" id="file-input" accept="image/png, image/webp, image/jpeg">
+        </div>
+      </div>
+
+      <!-- SOURCE TOGGLE: CURRENT OPTIMIZED VS RAW ORIGINALS -->
+      <div>
+        <div class="panel-section-title">
+          <span>📦</span> ASSET REPOSITORY
+        </div>
+        <div style="display: flex; gap: 0.4rem; margin-top: 0.6rem;">
+          <button id="btn-repo-optimized" class="bg-select-btn active" style="flex: 1;">OPTIMIZED (512²)</button>
+          <button id="btn-repo-raw" class="bg-select-btn" style="flex: 1;">RAW (ORIGINALS)</button>
+        </div>
+      </div>
+
+      <!-- CHARACTER SELECT GALLERY -->
+      <div>
+        <div class="panel-section-title">
+          <span>👑</span> GAME CHARACTERS
+        </div>
+        <div class="sprite-gallery-grid" id="sprite-gallery" style="margin-top: 0.6rem;">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- CENTER WORKSPACE: INTERACTIVE CANVAS -->
+    <section id="center-workspace">
+      
+      <!-- TOP CANVAS TOOLBAR -->
+      <div class="workspace-toolbar">
+        <div class="toolbar-group">
+          <span class="toolbar-label">Canvas Backdrop:</span>
+          <button class="bg-select-btn active" data-bg="checkerboard">🏁 Checkerboard</button>
+          <button class="bg-select-btn" data-bg="meadow">🌿 Meadow</button>
+          <button class="bg-select-btn" data-bg="beach">🏖️ Beach</button>
+          <button class="bg-select-btn" data-bg="temple">🌌 Deep Dark</button>
+        </div>
+
+        <div class="toolbar-group">
+          <label style="font-size: 0.75rem; color: #cbd5e1; display: flex; align-items: center; gap: 0.35rem; cursor: pointer;">
+            <input type="checkbox" id="chk-show-bbox" checked> Show Trim Box
+          </label>
+          <button id="btn-reset-view" class="bg-select-btn">🔄 Reset View</button>
+        </div>
+      </div>
+
+      <!-- CANVAS VIEWPORT -->
+      <div id="canvas-viewport" class="bg-checkerboard">
+        <canvas id="editor-canvas" width="512" height="512"></canvas>
+      </div>
+
+      <!-- BOTTOM MULTI-CONTEXT LIVE PREVIEWS -->
+      <div id="preview-bar">
+        
+        <!-- Context 1: Overworld Sprite Tile -->
+        <div class="preview-item">
+          <div class="preview-tile-box">
+            <div class="preview-tile-shadow"></div>
+            <img id="preview-img-tile" class="preview-tile-sprite" src="assets/images/vanar.png" alt="Tile">
+          </div>
+          <div class="preview-label-box">
+            <span class="preview-title">OVERWORLD TILE</span>
+            <span class="preview-desc">60px Grid with Bob & Shadow</span>
+          </div>
+        </div>
+
+        <!-- Context 2: Dialogue Speaker Portrait -->
+        <div class="preview-item">
+          <div class="preview-dialogue-mockup">
+            <img id="preview-img-dialogue" class="dialogue-mockup-avatar" src="assets/images/vanar.png" alt="Dialogue">
+            <div class="dialogue-mockup-text">
+              <span id="preview-speaker-name" style="color: #5eead4; font-weight: bold;">Vanar:</span><br>
+              "जय श्री राम!"
+            </div>
+          </div>
+          <div class="preview-label-box">
+            <span class="preview-title">DIALOGUE BOX</span>
+            <span class="preview-desc">GBA Emerald Portrait</span>
+          </div>
+        </div>
+
+        <!-- Context 3: Character Selection Card -->
+        <div class="preview-item">
+          <div class="preview-card-mockup">
+            <img id="preview-img-card" class="card-mockup-img" src="assets/images/vanar.png" alt="Card">
+          </div>
+          <div class="preview-label-box">
+            <span class="preview-title">HERO CARD</span>
+            <span class="preview-desc">Title Select Screen Frame</span>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- RIGHT CONTROLS PANEL: TRANSFORMATION & EXPORT -->
+    <aside id="right-controls">
+
+      <!-- INFO BADGE CARD -->
+      <div class="control-card">
+        <div class="card-title">
+          <span>📊 SPRITE METRICS</span>
+          <span id="badge-character-name" style="color: var(--gold); font-size: 0.7rem;">vanar.png</span>
+        </div>
+        <div class="info-badge-list">
+          <div class="info-badge-row">
+            <strong>Target Size:</strong>
+            <span id="metric-target-size">512 × 512 px</span>
+          </div>
+          <div class="info-badge-row">
+            <strong>Original Size:</strong>
+            <span id="metric-orig-size">512 × 512 px</span>
+          </div>
+          <div class="info-badge-row">
+            <strong>Trim Bounding Box:</strong>
+            <span id="metric-bbox">0, 0 → 512, 512</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- AUTO-TRIM & CENTERING -->
+      <div class="control-card">
+        <div class="card-title">
+          <span>✂️ AUTO-TRIM & CENTERING</span>
+        </div>
+        <button id="btn-auto-trim" class="btn-action-primary">
+          ✂️ AUTO-TRIM TRANSPARENCY
+        </button>
+        <button id="btn-auto-center" class="btn-action-secondary">
+          🎯 CENTER SUBJECT
+        </button>
+        <div class="input-row">
+          <label class="input-label" for="slider-padding">Breathing Margin:</label>
+          <span class="input-val-tag" id="val-padding">5%</span>
+        </div>
+        <input type="range" id="slider-padding" class="slider-ctrl" min="0" max="25" value="5">
+      </div>
+
+      <!-- RESOLUTION & PRESETS -->
+      <div class="control-card">
+        <div class="card-title">
+          <span>📐 TARGET RESOLUTION</span>
+        </div>
+        <div class="preset-grid">
+          <button class="btn-preset active" data-res="512">512×512 (HD Card)</button>
+          <button class="btn-preset" data-res="256">256×256 (Portrait)</button>
+          <button class="btn-preset" data-res="128">128×128 (Overworld)</button>
+          <button class="btn-preset" data-res="64">64×64 (GBA Retro)</button>
+        </div>
+        <div class="input-row" style="margin-top: 0.4rem;">
+          <div style="display: flex; align-items: center; gap: 0.4rem;">
+            <label class="input-label">W:</label>
+            <input type="number" id="input-width" class="num-input" value="512" min="32" max="2048">
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.4rem;">
+            <label class="input-label">H:</label>
+            <input type="number" id="input-height" class="num-input" value="512" min="32" max="2048">
+          </div>
+        </div>
+        <label style="font-size: 0.72rem; color: #cbd5e1; display: flex; align-items: center; gap: 0.4rem; cursor: pointer;">
+          <input type="checkbox" id="chk-lock-aspect" checked> 🔒 Lock 1:1 Aspect Ratio
+        </label>
+      </div>
+
+      <!-- SCALE & POSITION TRANSFORMS -->
+      <div class="control-card">
+        <div class="card-title">
+          <span>🔍 SCALE & ORIENTATION</span>
+        </div>
+        
+        <!-- Scale Slider -->
+        <div class="input-row">
+          <label class="input-label" for="slider-scale">Subject Scale:</label>
+          <span class="input-val-tag" id="val-scale">100%</span>
+        </div>
+        <input type="range" id="slider-scale" class="slider-ctrl" min="30" max="250" value="100">
+
+        <!-- Position Offsets -->
+        <div class="input-row" style="margin-top: 0.3rem;">
+          <label class="input-label" for="slider-offset-x">Offset X:</label>
+          <span class="input-val-tag" id="val-offset-x">0 px</span>
+        </div>
+        <input type="range" id="slider-offset-x" class="slider-ctrl" min="-200" max="200" value="0">
+
+        <div class="input-row" style="margin-top: 0.3rem;">
+          <label class="input-label" for="slider-offset-y">Offset Y:</label>
+          <span class="input-val-tag" id="val-offset-y">0 px</span>
+        </div>
+        <input type="range" id="slider-offset-y" class="slider-ctrl" min="-200" max="200" value="0">
+
+        <!-- Flip & Rotate Buttons -->
+        <div style="display: flex; gap: 0.4rem; margin-top: 0.5rem;">
+          <button id="btn-flip-h" class="btn-action-secondary" style="flex: 1;">↔️ Flip H</button>
+          <button id="btn-flip-v" class="btn-action-secondary" style="flex: 1;">↕️ Flip V</button>
+          <button id="btn-rotate" class="btn-action-secondary" style="flex: 1;">🔄 90°</button>
+        </div>
+      </div>
+
+      <!-- EXPORT ACTIONS -->
+      <div class="control-card">
+        <div class="card-title">
+          <span>💾 SAVE & EXPORT</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 0.4rem;">
+          <label class="input-label" for="export-filename">Output Filename:</label>
+          <input type="text" id="export-filename" class="num-input" style="width: 100%; text-align: left;" value="vanar.png">
+        </div>
+        <button id="btn-download-png" class="btn-action-primary" style="margin-top: 0.4rem;">
+          💾 DOWNLOAD OPTIMIZED PNG
+        </button>
+        <button id="btn-apply-session" class="btn-action-secondary">
+          ⚡ APPLY TO LIVE GAME (SESSION)
+        </button>
+      </div>
+
+    </aside>
+
+  </main>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="editor-toast">Action Completed Successfully!</div>
+
+  <script src="scripts/imageEditor.js"></script>
+</body>
+</html>
