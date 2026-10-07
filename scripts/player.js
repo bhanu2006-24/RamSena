@@ -26,7 +26,10 @@ class Player {
     this.stepCycle = 0;
   }
 
-  setCharacterType(typeId) {
+  setCharacterType(typeId, force = false) {
+    if (this.isLocked && !force) {
+      return;
+    }
     const isBear = typeId.toLowerCase() === 'riksha';
     this.typeId = isBear ? 'riksha' : 'vanar';
 
@@ -60,7 +63,7 @@ class Player {
       this.moveSpeed = 0.24;
     }
 
-    if (window.uiManager) {
+    if (window.uiManager && window.uiManager.updateRoleHUD) {
       window.uiManager.updateRoleHUD(this.typeName, this.symbol);
     }
   }

@@ -3,323 +3,214 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ram Sena | The Sacred Vanguard (राम सेना)</title>
-  <meta name="description" content="A minimalist top-down 2D Pokemon RPG-style web game of devotion and service in Shri Ram's army.">
+  <title>RAM SENA | The Sacred Vanguard (राम सेना)</title>
+  <meta name="description" content="A fullscreen 2D Pokemon RPG-style web game of devotion and service in Shri Ram's army.">
   
-  <!-- Google Fonts: Vedic Epic & Modern Typography -->
+  <!-- Retro & Sanskrit Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Press+Start+2P&family=Outfit:wght@400;500;600;700&family=VT323&display=swap" rel="stylesheet">
   
-  <!-- Modular Stylesheet in /css/ -->
+  <!-- Stylesheet -->
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <div id="game-app">
-    <!-- Top 70%: Visual Game Canvas Viewport & Top HUD -->
-    <header id="game-header">
-      <div class="header-left">
-        <span class="om-symbol">ॐ</span>
-        <div class="title-group">
-          <h1 class="game-title">RAM SENA <span class="hindi-title">राम सेना</span></h1>
-          <span class="subtitle">A Journey of Devotion & Humble Service (Bhakti)</span>
-        </div>
+    <!-- 1. FULLSCREEN CANVAS GAME WORLD (100% SCREEN) -->
+    <main id="canvas-container">
+      <canvas id="gameCanvas"></canvas>
+
+      <!-- In-Game Location Banner -->
+      <div id="location-banner">
+        <div class="loc-title" id="loc-name">Vanar Camp</div>
+        <div class="loc-subtitle" id="loc-sub">Phase 1: Ram Setu</div>
       </div>
 
-      <div class="header-center">
-        <div class="badge phase-badge" id="phase-indicator">Phase 1: Ram Setu (The Camp)</div>
-      </div>
-
-      <div class="header-right">
-        <!-- Hail Shri Ram Button -->
-        <button class="btn-hud hail-btn" id="btn-hail-ram" title="Hail Shri Ram! (Press H)">
-          🚩 जय श्री राम! [H]
-        </button>
-
-        <!-- Inventory Modal Button -->
-        <button class="btn-hud" id="btn-open-inventory" title="Open Inventory & Stats (Press I)">
-          🎒 Inventory [I]
-        </button>
-
-        <!-- Map Travel Selector -->
-        <button class="btn-hud" id="btn-map-travel" title="Travel to other Scenarios (Press M)">
-          🗺️ Travel [M]
-        </button>
-
-        <!-- Audio Toggle -->
-        <button class="btn-hud" id="btn-audio-toggle" title="Toggle Devotional Music">
-          🎵 Sound ON
-        </button>
-
-        <!-- Current Role & Coordinates -->
-        <div class="hud-stat" id="hud-role">
-          <span class="stat-label">Sevaka:</span>
-          <span class="stat-val" id="hud-role-icon">🐒</span>
-          <span class="stat-val" id="hud-role-name">Vanar (सेवक)</span>
-        </div>
-        <div class="hud-stat" id="hud-coords">
-          <span class="stat-label">Pos:</span>
-          <span class="stat-val" id="coord-display">(17, 14)</span>
-        </div>
-      </div>
-    </header>
-
-    <main id="viewport-section">
-      <div id="canvas-container">
-        <canvas id="gameCanvas" width="960" height="540"></canvas>
-        <div id="canvas-overlay-hints">
-          <span class="key-pill">WASD / Arrows</span> Walk • <span class="key-pill">E</span> Interact • <span class="key-pill">H</span> Hail • <span class="key-pill">I</span> Bag • <span class="key-pill">M</span> Map
-        </div>
-      </div>
+      <!-- In-Game Menu Toggle Button (Top-Right) -->
+      <button id="in-game-menu-trigger" title="Open Start Menu (Press ENTER or ESC)">
+        <span>🎒</span> MENU [ENTER]
+      </button>
     </main>
 
-    <!-- Bottom 30%: Dedicated Black Box for Dialogue, Story & Combat Logs -->
-    <footer id="dialogue-section">
-      <div class="dialogue-panel-border"></div>
-      
-      <div class="dialogue-inner">
-        <!-- Top bar of dialogue area: Speaker & Mode Tabs -->
-        <div class="dialogue-top-bar">
-          <div class="speaker-tag-wrapper">
-            <span class="speaker-icon" id="speaker-icon">📜</span>
-            <span class="speaker-name" id="speaker-name">Narration</span>
-          </div>
-          <div class="dialogue-tabs">
-            <button class="tab-btn active" id="tab-dialogue" data-target="dialogue-view">Dialogue & Story</button>
-            <button class="tab-btn" id="tab-log" data-target="log-view">Activity Log (<span id="log-count">0</span>)</button>
-          </div>
+    <!-- 2. AUTHENTIC POKEMON EMERALD DIALOGUE BOX (Overlay at Bottom) -->
+    <div id="pokemon-textbox-wrapper" class="hidden">
+      <div class="poke-speaker-tag" id="poke-speaker-name">Shri Ram</div>
+      <div class="poke-box">
+        <div class="poke-text-content" id="poke-dialogue-text">
+          Hi! Sorry to keep you waiting!
         </div>
-
-        <!-- Main text content body -->
-        <div class="dialogue-body-container">
-          <!-- Active Dialogue View -->
-          <div id="dialogue-view" class="view-panel active">
-            <div id="dialogue-text" class="dialogue-text">
-              The dawn sun casts golden rays over the shores of the southern ocean. Select your humble sevaka to begin your sacred journey.
-            </div>
-            <div id="dialogue-prompt" class="dialogue-prompt">
-              <span class="prompt-key">[Space]</span> Continue reading
-            </div>
-          </div>
-
-          <!-- Activity Log View -->
-          <div id="log-view" class="view-panel">
-            <ul id="log-list" class="log-list">
-              <!-- Logs populated by ui.js -->
-            </ul>
-          </div>
-        </div>
-
-        <!-- Dialogue Action Buttons (choices / interactions) -->
-        <div id="dialogue-actions" class="dialogue-actions">
-          <!-- Dynamically populated if choices exist -->
-        </div>
+        <!-- Blinking Red Down-Triangle Indicator (▼) -->
+        <div class="poke-cursor-indicator active" id="poke-cursor">▼</div>
+        <!-- Choice Buttons Container -->
+        <div class="poke-choices-container" id="poke-choices"></div>
       </div>
-    </footer>
+    </div>
 
-    <!-- 1. MAIN MENU MODAL (SCENIC TITLE SCREEN) -->
-    <div id="main-menu-modal" class="modal-backdrop">
-      <div class="menu-card scenic-card">
-        <!-- Atmospheric Sunrise Scenery Backdrop -->
-        <div class="scenic-backdrop-art">
-          <div class="scenery-sun"></div>
-          <div class="scenery-mountains">⛰️ ⛰️ ⛰️ ⛰️</div>
-          <div class="scenery-ocean-waves">🌊 🌊 🌊 🌊 🌊 🌊 🌊 🌊</div>
+    <!-- 3. POKEMON IN-GAME START MENU (Top-Right Popup) -->
+    <div id="pokemon-start-menu" class="hidden">
+      <button class="poke-menu-item" id="menu-btn-bag">🎒 BAG</button>
+      <button class="poke-menu-item" id="menu-btn-sevaka">👤 SEVAKA</button>
+      <button class="poke-menu-item" id="menu-btn-hail">🚩 HAIL (जय श्री राम)</button>
+      <button class="poke-menu-item" id="menu-btn-save">💾 SAVE</button>
+      <button class="poke-menu-item" id="menu-btn-options">⚙️ OPTIONS</button>
+      <button class="poke-menu-item" id="menu-btn-close">🚪 EXIT</button>
+    </div>
+
+    <!-- 4. AUTHENTIC POKEMON BAG (INVENTORY MODAL) -->
+    <div id="pokemon-bag-modal" class="hidden">
+      <div class="poke-bag-frame">
+        <div class="poke-bag-header">
+          <span class="poke-bag-title">🎒 SEVAKA POCKETS (ITEMS)</span>
+          <span style="font-family: var(--font-retro); font-size: 0.65rem; color: var(--gold);">DEVOTION</span>
         </div>
-
-        <div class="menu-header">
-          <div class="menu-om">ॐ</div>
-          <h2 class="menu-title">RAM SENA</h2>
-          <div class="menu-subtitle">राम सेना • The Sacred Vanguard</div>
+        <div class="poke-bag-body">
+          <!-- Left: Items List -->
+          <div class="poke-bag-list" id="bag-item-list">
+            <!-- Dynamically populated rows -->
+          </div>
+          <!-- Right: Item Detail View -->
+          <div class="poke-bag-detail">
+            <div>
+              <div class="item-detail-icon" id="bag-detail-icon">🪨</div>
+              <div class="item-detail-name" id="bag-detail-name">Sacred Stone</div>
+              <div class="item-detail-desc" id="bag-detail-desc">
+                Heavy mountain stone for Nal & Neel to inscribe and construct the Setu bridge across the southern ocean.
+              </div>
+            </div>
+            <div class="poke-bag-actions" id="bag-actions-container">
+              <!-- Action button like Craft Garland -->
+            </div>
+          </div>
         </div>
-
-        <p class="menu-description">
-          A minimalist top-down devotional RPG. Walk as a humble Vanar or Bear devotee in the army of Maryada Purushottam Shri Ram. Offer fruits, gather Setu stones, and march with the faithful.
-        </p>
-
-        <div class="menu-btn-group">
-          <button id="btn-start-journey" class="btn-primary">
-            START JOURNEY • यात्रा आरंभ करें (जय श्री राम)
-          </button>
-          <button id="btn-open-about" class="btn-secondary">
-            ABOUT & SACRED LORE • परिचय एवं कथा
-          </button>
+        <div class="poke-bag-footer">
+          <button class="btn-poke-action" id="btn-close-bag">BACK [B]</button>
         </div>
       </div>
     </div>
 
-    <!-- 2. ABOUT & PHILOSOPHY MODAL -->
-    <div id="about-modal" class="modal-backdrop hidden">
-      <div class="menu-card">
-        <div class="menu-header">
-          <div class="menu-om">ॐ</div>
-          <h2 class="menu-title">ABOUT RAM SENA</h2>
-          <div class="menu-subtitle">The Sacred Philosophy of Bhakti (Devotion)</div>
+    <!-- 5. SEVAKA STATS CARD (TRAINER INFO) -->
+    <div id="sevaka-card-modal" class="hidden">
+      <div class="sevaka-card-frame">
+        <div class="card-header">
+          <span class="card-title" id="card-hero-name">VANAR SEVAKA 🐒</span>
+          <span style="color: var(--saffron); font-family: var(--font-retro); font-size: 0.65rem;">ARMY OF RAM</span>
+        </div>
+        <div class="card-stats-grid">
+          <div class="stat-box"><strong>HEALTH:</strong> <span id="card-hp">100/100</span></div>
+          <div class="stat-box"><strong>ATTACK:</strong> <span id="card-atk">22</span></div>
+          <div class="stat-box"><strong>DEFENSE:</strong> <span id="card-def">10</span></div>
+          <div class="stat-box"><strong>AGILITY:</strong> <span id="card-agi">26</span></div>
+          <div class="stat-box" style="grid-column: span 2;">
+            <strong>SETU PROGRESS:</strong> <span id="card-setu">0</span> / 10 Stones Placed
+          </div>
+        </div>
+        <button class="btn-poke-action" id="btn-close-sevaka-card" style="align-self: center; padding: 0.5rem 2rem;">
+          CLOSE
+        </button>
+      </div>
+    </div>
+
+    <!-- 6. FULLSCREEN TITLE SCREEN (Inspired by Contract Demon Reference Image) -->
+    <div id="title-screen">
+      <div class="title-bg-scenery"></div>
+      
+      <div class="title-candles-silhouette">
+        <span>🪔</span>
+        <span>🪔</span>
+        <span>🪔</span>
+        <span>🪔</span>
+      </div>
+
+      <div class="title-main-group">
+        <div class="title-om">ॐ</div>
+        <h1 class="title-logo-text">RAM SENA</h1>
+        <div class="title-hindi">राम सेना</div>
+        <div class="title-author">AN EPIC OF DEVOTION (BHAKTI) • BY BHANU PRATAP SAINI</div>
+      </div>
+
+      <!-- Bottom Navigation Ribbon matching Contract Demon -->
+      <nav class="title-nav-ribbon">
+        <button class="title-nav-btn" id="btn-title-start">START</button>
+        <button class="title-nav-btn" id="btn-title-load">LOAD</button>
+        <button class="title-nav-btn" id="btn-title-options">OPTIONS</button>
+        <button class="title-nav-btn" id="btn-title-about">ABOUT</button>
+      </nav>
+    </div>
+
+    <!-- 7. CHARACTER SELECTION (PROFESSOR INTRO STYLE - PERMANENT CHOICE) -->
+    <div id="character-select-screen" class="hidden">
+      <div class="char-select-card">
+        <div class="title-om" style="font-size: 2.2rem;">ॐ</div>
+        <div class="char-select-prompt">
+          Welcome to the era of Treta Yuga!<br>
+          Before stepping into the sacred vanguard, choose your devotee:
         </div>
 
-        <div class="menu-description" style="text-align: left; max-height: 280px; overflow-y: auto;">
+        <div class="char-options-grid">
+          <div class="char-option-btn selected" id="opt-vanar">
+            <div class="char-icon">🐒</div>
+            <div class="char-name">VANAR (वानर)</div>
+            <div class="char-desc">Agile & devoted monkey soldier of Kishkindha. High speed and critical strikes.</div>
+          </div>
+          <div class="char-option-btn" id="opt-riksha">
+            <div class="char-icon">🐻</div>
+            <div class="char-name">RIKSHA / BEAR (ऋक्ष - भालू)</div>
+            <div class="char-desc">Sturdy bear warrior of Jambavan's clan. Massive HP (130) and heavy attack power.</div>
+          </div>
+        </div>
+
+        <div class="permanent-notice">
+          ⚠ ATTENTION: Your choice is locked for this playthrough until you start a New Game!
+        </div>
+
+        <button class="btn-poke-action" id="btn-confirm-archetype" style="padding: 0.8rem 2.5rem; font-size: 0.75rem; align-self: center;">
+          CONFIRM & ENTER WORLD (जय श्री राम)
+        </button>
+      </div>
+    </div>
+
+    <!-- 8. ABOUT MODAL -->
+    <div id="about-modal" class="retro-modal-backdrop hidden">
+      <div class="retro-modal-frame">
+        <div class="retro-modal-title">ABOUT RAM SENA (राम सेना)</div>
+        <div class="retro-modal-body">
           <p style="margin-bottom: 0.6rem;">
-            <strong>✦ Sacred Context:</strong> This game is inspired by the timeless sacred epic, the Ramayana. The player is a humble, generic soldier—either a nimble Vanar from Kishkindha or a steadfast Bear of Jambavan’s clan.
+            <strong>✦ Sacred Philosophy:</strong> Based on the sacred Hindu history of The Ramayana. You are a humble generic Vanar or Bear devotee. You do NOT play as or alter the stories of Shri Ram, Lakshman, or Hanuman.
           </p>
           <p style="margin-bottom: 0.6rem;">
-            <strong>✦ Immutable Rule:</strong> The player is NOT a divine figure. Shri Ram, Lakshman, and Hanuman are revered avatars and ideals of Dharma. The game never animates grand divine events or alters their sacred narratives; all epics are experienced through pure dialogue and humble service.
+            <strong>✦ Pure Service (Bhakti):</strong> Lift stones for Nal & Neel to build Ram Setu, gather wild fruits and flowers, and offer them with folded hands.
           </p>
           <p style="margin-bottom: 0.6rem;">
-            <strong>✦ Divine Intervention:</strong> In battle, the player never faces a game over. If strength falters, an arrow from Shri Ram strikes the foe, protecting the devotee with eternal grace.
+            <strong>✦ Divine Intervention:</strong> In battle, there is NO Game Over. If your HP drops to 0, an arrow from Shri Ram strikes the foe and preserves your life.
           </p>
           <p>
-            <strong>✦ Controls:</strong> Move with <strong>WASD / Arrow Keys</strong> • Press <strong>[E]</strong> to Interact / Talk / Gather • Press <strong>[H]</strong> to Hail "जय श्री राम!" • Press <strong>[I]</strong> for Bag & Stats • Press <strong>[M]</strong> for Map Travel.
+            <strong>✦ Controls:</strong> Move with <strong>WASD / Arrow Keys</strong> • Press <strong>[E]</strong> to Interact / Talk • Press <strong>[ENTER] / [ESC]</strong> to open Bag & Menu • Press <strong>[H]</strong> to Hail "जय श्री राम!".
           </p>
         </div>
-
-        <button id="btn-close-about" class="btn-primary">
-          Back to Menu (वापस जाएँ)
-        </button>
+        <button class="retro-btn" id="btn-close-about">CLOSE</button>
       </div>
     </div>
 
-    <!-- 3. CHARACTER SELECTION MODAL -->
-    <div id="character-modal" class="modal-backdrop hidden">
-      <div class="menu-card">
-        <div class="menu-header">
-          <div class="menu-om">ॐ</div>
-          <h2 class="menu-title">CHOOSE YOUR SEVAKA</h2>
-          <div class="menu-subtitle">Select your character archetype</div>
-        </div>
-
-        <div class="archetype-cards-grid">
-          <!-- Option 1: Vanar -->
-          <div class="archetype-card selected" id="choose-vanar">
-            <div class="archetype-icon">🐒</div>
-            <div class="archetype-name">Vanar (वानर)</div>
-            <div class="archetype-desc">Agile & devoted monkey soldier of Kishkindha. Swift in foraging wild fruits and carrying stones.</div>
-            <div class="archetype-stat">HP: 100 • Agility: High • Crit: 22%</div>
+    <!-- 9. OPTIONS MODAL -->
+    <div id="options-modal" class="retro-modal-backdrop hidden">
+      <div class="retro-modal-frame">
+        <div class="retro-modal-title">OPTIONS</div>
+        <div class="retro-modal-body" style="display: flex; flex-direction: column; gap: 1rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span>DEVOTIONAL MUSIC:</span>
+            <button class="btn-poke-action" id="opt-bgm-toggle" style="padding: 0.4rem 1rem;">ON</button>
           </div>
-
-          <!-- Option 2: Riksha / Bear -->
-          <div class="archetype-card" id="choose-riksha">
-            <div class="archetype-icon">🐻</div>
-            <div class="archetype-name">Riksha (ऋक्ष - भालू)</div>
-            <div class="archetype-desc">Stalwart warrior from Jambavan’s bear clan. Mighty strength, heavy attack power, and endurance.</div>
-            <div class="archetype-stat">HP: 130 • Defense: High • Atk: 28</div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span>TEXT SPEED:</span>
+            <button class="btn-poke-action" id="opt-text-speed" style="padding: 0.4rem 1rem;">FAST</button>
           </div>
         </div>
-
-        <button id="btn-confirm-character" class="btn-primary">
-          Confirm Sevaka (चयन पुष्टि)
-        </button>
-      </div>
-    </div>
-
-    <!-- 4. STORY PROLOGUE MODAL -->
-    <div id="prologue-modal" class="modal-backdrop hidden">
-      <div class="menu-card">
-        <div class="menu-header">
-          <div class="menu-om">ॐ</div>
-          <h2 class="menu-title">THE PROLOGUE</h2>
-          <div class="menu-subtitle">From Kishkindha to the Southern Shores</div>
-        </div>
-
-        <p class="menu-description" style="text-align: left; line-height: 1.6;">
-          Following the friendship forged between Shri Ram and King Sugreev, millions of Vanars and Bears answered the call of Dharma. 
-          <br><br>
-          Marching across forests, rivers, and rugged mountains, the great vanguard has arrived at the southern ocean at Rameshwaram. 
-          Ahead lies the roaring ocean, and across the waves lies Lanka, where Mother Sita remains steadfast in faith. 
-          <br><br>
-          You step into the camp not for fame, but with folded hands, ready to lift every stone and offer every blossom in pure devotion.
-        </p>
-
-        <button id="btn-begin-from-prologue" class="btn-primary">
-          Enter The Camp • शिविर में प्रवेश करें (जय श्री राम)
-        </button>
-      </div>
-    </div>
-
-    <!-- 5. INVENTORY & STATS MODAL -->
-    <div id="inventory-modal" class="modal-backdrop hidden">
-      <div class="menu-card" style="max-width: 580px;">
-        <div class="menu-header">
-          <div class="menu-om">🎒</div>
-          <h2 class="menu-title">SEVA BAG & STATS</h2>
-          <div class="menu-subtitle">Gathered Offerings & Character Attributes</div>
-        </div>
-
-        <!-- Inventory Grid -->
-        <div class="inv-grid">
-          <div class="inv-slot">
-            <span class="inv-slot-icon">🪨</span>
-            <span class="inv-slot-name">Setu Stones</span>
-            <span class="inv-slot-count" id="inv-stones">0</span>
-          </div>
-          <div class="inv-slot">
-            <span class="inv-slot-icon">🍎</span>
-            <span class="inv-slot-name">Wild Fruits</span>
-            <span class="inv-slot-count" id="inv-fruits">0</span>
-          </div>
-          <div class="inv-slot">
-            <span class="inv-slot-icon">🌸</span>
-            <span class="inv-slot-name">Forest Flowers</span>
-            <span class="inv-slot-count" id="inv-flowers">0</span>
-          </div>
-          <div class="inv-slot">
-            <span class="inv-slot-icon">🥥</span>
-            <span class="inv-slot-name">Coconuts</span>
-            <span class="inv-slot-count" id="inv-coconuts">0</span>
-          </div>
-          <div class="inv-slot">
-            <span class="inv-slot-icon">📿</span>
-            <span class="inv-slot-name">Garlands</span>
-            <span class="inv-slot-count" id="inv-garlands">0</span>
-          </div>
-          <div class="inv-slot">
-            <span class="inv-slot-icon">🪵</span>
-            <span class="inv-slot-name">Wood</span>
-            <span class="inv-slot-count" id="inv-wood">0</span>
-          </div>
-        </div>
-
-        <!-- Combat & Seva Stats Box -->
-        <div class="stats-card-box">
-          <div><strong>Archetype:</strong> <span id="stat-role">Vanar</span></div>
-          <div><strong>Health (HP):</strong> <span id="stat-hp">100/100</span></div>
-          <div><strong>Attack Power:</strong> <span id="stat-atk">22</span></div>
-          <div><strong>Defense:</strong> <span id="stat-def">10</span></div>
-          <div><strong>Agility / Speed:</strong> <span id="stat-agi">26</span></div>
-          <div><strong>Setu Stones Placed:</strong> <span id="stat-setu-stones">0</span>/10</div>
-        </div>
-
-        <div style="display: flex; gap: 0.75rem; justify-content: center;">
-          <button id="btn-craft-garland-modal" class="btn-secondary" style="color: var(--gold); border-color: var(--saffron);">
-            🌸 Craft Garland (Weave 5 Flowers)
-          </button>
-          <button id="btn-close-inventory" class="btn-primary">
-            Close (बंद करें)
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 6. FAST TRAVEL MODAL -->
-    <div id="travel-modal" class="modal-backdrop hidden">
-      <div class="menu-card" style="max-width: 500px;">
-        <div class="menu-header">
-          <div class="menu-om">🗺️</div>
-          <h2 class="menu-title">SCENARIO TRAVEL</h2>
-          <div class="menu-subtitle">Visit Unlocked Maps & Scenarios</div>
-        </div>
-
-        <div class="travel-grid" id="travel-map-list">
-          <!-- Populated by ui.js -->
-        </div>
-
-        <button id="btn-close-travel" class="btn-secondary" style="margin-top: 0.5rem;">
-          Close (वापस जाएँ)
-        </button>
+        <button class="retro-btn" id="btn-close-options">CLOSE</button>
       </div>
     </div>
   </div>
 
-  <!-- Modular Scripts in Order of Dependency -->
+  <!-- Modular Scripts in Order of Execution -->
   <script src="scripts/constants.js"></script>
   <script src="maps/camp1.js"></script>
   <script src="maps/forest1.js"></script>

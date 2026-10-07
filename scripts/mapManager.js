@@ -72,19 +72,14 @@ class MapManager {
       window.npcManager.loadNPCsForMap(mapId);
     }
 
-    // Update UI HUD
+    // Show Pokemon-style location banner on map transition
     if (window.uiManager) {
-      const phaseBadgeText = `Phase ${this.phase}: ${this.phase === 1 ? 'Ram Setu' : 'Lanka (The War)'} • ${mapData.name}`;
-      window.uiManager.setPhaseText(phaseBadgeText);
-      window.uiManager.updateCoordinates(px, py);
-
+      window.uiManager.showLocationBanner(mapData.name, mapData.subtitle);
       if (announce) {
         window.uiManager.showDialogue(
           mapData.name,
-          `${mapData.subtitle}. You tread mindfully with folded hands in service of Shri Ram.`,
-          '🚩'
+          `${mapData.subtitle}. You tread mindfully with folded hands in service of Shri Ram.`
         );
-        window.uiManager.addLog(`Entered ${mapData.name}.`, 'info');
       }
     }
 
