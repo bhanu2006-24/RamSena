@@ -13,6 +13,7 @@ class UIManager {
     // 1. Dialogue Elements
     this.textboxWrapper = document.getElementById('pokemon-textbox-wrapper');
     this.speakerTag = document.getElementById('poke-speaker-name');
+    this.speakerImg = document.getElementById('poke-speaker-img');
     this.dialogueText = document.getElementById('poke-dialogue-text');
     this.cursorIndicator = document.getElementById('poke-cursor');
     this.choicesContainer = document.getElementById('poke-choices');
@@ -524,11 +525,38 @@ class UIManager {
   openBag() {
     this.renderBagItems();
     this.selectBagItem(this.selectedBagItemKey);
+    this.updateBagCraftingStatus();
     this.bagModal.classList.remove('hidden');
   }
 
   closeBag() {
     this.bagModal.classList.add('hidden');
+  }
+
+  updateBagCraftingStatus() {
+    const inv = window.inventory ? window.inventory.items : {};
+    const flowerCount = inv.flowers || 0;
+
+    if (this.craftFlowerCount) {
+      this.craftFlowerCount.textContent = `Flowers: ${flowerCount} / 5`;
+    }
+
+    if (this.btnQuickCraftGarland) {
+      if (flowerCount >= 5) {
+        this.btnQuickCraftGarland.textContent = '🌸 WEAVE SACRED GARLAND (READY!)';
+        this.btnQuickCraftGarland.style.opacity = '1';
+        this.btnQuickCraftGarland.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+        this.btnQuickCraftGarland.style.borderColor = '#34d399';
+        this.btnQuickCraftGarland.style.cursor = 'pointer';
+      } else {
+        const needed = 5 - flowerCount;
+        this.btnQuickCraftGarland.textContent = `🌸 NEED ${needed} MORE FLOWER${needed > 1 ? 'S' : ''}`;
+        this.btnQuickCraftGarland.style.opacity = '0.75';
+        this.btnQuickCraftGarland.style.background = 'linear-gradient(135deg, #78350f 0%, #451a03 100%)';
+        this.btnQuickCraftGarland.style.borderColor = '#d97706';
+        this.btnQuickCraftGarland.style.cursor = 'pointer';
+      }
+    }
   }
 
   renderBagItems() {
@@ -588,14 +616,22 @@ class UIManager {
         if (window.inventory && window.inventory.craftGarland()) {
           this.renderBagItems();
           this.selectBagItem('flowers');
+          this.updateBagCraftingStatus();
         }
       });
       this.bagActionsContainer.appendChild(craftBtn);
     }
 
+    this.updateBagCraftingStatus();
+
     const rows = this.bagItemList.querySelectorAll('.poke-bag-item-row');
-    rows.forEach(r => r.classList.remove('active'));
-    this.renderBagItems();
+    rows.forEach(r => {
+      if (r.textContent.includes(detail.name)) {
+        r.classList.add('active');
+      } else {
+        r.classList.remove('active');
+      }
+    });
   }
 
   openSevakaCard() {
@@ -619,12 +655,40 @@ class UIManager {
   // POKEMON EMERALD DIALOGUE SYSTEM
   // ===================================================================
 
+  getSpeakerImage(speaker) {
+    if (!speaker) return null;
+    const s = speaker.toLowerCase();
+    if (s.includes('ram') && !s.includes('sugreev') && !s.includes('balram')) return 'assets/images/ram.png';
+    if (s.includes('laxman') || s.includes('lakshman') || s.includes('saumitri')) return 'assets/images/laxman.png';
+    if (s.includes('hanuman') || s.includes('maruti') || s.includes('anjaneya') || s.includes('pavanputra')) return 'assets/images/hanuman.png';
+    if (s.includes('sugreev') || s.includes('sugriva')) return 'assets/images/sugreev.png';
+    if (s.includes('jambavan') || s.includes('jambvant') || s.includes('riksharaj')) return 'assets/images/jambavan.png';
+    if (s.includes('vibhisan') || s.includes('vibhisana') || s.includes('vibhishan')) return 'assets/images/vibhisan.png';
+    if (s.includes('angad') || s.includes('angada') || s.includes('yuvaraj')) return 'assets/images/angad.png';
+    if (s.includes('bear') || s.includes('riksha')) return 'assets/images/bear.png';
+    if (s.includes('vanar') || s.includes('nal') || s.includes('neel') || s.includes('sushen')) return 'assets/images/vanar.png';
+    if (s.includes('humble') || s.includes('sevaka') || s.includes('devotee')) {
+      return (window.player && window.player.typeId === 'riksha') ? 'assets/images/bear.png' : 'assets/images/vanar.png';
+    }
+    return (window.player && window.player.typeId === 'riksha') ? 'assets/images/bear.png' : 'assets/images/vanar.png';
+  }
+
   showDialogue(speaker, text, icon = '', choices = [], onComplete = null) {
     this.textboxWrapper.classList.remove('hidden');
 
     if (this.speakerTag) {
       this.speakerTag.textContent = speaker ? `${icon ? icon + ' ' : ''}${speaker}` : '';
       this.speakerTag.style.display = speaker ? 'inline-flex' : 'none';
+    }
+
+    if (this.speakerImg) {
+      const imgSrc = this.getSpeakerImage(speaker);
+      if (imgSrc) {
+        this.speakerImg.src = imgSrc;
+        this.speakerImg.style.display = 'block';
+      } else {
+        this.speakerImg.style.display = 'none';
+      }
     }
 
     if (this.choicesContainer) {

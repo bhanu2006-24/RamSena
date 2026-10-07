@@ -215,7 +215,7 @@ canvas#gameCanvas {
   transform: translateX(-50%);
   width: calc(100% - 48px);
   max-width: 880px;
-  z-index: 50;
+  z-index: 120;
   transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
