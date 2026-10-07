@@ -13,8 +13,8 @@ class Game {
     this.canvasWidth = window.innerWidth;
     this.canvasHeight = window.innerHeight;
 
-    // Pokemon GBA/DS tile size (60px crisp tiles)
-    this.tileSize = 60;
+    // Pokemon GBA Scale: Target ~15 tiles across viewport (110px - 130px per tile)
+    this.tileSize = this.calculateTileSize();
 
     this.state = window.GAME_STATES.MENU;
     this.lastTime = performance.now();
@@ -22,6 +22,11 @@ class Game {
 
     this.initCanvas();
     this.initInput();
+  }
+
+  calculateTileSize() {
+    // Authentic GBA Pokemon Scale: Target ~15 tiles across screen
+    return Math.max(105, Math.min(130, Math.floor(window.innerWidth / 15)));
   }
 
   initCanvas() {
@@ -34,6 +39,7 @@ class Game {
     this.canvasHeight = window.innerHeight;
     this.canvas.width = this.canvasWidth;
     this.canvas.height = this.canvasHeight;
+    this.tileSize = this.calculateTileSize();
 
     if (window.camera) {
       window.camera.resize(this.canvasWidth, this.canvasHeight);

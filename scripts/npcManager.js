@@ -457,74 +457,24 @@ class NPCManager {
       const sx = screenPos.x;
       const sy = screenPos.y;
 
-      // Drop shadow
-      ctx.beginPath();
-      ctx.ellipse(sx + tileSize / 2, sy + tileSize * 0.88, tileSize * 0.36, tileSize * 0.18, 0, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
-      ctx.fill();
+      const clock = window.game ? window.game.animClock : 0;
+      const bob = Math.sin(clock * 0.003 + (npc.x * 2 + npc.y)) * 2.5;
 
-      // Aura if divine / leader
-      if (npc.aura) {
-        const auraGrad = ctx.createRadialGradient(
-          sx + tileSize / 2, sy + tileSize / 2, tileSize * 0.1,
-          sx + tileSize / 2, sy + tileSize / 2, tileSize * 0.85
-        );
-        auraGrad.addColorStop(0, npc.aura);
-        auraGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
-        ctx.fillStyle = auraGrad;
-        ctx.beginPath();
-        ctx.arc(sx + tileSize / 2, sy + tileSize / 2, tileSize * 0.8, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      // Check if real sprite is available from SpriteManager
       const spriteKey = window.spriteManager ? window.spriteManager.getSpriteKeyForNPC(npc.id) : null;
       const spriteImg = spriteKey && window.spriteManager ? window.spriteManager.getImage(spriteKey) : null;
-      const isLoaded = spriteKey && window.spriteManager ? window.spriteManager.isLoaded(spriteKey) : false;
 
-      if (isLoaded && spriteImg) {
-        // Draw real high-res character sprite with gentle breathing bob!
-        const clock = window.game ? window.game.animClock : 0;
-        const bob = Math.sin(clock * 0.003 + (npc.x * 2 + npc.y)) * 2.2;
-        const drawH = tileSize * 0.98;
-        const aspect = (spriteImg.naturalWidth && spriteImg.naturalHeight) ? (spriteImg.naturalWidth / spriteImg.naturalHeight) : 1;
-        const drawW = drawH * aspect;
-        
-        ctx.drawImage(
+      if (window.assetRenderer) {
+        window.assetRenderer.drawCharacter(
+          ctx,
           spriteImg,
-          sx + (tileSize - drawW) / 2,
-          sy + tileSize - drawH + bob - 2,
-          drawW,
-          drawH
+          sx,
+          sy,
+          tileSize,
+          bob,
+          'down',
+          npc.isDivine,
+          npc.aura
         );
-
-        // Radiant divine halo spark if divine figure
-        if (npc.isDivine) {
-          ctx.fillStyle = '#fef08a';
-          ctx.beginPath();
-          ctx.arc(sx + tileSize / 2, sy + 4 + bob, 3, 0, Math.PI * 2);
-          ctx.fill();
-        }
-      } else {
-        // High-aesthetic fallback
-        const size = tileSize * 0.78;
-        const padding = (tileSize - size) / 2;
-        const rx = sx + padding;
-        const ry = sy + padding;
-
-        ctx.fillStyle = npc.color || '#854d0e';
-        ctx.strokeStyle = npc.isDivine ? '#fde047' : '#f59e0b';
-        ctx.lineWidth = npc.isDivine ? 3 : 2;
-
-        ctx.beginPath();
-        ctx.roundRect(rx, ry, size, size, 10);
-        ctx.fill();
-        ctx.stroke();
-
-        ctx.font = `${Math.floor(size * 0.52)}px sans-serif`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(npc.symbol, rx + size / 2, ry + size * 0.58);
       }
     });
 
