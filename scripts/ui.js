@@ -38,8 +38,12 @@ class UIManager {
     this.optBgmToggle = document.getElementById('opt-bgm-toggle');
     this.optBhajanSelect = document.getElementById('opt-bhajan-select');
     this.optTextSpeed = document.getElementById('opt-text-speed');
+    this.optVolumeSlider = document.getElementById('opt-volume-slider');
+    this.btnVolDown = document.getElementById('btn-vol-down');
+    this.btnVolUp = document.getElementById('btn-vol-up');
+    this.optVolumeVal = document.getElementById('opt-volume-val');
 
-    // 4. GBA Pokemon Start Menu (Matching Image 2 Reference)
+    // 4. GBA Pokemon Start Menu
     this.startMenu = document.getElementById('pokemon-start-menu');
     this.menuRows = document.querySelectorAll('.gba-menu-row');
     this.menuPlayerNameEl = document.getElementById('gba-player-name');
@@ -53,11 +57,18 @@ class UIManager {
     this.bagDetailDesc = document.getElementById('bag-detail-desc');
     this.bagActionsContainer = document.getElementById('bag-actions-container');
     this.btnCloseBag = document.getElementById('btn-close-bag');
+    this.btnQuickCraftGarland = document.getElementById('btn-quick-craft-garland');
+    this.craftFlowerCount = document.getElementById('craft-flower-count');
 
     this.sevakaCardModal = document.getElementById('sevaka-card-modal');
     this.btnCloseSevakaCard = document.getElementById('btn-close-sevaka-card');
 
-    // Fullscreen Toggle
+    // 6. Interactive Modern RPG HUD Buttons
+    this.hudBtnBag = document.getElementById('hud-btn-bag');
+    this.hudBtnMenu = document.getElementById('hud-btn-menu');
+    this.hudBtnOptions = document.getElementById('hud-btn-options');
+    this.hudBtnHail = document.getElementById('hud-btn-hail');
+    this.hudBtnFullscreen = document.getElementById('hud-btn-fullscreen');
     this.btnFullscreen = document.getElementById('btn-fullscreen-toggle');
 
     // State
@@ -115,6 +126,31 @@ class UIManager {
       });
     }
 
+    // Modern HUD Buttons
+    if (this.hudBtnBag) {
+      this.hudBtnBag.addEventListener('click', () => this.toggleBag());
+    }
+    if (this.hudBtnMenu) {
+      this.hudBtnMenu.addEventListener('click', () => this.toggleStartMenu());
+    }
+    if (this.hudBtnOptions) {
+      this.hudBtnOptions.addEventListener('click', () => this.toggleOptions());
+    }
+    if (this.hudBtnHail) {
+      this.hudBtnHail.addEventListener('click', () => {
+        if (window.audioManager) window.audioManager.hailShriRam();
+      });
+    }
+    if (this.hudBtnFullscreen) {
+      this.hudBtnFullscreen.addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(() => {});
+        } else {
+          document.exitFullscreen().catch(() => {});
+        }
+      });
+    }
+
     // Fullscreen button
     if (this.btnFullscreen) {
       this.btnFullscreen.addEventListener('click', () => {
@@ -122,6 +158,35 @@ class UIManager {
           document.documentElement.requestFullscreen().catch(() => {});
         } else {
           document.exitFullscreen().catch(() => {});
+        }
+      });
+    }
+
+    // Volume Controls
+    if (this.optVolumeSlider) {
+      this.optVolumeSlider.addEventListener('input', (e) => {
+        const val = parseInt(e.target.value, 10);
+        if (window.audioManager) {
+          window.audioManager.setVolume(val / 100);
+          this.updateOptionsDisplay();
+        }
+      });
+    }
+
+    if (this.btnVolDown) {
+      this.btnVolDown.addEventListener('click', () => {
+        if (window.audioManager) {
+          window.audioManager.volumeDown();
+          this.updateOptionsDisplay();
+        }
+      });
+    }
+
+    if (this.btnVolUp) {
+      this.btnVolUp.addEventListener('click', () => {
+        if (window.audioManager) {
+          window.audioManager.volumeUp();
+          this.updateOptionsDisplay();
         }
       });
     }
@@ -156,6 +221,16 @@ class UIManager {
         } else {
           this.textSpeed = 12;
           this.optTextSpeed.textContent = 'FAST';
+        }
+      });
+    }
+
+    // Quick Garland Crafting Button
+    if (this.btnQuickCraftGarland) {
+      this.btnQuickCraftGarland.addEventListener('click', () => {
+        if (window.inventory && window.inventory.craftGarland()) {
+          this.renderBagItems();
+          this.updateBagCraftingStatus();
         }
       });
     }
@@ -238,10 +313,56 @@ class UIManager {
       const track = window.audioManager.getCurrentTrack();
       this.optBhajanSelect.textContent = track ? track.name : 'Bhajan 1';
     }
+    if (window.audioManager) {
+      const pct = window.audioManager.getVolumePercent();
+      if (this.optVolumeSlider) this.optVolumeSlider.value = pct;
+      if (this.optVolumeVal) this.optVolumeVal.textContent = `${pct}%`;
+    }
     if (this.optTextSpeed) {
       if (this.textSpeed === 24) this.optTextSpeed.textContent = 'MEDIUM';
       else if (this.textSpeed === 6) this.optTextSpeed.textContent = 'INSTANT';
       else this.optTextSpeed.textContent = 'FAST';
+    }
+  }
+
+  toggleBag() {
+    if (this.isBagOpen()) {
+      this.closeBag();
+    } else {
+      this.openBag();
+    }
+  }
+
+  toggleOptions() {
+    if (this.optionsModal && !this.optionsModal.classList.contains('hidden')) {
+      this.optionsModal.classList.add('hidden');
+    } else {
+      this.updateOptionsDisplay();
+      this.optionsModal.classList.remove('hidden');
+    }
+  }
+
+  updateHUD() {
+    const heroNameEl = document.getElementById('hud-hero-name');
+    const avatarImgEl = document.getElementById('hud-avatar-img');
+    const mapNameEl = document.getElementById('hud-map-name');
+    const hpBarEl = document.getElementById('hud-hp-bar');
+    const hpTextEl = document.getElementById('hud-hp-text');
+
+    if (window.player) {
+      if (heroNameEl) heroNameEl.textContent = window.player.typeId === 'riksha' ? 'RIKSHA SEVAKA' : 'VANAR SEVAKA';
+      if (avatarImgEl) avatarImgEl.src = window.player.typeId === 'riksha' ? 'assets/images/bear.png' : 'assets/images/vanar.png';
+      if (hpBarEl) {
+        const pct = Math.max(0, Math.min(100, (window.player.hp / window.player.maxHp) * 100));
+        hpBarEl.style.width = `${pct}%`;
+      }
+      if (hpTextEl) {
+        hpTextEl.textContent = `${window.player.hp}/${window.player.maxHp} HP`;
+      }
+    }
+
+    if (window.mapManager && window.mapManager.currentMap && mapNameEl) {
+      mapNameEl.textContent = window.mapManager.currentMap.name || 'Southern Shore Camp';
     }
   }
 
