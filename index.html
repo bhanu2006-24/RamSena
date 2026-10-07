@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ram Sena | The Sacred Vanguard (राम सेना)</title>
+  <meta name="description" content="A minimalist top-down 2D grid-based web game of devotion and service in Shri Ram's army.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game-app">
+    <!-- Top 70%: Visual Game Canvas Viewport -->
+    <header id="game-header">
+      <div class="header-left">
+        <span class="om-symbol">ॐ</span>
+        <div class="title-group">
+          <h1 class="game-title">RAM SENA <span class="hindi-title">राम सेना</span></h1>
+          <span class="subtitle">A Journey of Devotion & Humble Service (Bhakti)</span>
+        </div>
+      </div>
+
+      <div class="header-center">
+        <div class="badge phase-badge" id="phase-indicator">Phase 1: Ram Setu (The Camp)</div>
+      </div>
+
+      <div class="header-right">
+        <div class="hud-stat" id="hud-role">
+          <span class="stat-label">Role:</span>
+          <span class="stat-val">Humble Vanar (सेवक)</span>
+        </div>
+        <div class="hud-stat" id="hud-coords">
+          <span class="stat-label">Pos:</span>
+          <span class="stat-val" id="coord-display">(10, 7)</span>
+        </div>
+      </div>
+    </header>
+
+    <main id="viewport-section">
+      <div id="canvas-container">
+        <canvas id="gameCanvas" width="960" height="540"></canvas>
+        <div id="canvas-overlay-hints">
+          <span class="key-pill">W</span><span class="key-pill">A</span><span class="key-pill">S</span><span class="key-pill">D</span> or <span class="key-pill">↑</span><span class="key-pill">←</span><span class="key-pill">↓</span><span class="key-pill">→</span> to Move
+        </div>
+      </div>
+    </main>
+
+    <!-- Bottom 30%: Dedicated Black Box for Dialogue, Story & Combat Logs -->
+    <footer id="dialogue-section">
+      <div class="dialogue-panel-border"></div>
+      
+      <div class="dialogue-inner">
+        <!-- Top bar of dialogue area: Speaker & Mode Tabs -->
+        <div class="dialogue-top-bar">
+          <div class="speaker-tag-wrapper">
+            <span class="speaker-icon" id="speaker-icon">📜</span>
+            <span class="speaker-name" id="speaker-name">Narration</span>
+          </div>
+          <div class="dialogue-tabs">
+            <button class="tab-btn active" id="tab-dialogue" data-target="dialogue-view">Dialogue & Story</button>
+            <button class="tab-btn" id="tab-log" data-target="log-view">Activity Log (<span id="log-count">0</span>)</button>
+          </div>
+        </div>
+
+        <!-- Main text content body -->
+        <div class="dialogue-body-container">
+          <!-- Active Dialogue View -->
+          <div id="dialogue-view" class="view-panel active">
+            <div id="dialogue-text" class="dialogue-text">
+              The dawn sun casts golden rays over the shores of the southern ocean. You stand among thousands of devoted Vanars in the encampment of Shri Ram, eager to offer whatever humble service you can.
+            </div>
+            <div id="dialogue-prompt" class="dialogue-prompt">
+              <span class="prompt-key">[Space]</span> Continue reading
+            </div>
+          </div>
+
+          <!-- Activity Log View -->
+          <div id="log-view" class="view-panel">
+            <ul id="log-list" class="log-list">
+              <!-- Logs populated by ui.js -->
+            </ul>
+          </div>
+        </div>
+
+        <!-- Dialogue Action Buttons (choices / interactions) -->
+        <div id="dialogue-actions" class="dialogue-actions">
+          <!-- Dynamically populated if choices exist -->
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Modular Scripts in Dependency Order -->
+  <script src="maps.js"></script>
+  <script src="inventory.js"></script>
+  <script src="ui.js"></script>
+  <script src="combat.js"></script>
+  <script src="player.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
