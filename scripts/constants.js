@@ -57,39 +57,39 @@ const TILE_PROPERTIES = {
     name: 'Lush Meadow',
     walkable: true,
     color: '#264e22',
-    altColor: '#22461e',
+    altColor: '#20421d',
     symbol: ''
   },
   [TILE_TYPES.GRASS_FLOWERS]: {
     name: 'Floral Clearing',
     walkable: true,
-    color: '#295424',
-    symbol: '🌸'
+    color: '#264e22',
+    symbol: ''
   },
   [TILE_TYPES.DIRT_PATH]: {
     name: 'Camp Pathway',
     walkable: true,
     color: '#5c4627',
-    altColor: '#533e21',
+    altColor: '#523d21',
     symbol: ''
   },
   [TILE_TYPES.TREE]: {
     name: 'Ancient Tree',
     walkable: false,
-    color: '#143513',
-    symbol: '🌳'
+    color: '#0f381e',
+    symbol: ''
   },
   [TILE_TYPES.ROCK]: {
     name: 'Sacred Boulder',
     walkable: false,
     color: '#475569',
-    symbol: '🪨'
+    symbol: ''
   },
   [TILE_TYPES.WATER]: {
     name: 'Ocean Waters',
     walkable: false,
     color: '#1e3a8a',
-    symbol: '🌊'
+    symbol: ''
   },
   [TILE_TYPES.SAND]: {
     name: 'Shoreline Sand',
@@ -100,32 +100,32 @@ const TILE_PROPERTIES = {
   [TILE_TYPES.COCONUT_TREE]: {
     name: 'Coconut Palm',
     walkable: false,
-    color: '#134e27',
-    symbol: '🌴'
+    color: '#14532d',
+    symbol: ''
   },
   [TILE_TYPES.MOUNTAIN]: {
     name: 'Sacred Hill',
     walkable: false,
     color: '#334155',
-    symbol: '⛰️'
+    symbol: ''
   },
   [TILE_TYPES.SACRED_FIRE]: {
     name: 'Sacred Yajna Fire',
     walkable: false,
-    color: '#7c2d12',
-    symbol: '🔥'
+    color: '#6b2512',
+    symbol: ''
   },
   [TILE_TYPES.FLAG_BANNER]: {
     name: 'Dharma Dhwaja Banner',
     walkable: false,
-    color: '#9a3412',
-    symbol: '🚩'
+    color: '#6b2512',
+    symbol: ''
   },
   [TILE_TYPES.CAMP_TENT]: {
     name: 'Camp Pavilion',
     walkable: false,
-    color: '#78350f',
-    symbol: '⛺'
+    color: '#6b2512',
+    symbol: ''
   }
 };
 

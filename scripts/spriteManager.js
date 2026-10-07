@@ -8,12 +8,12 @@ class SpriteManager {
   constructor() {
     this.manifest = {
       angad: 'assets/images/angad.png',
-      bear: 'assets/images/bear.png',
+      bear: 'assets/images/bhaluu.png',
       hanuman: 'assets/images/hanuman.png',
       laxman: 'assets/images/laxman.png',
       ram: 'assets/images/ram.png',
       sugreev: 'assets/images/sugreev.png',
-      vanar: 'assets/images/vanar.png',
+      vanar: 'assets/images/vanarsena.png',
       vibhisan: 'assets/images/vibhisan.png',
       jambavan: 'assets/images/jambavan.png'
     };

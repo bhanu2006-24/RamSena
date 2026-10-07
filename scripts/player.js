@@ -146,85 +146,24 @@ class Player {
     if (this.isMoving) {
       bobY = -Math.sin(this.moveProgress * Math.PI) * (tileSize * 0.12);
     } else {
-      bobY = Math.sin(this.animTimer * 0.005) * 1.5;
+      bobY = Math.sin(this.animTimer * 0.005) * 2;
     }
 
-    ctx.save();
-
-    // 1. Drop Shadow
-    ctx.beginPath();
-    ctx.ellipse(
-      sx + tileSize / 2,
-      sy + tileSize * 0.84,
-      tileSize * 0.34,
-      tileSize * 0.18,
-      0,
-      0,
-      Math.PI * 2
-    );
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.48)';
-    ctx.fill();
-
-    // 2. Devotional Aura
-    const auraGrad = ctx.createRadialGradient(
-      sx + tileSize / 2, sy + tileSize / 2 + bobY, tileSize * 0.15,
-      sx + tileSize / 2, sy + tileSize / 2 + bobY, tileSize * 0.75
-    );
-    auraGrad.addColorStop(0, this.auraColor);
-    auraGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
-    ctx.fillStyle = auraGrad;
-    ctx.beginPath();
-    ctx.arc(sx + tileSize / 2, sy + tileSize / 2 + bobY, tileSize * 0.72, 0, Math.PI * 2);
-    ctx.fill();
-
-    // 3. Check if real sprite is available
     const spriteKey = this.typeId === 'riksha' ? 'bear' : 'vanar';
     const spriteImg = window.spriteManager ? window.spriteManager.getImage(spriteKey) : null;
-    const isLoaded = window.spriteManager ? window.spriteManager.isLoaded(spriteKey) : false;
 
-    if (isLoaded && spriteImg) {
-      const drawH = tileSize * 0.96;
-      const aspect = (spriteImg.naturalWidth && spriteImg.naturalHeight) ? (spriteImg.naturalWidth / spriteImg.naturalHeight) : 1;
-      const drawW = drawH * aspect;
-      const posX = sx + (tileSize - drawW) / 2;
-      const posY = sy + tileSize - drawH + bobY - 2;
-
-      ctx.save();
-      // Mirror horizontally if facing left
-      if (this.direction === 'left') {
-        ctx.translate(posX + drawW, posY);
-        ctx.scale(-1, 1);
-        ctx.drawImage(spriteImg, 0, 0, drawW, drawH);
-      } else {
-        ctx.drawImage(spriteImg, posX, posY, drawW, drawH);
-      }
-      ctx.restore();
-
-      // Devotional Tilak on head
-      ctx.fillStyle = '#ef4444';
-      ctx.beginPath();
-      ctx.ellipse(sx + tileSize / 2, posY + 10, 2.5, 4, 0, 0, Math.PI * 2);
-      ctx.fill();
-    } else {
-      // Fallback stylized box
-      const size = tileSize * 0.78;
-      const padding = (tileSize - size) / 2;
-      const rx = sx + padding;
-      const ry = sy + padding + bobY;
-
-      ctx.fillStyle = this.color;
-      ctx.strokeStyle = this.borderColor;
-      ctx.lineWidth = 2.5;
-
-      ctx.beginPath();
-      ctx.roundRect(rx, ry, size, size, 10);
-      ctx.fill();
-      ctx.stroke();
-
-      ctx.font = `${Math.floor(size * 0.54)}px sans-serif`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(this.symbol, rx + size / 2, ry + size * 0.58);
+    if (window.assetRenderer) {
+      window.assetRenderer.drawCharacter(
+        ctx,
+        spriteImg,
+        sx,
+        sy,
+        tileSize,
+        bobY,
+        this.direction,
+        false,
+        this.auraColor
+      );
     }
 
     // Directional indicator dot
