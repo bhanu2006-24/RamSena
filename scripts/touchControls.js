@@ -307,8 +307,12 @@
             }
           }
 
-          if (window.game && window.game.interactWithWorld) {
-            window.game.interactWithWorld();
+          if (window.game) {
+            if (typeof window.game.handleInteract === 'function') {
+              window.game.handleInteract();
+            } else if (typeof window.game.interactWithWorld === 'function') {
+              window.game.interactWithWorld();
+            }
           }
         });
       }
@@ -437,8 +441,12 @@
           else if (targetTileY > py) window.player.direction = 'down';
           else if (targetTileY < py) window.player.direction = 'up';
 
-          if (window.game.interactWithWorld) {
-            window.game.interactWithWorld();
+          if (window.game) {
+            if (typeof window.game.handleInteract === 'function') {
+              window.game.handleInteract();
+            } else if (typeof window.game.interactWithWorld === 'function') {
+              window.game.interactWithWorld();
+            }
           }
           return;
         }
@@ -567,8 +575,12 @@
             else if (ty > py) window.player.direction = 'down';
             else if (ty < py) window.player.direction = 'up';
 
-            if (window.game.interactWithWorld) {
-              window.game.interactWithWorld();
+            if (window.game) {
+              if (typeof window.game.handleInteract === 'function') {
+                window.game.handleInteract();
+              } else if (typeof window.game.interactWithWorld === 'function') {
+                window.game.interactWithWorld();
+              }
             }
           }
           this.targetInteractionTile = null;

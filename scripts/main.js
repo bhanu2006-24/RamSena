@@ -22,6 +22,7 @@ class Game {
 
     this.initCanvas();
     this.initInput();
+    this.interactWithWorld = this.handleInteract.bind(this);
   }
 
   calculateTileSize() {
@@ -235,9 +236,26 @@ class Game {
     else if (window.player.direction === 'left') targetX -= 1;
     else if (window.player.direction === 'right') targetX += 1;
 
-    // 1. Check NPC interaction
+    // 1. Check NPC interaction (facing tile, current tile, or adjacent neighbors)
     if (window.npcManager) {
-      const npc = window.npcManager.getNPCAt(targetX, targetY) || window.npcManager.getNPCAt(window.player.x, window.player.y);
+      let npc = window.npcManager.getNPCAt(targetX, targetY) || window.npcManager.getNPCAt(window.player.x, window.player.y);
+      if (!npc) {
+        // If not facing an NPC, check 4 adjacent directions so mobile ACT button effortlessly interacts with nearby characters
+        const neighbors = [
+          { x: window.player.x, y: window.player.y - 1, dir: 'up' },
+          { x: window.player.x, y: window.player.y + 1, dir: 'down' },
+          { x: window.player.x - 1, y: window.player.y, dir: 'left' },
+          { x: window.player.x + 1, y: window.player.y, dir: 'right' }
+        ];
+        for (const n of neighbors) {
+          const adjNpc = window.npcManager.getNPCAt(n.x, n.y);
+          if (adjNpc) {
+            window.player.direction = n.dir;
+            npc = adjNpc;
+            break;
+          }
+        }
+      }
       if (npc) {
         window.npcManager.interactWithNPC(npc);
         return;
@@ -246,7 +264,16 @@ class Game {
 
     // 2. Check Battlefield Encounter on Field map
     if (window.mapManager && window.mapManager.currentMapId === 'field') {
-      const enc = window.mapManager.encounters.find(e => e.x === targetX && e.y === targetY && !e.defeated);
+      let enc = window.mapManager.encounters.find(e => e.x === targetX && e.y === targetY && !e.defeated);
+      if (!enc) {
+        const neighbors = [
+          { x: window.player.x, y: window.player.y - 1 },
+          { x: window.player.x, y: window.player.y + 1 },
+          { x: window.player.x - 1, y: window.player.y },
+          { x: window.player.x + 1, y: window.player.y }
+        ];
+        enc = window.mapManager.encounters.find(e => neighbors.some(n => n.x === e.x && n.y === e.y) && !e.defeated);
+      }
       if (enc) {
         window.combatSystem.startBattle(enc.id, enc.enemyType);
         return;
