@@ -17,11 +17,12 @@ class CombatSystem {
     this.turn = 'player'; // 'player' | 'enemy'
     this.activeEncounterId = null;
     this.defeatedEncounters = new Set();
+    this.disengageCooldownUntil = 0;
   }
 
   getPlayerMoves() {
     const isBear = window.player && window.player.typeId === 'riksha';
-    return isBear ? [
+    const moves = isBear ? [
       { label: '🐾 Crushing Paw (वज्र प्रहार)', action: () => this.playerAttack('Crushing Paw', 28) },
       { label: '🦷 Heavy Bite (मल्ल दन्त)', action: () => this.playerAttack('Heavy Bite', 26) },
       { label: '🪨 Hurl Boulder (महाशिला प्रक्षेप)', action: () => this.playerAttack('Hurl Boulder', 34) },
@@ -32,10 +33,20 @@ class CombatSystem {
       { label: '🪨 Throw Rock (शिला प्रक्षेप)', action: () => this.playerAttack('Throw Rock', 28) },
       { label: '🪵 Throw Wood (दण्ड प्रहार)', action: () => this.playerAttack('Throw Wood', 23) }
     ];
+
+    moves.push({
+      label: '↩️ Retreat / Cancel (पीछे हटें)',
+      action: () => this.retreatBattle()
+    });
+
+    return moves;
   }
 
   startBattle(encounterId = null, customEnemyName = null) {
     if (this.inCombat) return;
+    if (this.disengageCooldownUntil && Date.now() < this.disengageCooldownUntil) {
+      return;
+    }
 
     this.activeEncounterId = encounterId;
     this.inCombat = true;
@@ -241,6 +252,17 @@ class CombatSystem {
     }
   }
 
+  retreatBattle() {
+    this.disengageCooldownUntil = Date.now() + 800;
+    if (window.uiManager) {
+      window.uiManager.addLog(
+        `↩️ Disengaged from ${this.currentEnemy ? this.currentEnemy.name : 'enemy'}. Regrouping with the Sena!`,
+        'info'
+      );
+    }
+    this.endBattle();
+  }
+
   endBattle() {
     this.inCombat = false;
     this.currentEnemy = null;
@@ -250,7 +272,7 @@ class CombatSystem {
       window.game.state = window.GAME_STATES.OVERWORLD;
     }
 
-    if (window.uiManager) {
+    if (window.uiManager && window.uiManager.isDialogueOpen()) {
       window.uiManager.hideDialogue();
     }
   }

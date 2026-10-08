@@ -115,10 +115,14 @@ class Game {
         return;
       }
 
-      // 4. If Dialogue is active, Z, Enter, Space, or E advances dialogue; Esc or X hides it
+      // 4. If Dialogue is active, Z, Enter, Space, or E advances dialogue; Esc, X, or B hides/retreats
       if (window.uiManager && window.uiManager.isDialogueOpen()) {
-        if (['KeyX', 'Escape'].includes(e.code)) {
-          window.uiManager.hideDialogue();
+        if (['KeyX', 'KeyB', 'Escape'].includes(e.code)) {
+          if (window.combatSystem && window.combatSystem.inCombat) {
+            window.combatSystem.retreatBattle();
+          } else {
+            window.uiManager.hideDialogue();
+          }
           return;
         }
         if (['KeyZ', 'KeyE', 'Enter', 'Space'].includes(e.code)) {

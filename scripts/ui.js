@@ -842,6 +842,17 @@ class UIManager {
       this.typewriterTimer = null;
     }
     this.isTyping = false;
+
+    // Cleanly cancel combat state and restore overworld navigation if dialogue is dismissed
+    if (window.combatSystem && window.combatSystem.inCombat) {
+      window.combatSystem.inCombat = false;
+      window.combatSystem.currentEnemy = null;
+      window.combatSystem.activeEncounterId = null;
+      window.combatSystem.disengageCooldownUntil = Date.now() + 800;
+    }
+    if (window.game && window.game.state === window.GAME_STATES.COMBAT) {
+      window.game.state = window.GAME_STATES.OVERWORLD;
+    }
   }
 
   // ===================================================================

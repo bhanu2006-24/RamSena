@@ -322,7 +322,11 @@
 
           if (window.uiManager) {
             if (window.uiManager.isDialogueOpen()) {
-              window.uiManager.hideDialogue();
+              if (window.combatSystem && window.combatSystem.inCombat) {
+                window.combatSystem.retreatBattle();
+              } else {
+                window.uiManager.hideDialogue();
+              }
               return;
             }
             if (window.uiManager.isBagOpen()) {
