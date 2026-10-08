@@ -151,16 +151,52 @@ class AudioManager {
   hailShriRam() {
     this.playTempleBell();
 
+    const chaupais = [
+      {
+        verse: 'मंगल भवन अमंगल हारी।\nद्रवउ सुदसरथ अजिर बिहारी॥',
+        meaning: 'May the abode of auspiciousness and dispeller of all sorrow, Shri Ram, shower His divine grace upon us!'
+      },
+      {
+        verse: 'सीय राम मय सब जग जानी।\nकरहुँ प्रनाम जोरि जुग पानी॥',
+        meaning: 'Knowing the entire cosmos to be permeated by Sita and Ram, I offer my humble prostrations with folded hands.'
+      },
+      {
+        verse: 'दीन दयाल बिरिदु संभारी।\nहरहु नाथ मम संकट भारी॥',
+        meaning: 'O Lord, mindful of Your vow as the protector of the humble and helpless, take away all grief and distress!'
+      },
+      {
+        verse: 'राम नाम मनि दीप धरू जीह देहरीं द्वार।\nतुलसी भीतर बाहिरहुँ जौं चाहसि उजिआर॥',
+        meaning: 'Place the jewel-lamp of Ram Naam on the threshold of your tongue if you desire divine radiance both within and without!'
+      },
+      {
+        verse: 'होइहि सोइ जो राम रचि राखा।\nको करि तर्क बढ़ावै साखा॥',
+        meaning: 'Whatever Shri Ram has ordained shall come to pass; keep unwavering faith in the divine will!'
+      },
+      {
+        verse: 'जापर कृपा राम की होई।\nतापर कृपा करहिं सब कोई॥',
+        meaning: 'He upon whom the grace of Shri Ram descends receives the loving grace and goodwill of all creation!'
+      },
+      {
+        verse: 'रामहि केवल प्रेमु पिआरा।\nजानि लेउ जो जान निहारा॥',
+        meaning: 'Shri Ram loves only pure, selfless love; let all who yearn to know Him understand this eternal truth!'
+      }
+    ];
+
+    const pick = chaupais[Math.floor(Math.random() * chaupais.length)];
+
     if (window.uiManager) {
       window.uiManager.showDialogue(
-        'Devotional Hail',
-        'You raise your voice with deep Bhakti: "जय श्री राम!" The whole camp echoes with reverence.',
+        'श्री रामचरितमानस — पावन चौपाई',
+        `${pick.verse}\n\n✦ भावार्थ: ${pick.meaning}`,
         '🚩'
       );
+      if (window.uiManager.addLog) {
+        window.uiManager.addLog(`जयघोष: ${pick.verse.split('\n')[0]}`, 'service');
+      }
     }
 
     if (window.npcManager) {
-      window.npcManager.echoChant();
+      window.npcManager.echoChant(pick.verse.split('\n')[0]);
     }
   }
 

@@ -46,9 +46,9 @@ class NPCManager {
           isDivine: true,
           title: 'Avatar of Dharma & Ocean of Compassion',
           dialogues: [
-            'Beloved devotee, your humble service in this great cause is more precious than jewels. Serve with pure devotion and fearless heart.',
-            'Dharma is protected not by pride, but by selfless surrender and truth. Walk in peace.',
-            'The stones you gather with love carry the power to bridge any sea. May your mind always remain steady.'
+            'सनमुख होइ जीव मोहि जबहीं।\nजन्म कोटि अघ नासहिं तबहीं॥\n\nBeloved devotee, the moment a soul turns toward Me with devotion, countless sins of lifetimes dissolve. Serve with pure devotion and a fearless heart.',
+            'सखा सोच त्यागहु बल मोरें।\nसब बिधि घटब काजु मैं तोरें॥\n\nAbandon all worry by my strength, dear friend. Every task will be fulfilled in righteousness. Dharma is protected not by pride, but by selfless surrender and truth.',
+            'निर्मल मन जन सो मोहि पावा।\nमोहि कपट छल छिद्र न भावा॥\n\nHe who possesses a pure, innocent heart attains Me. The stones you gather with love carry the power to bridge any sea. May your mind always remain steady.'
           ]
         },
         {
@@ -61,8 +61,8 @@ class NPCManager {
           isDivine: true,
           title: 'Ever-Vigilant Guardian of Shri Ram',
           dialogues: [
-            'Keep your vigilance sharp, valiant Vanar. We prepare to cross the ocean and root out the dark forces of adharma.',
-            'Every stone brought forward is a blow against righteousness being wronged. Stand tall!'
+            'धर्म न दूसर सत्य समाना।\nआगम निगम पुरान बखाना॥\n\nThere is no Dharma higher than Truth! Keep your vigilance sharp, valiant Vanar, as we prepare to cross the ocean and root out the dark forces of adharma.',
+            'राम सखा रघुपति प्रिय केही।\nभरतहि प्रिय जेहि सिय पिउ देही॥\n\nEvery stone brought forward is an immortal contribution to righteousness. Stand tall and unwavering!'
           ]
         },
         {
@@ -75,9 +75,9 @@ class NPCManager {
           isDivine: true,
           title: 'Embodiment of Pure Bhakti & Supreme Strength',
           dialogues: [
-            'जय श्री राम! In every heartbeat, remember the holy name of Shri Ram. Nothing in all three worlds can resist the power of Ram Naam.',
-            'Do not feel your seva is small. Even the tiny squirrel who rolled in the dust to fill cracks between the stones received the loving caress of Shri Ram!',
-            'Serve with humility and courage. Victory belongs to Dharma!'
+            'कवन सो काज कठिन जग माहीं।\nजो नहिं होइ तात तुम्ह पाहीं॥\n\nजय श्री राम! What task in all the three worlds is difficult when one has the grace of Shri Ram? Never consider any seva small—even the tiny squirrel received the loving caress of the Lord!',
+            'प्रबिसि नगर कीजै सब काजा।\nहृदयं राखि कोसलपुर राजा॥\n\nKeep the King of Kosala (Shri Ram) enshrined in your heart, and every impossible task in life will be effortlessly accomplished!',
+            'राम काज करिबे को आतुर।\nप्रभु चरित्र सुनिबे को रसिया॥\n\nIn every breath and heartbeat, remember the holy name of Shri Ram. Nothing in all three worlds can resist the power of Ram Naam!'
           ]
         },
         {
@@ -88,7 +88,7 @@ class NPCManager {
           color: '#d97706',
           title: 'King of Kishkindha & General of the Sena',
           dialogues: [
-            'The entire vanar host stands united under Shri Ram. See that every patrol is alert and stones are delivered swiftly to Nal and Neel.'
+            'राम काज लगि तव अवतारा।\nसुनतहिं हरष भयउ संसारा॥\n\nThe entire vanar host stands united under Shri Ram. See that every patrol is alert and stones are delivered swiftly to Nal and Neel.'
           ]
         },
         {
@@ -99,7 +99,7 @@ class NPCManager {
           color: '#522610',
           title: 'Venerable Patriarch of the Bears',
           dialogues: [
-            'Blessed is this day that our clans join hands for the supreme cause. Bear or Vanar, every one of us is an instrument of divine will.'
+            'पवन तनय बल पवन समाना।\nबुधि बिबेक बिग्यान निधाना॥\n\nBlessed is this day that our clans join hands for the supreme cause. Bear or Vanar, every one of us is an instrument of divine will.'
           ]
         },
         {
@@ -110,7 +110,7 @@ class NPCManager {
           color: '#475569',
           title: 'Devotee of Dharma & Refuge of Shri Ram',
           dialogues: [
-            'I left the splendour of Lanka because truth cannot coexist with adharma. Shri Ram accepted me without hesitation. What mercy!'
+            'कोटि बिप्र बध लागहिं जाहू।\nआएँ सरन तजउँ नहिं ताहू॥\n\nI left the splendour of Lanka because truth cannot coexist with adharma. Shri Ram accepted me the moment I took refuge at His lotus feet. What boundless mercy!'
           ]
         },
         {
@@ -186,7 +186,7 @@ class NPCManager {
           title: 'Divine Architect Nal (विश्वकर्मा-सुत)',
           isSetuArchitect: true,
           dialogues: [
-            'Jai Shri Ram! I am Nal, blessed son of Vishwakarma. Give me the sacred boulders from the forest; by divine boon and our heartfelt devotion to Shri Ram, whatever stone we place floats upon the ocean waves without sinking!',
+            'लिखि लिखि नाम चलावहिं रामा।\nरचहिं सेतु जय जय सुखधामा॥\n\nJai Shri Ram! I am Nal, blessed son of Vishwakarma. Give me the sacred boulders from the forest; as we inscribe "राम", by divine grace each stone floats upon the ocean waves without sinking!',
             'Every stone must be aligned with devotion. Bring your boulders to me or Neel to bridge this mighty ocean!'
           ]
         },
@@ -201,7 +201,7 @@ class NPCManager {
           title: 'Divine Architect Neel (विश्वकर्मा-सुत)',
           isSetuArchitect: true,
           dialogues: [
-            'Jai Shri Ram! I am Neel. While Nal measures the span toward Lanka, I secure and interlock the floating boulders upon the sea in Shri Ram\'s holy name!',
+            'सिला तरहिं जिन पर प्रभु नामा।\nदेखि कौतुक सुख पावत रामा॥\n\nJai Shri Ram! I am Neel. While Nal measures the span toward Lanka, I secure and interlock the floating boulders upon the sea in Shri Ram\'s holy name!',
             'With each stone you carry from Mount Mahendra, the sacred Setu stretches further across the turbulent waters!'
           ]
         },
@@ -252,8 +252,8 @@ class NPCManager {
           aura: 'rgba(56, 189, 248, 0.45)',
           isDivine: true,
           dialogues: [
-            'We stand upon Lanka. Protect the innocent and uphold Dharma without malice. Let our courage shine as a beacon of truth.',
-            'He who seeks shelter with an open heart shall never be rejected. Keep your faith steadfast.'
+            'सरनागत कहुँ जे तजहिं निज अनहित अनुमानि।\nते नर पावँर पापमय तिन्हहि बिलोकत हानि॥\n\nWe stand upon Lanka. Protect the innocent and uphold Dharma without malice. He who seeks shelter with an open heart shall never be rejected.',
+            'दैहिक दैविक भौतिक तापा।\nराम राज नहिं काहुहि ब्यापा॥\n\nLet our courage shine as a beacon of truth. Keep your faith steadfast; victory belongs to Dharma!'
           ]
         },
         {
@@ -265,7 +265,7 @@ class NPCManager {
           aura: 'rgba(234, 179, 8, 0.4)',
           isDivine: true,
           dialogues: [
-            'By the immense grace of Shri Ram and Hanuman’s heroic flight with Mount Dronagiri, the venom of Indrajit’s spear was shattered. I stand ready for victory!'
+            'राम टेक राखेहु मन माहीं।\nधर्म विजय संसय कछु नाहीं॥\n\nBy the immense grace of Shri Ram and Hanuman’s heroic flight with Mount Dronagiri, the venom of Indrajit’s spear was shattered. I stand ready for the supreme victory of righteousness!'
           ]
         },
         {
@@ -277,8 +277,8 @@ class NPCManager {
           aura: 'rgba(34, 197, 94, 0.4)',
           title: 'Master Physician of the Sena',
           dialogues: [
-            'Praise be to Hanuman Ji! When Lord Lakshman lay unconscious, Hanuman brought the entire mountain with Sanjeevani, Vishalyakarani, and Savarnakarani herbs before sunrise!',
-            'I tend to the wounded warriors of the army with herbs and sacred water. No loyal soldier in Shri Ram\'s army will be left behind.'
+            'संजीवनी मूरि आनि जिआए।\nलखन राम हरष उर छाए॥\n\nPraise be to Hanuman Ji! When Lord Lakshman lay unconscious, Hanuman brought the entire mountain with Sanjeevani, Vishalyakarani, and Savarnakarani herbs before sunrise!',
+            'I tend to the wounded warriors of the army with herbs and sacred water. No loyal soldier in Shri Ram\'s army will ever be left behind.'
           ]
         },
         {
@@ -290,7 +290,7 @@ class NPCManager {
           aura: 'rgba(249, 115, 22, 0.5)',
           isDivine: true,
           dialogues: [
-            'The gates of Lanka tremble! The demonic illusions can never cloud the light of Dharma. Keep repeating "जय श्री राम" as you stand guard!'
+            'महाबीर बिक्रम बजरंगी।\nकुमति निवार सुमति के संगी॥\n\nThe gates of Lanka tremble! The demonic illusions can never cloud the light of Dharma. Keep repeating "जय श्री राम" as you stand guard!'
           ]
         },
         {
@@ -514,12 +514,21 @@ class NPCManager {
     return lores[index % lores.length];
   }
 
-  echoChant() {
-    this.npcs.forEach(npc => {
+  echoChant(customText = null) {
+    const sacredChants = [
+      'जय श्री राम! 🙏',
+      'मंगल भवन अमंगल हारी 🚩',
+      'सियापति रामचन्द्र की जय! 🌸',
+      'पवनसुत हनुमान की जय! 🚩',
+      'जय रघुवीर समर्थ! 🏹',
+      'कवन सो काज कठिन जग माहीं 🙏'
+    ];
+    this.npcs.forEach((npc, idx) => {
+      const text = (customText && idx === 0) ? customText : sacredChants[(idx + Math.floor(Math.random() * sacredChants.length)) % sacredChants.length];
       this.floatingChants.push({
         x: npc.x,
         y: npc.y,
-        text: 'जय श्री राम! 🙏',
+        text: text,
         opacity: 1.0,
         age: 0
       });
