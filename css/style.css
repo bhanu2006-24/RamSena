@@ -168,6 +168,33 @@ canvas#gameCanvas {
   gap: 0.35rem;
 }
 
+.gba-menu-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding-bottom: 6px;
+  margin-bottom: 4px;
+  border-bottom: 2px solid rgba(245, 158, 11, 0.35);
+}
+
+.gba-menu-logo {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid var(--gold);
+  object-fit: cover;
+  box-shadow: 0 0 6px rgba(245, 158, 11, 0.5);
+}
+
+.gba-menu-brand-title {
+  font-family: var(--font-title);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #b45309;
+  letter-spacing: 0.08em;
+}
+
 .gba-menu-row {
   display: flex;
   align-items: center;
@@ -603,12 +630,42 @@ canvas#gameCanvas {
   z-index: 2;
 }
 
-.title-om {
-  font-size: 3.5rem;
-  color: #ff3366;
-  text-shadow: 0 0 25px rgba(255, 51, 102, 0.7), 0 0 50px rgba(245, 158, 11, 0.4);
-  margin-bottom: -15px;
-  animation: pulse-soft 3s infinite ease-in-out;
+.title-logo-badge-wrap {
+  width: clamp(80px, 14vw, 130px);
+  height: clamp(80px, 14vw, 130px);
+  margin-bottom: 0.6rem;
+  border-radius: 50%;
+  padding: 3px;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.4) 0%, rgba(255, 45, 85, 0.22) 70%, transparent 100%);
+  box-shadow: 
+    0 0 25px rgba(245, 158, 11, 0.65),
+    0 0 50px rgba(255, 45, 85, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  animation: logo-glow-float 4s ease-in-out infinite alternate;
+}
+
+@keyframes logo-glow-float {
+  0% {
+    transform: translateY(0) scale(1);
+    box-shadow: 0 0 25px rgba(245, 158, 11, 0.65), 0 0 50px rgba(255, 45, 85, 0.35);
+  }
+  100% {
+    transform: translateY(-5px) scale(1.03);
+    box-shadow: 0 0 40px rgba(245, 158, 11, 0.85), 0 0 75px rgba(255, 45, 85, 0.55);
+  }
+}
+
+.title-logo-emblem {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #f59e0b;
+  outline: 2px solid rgba(254, 240, 138, 0.7);
+  filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.85));
 }
 
 .title-logo-text {
@@ -1312,6 +1369,29 @@ canvas#gameCanvas {
   font-size: 0.88rem;
   line-height: 1.6;
   color: #f1f5f9;
+}
+
+.story-intro-card-flex {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+}
+
+.about-modal-logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 2px solid var(--gold);
+  box-shadow: 0 0 18px rgba(245, 158, 11, 0.6);
+  flex-shrink: 0;
+  object-fit: cover;
+}
+
+@media (max-width: 600px) {
+  .story-intro-card-flex {
+    flex-direction: column;
+    text-align: center;
+  }
 }
 
 .story-chapter {

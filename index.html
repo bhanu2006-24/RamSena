@@ -6,6 +6,10 @@
   <title>RAM SENA | The Sacred Vanguard (राम सेना)</title>
   <meta name="description" content="A top-down 2D modern RPG web game of devotion and service in Shri Ram's army.">
   
+  <!-- Sacred Logo Favicon & App Icons -->
+  <link rel="icon" type="image/png" href="assets/images/logo.png">
+  <link rel="apple-touch-icon" href="assets/images/logo.png">
+  
   <!-- Modern & Sacred Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -76,6 +80,10 @@
       <!-- 2. RETRO DEVOTIONAL START MENU (POPS UP ON PRESSING M / ENTER) -->
       <div id="retro-start-menu" class="hidden">
         <div class="gba-menu-box">
+          <div class="gba-menu-brand">
+            <img src="assets/images/logo.png" alt="Ram Sena Logo" class="gba-menu-logo">
+            <span class="gba-menu-brand-title">RAM SENA</span>
+          </div>
           <div class="gba-menu-row selected" data-index="0" data-action="bag">
             <span class="gba-cursor">▶</span><span class="gba-label">BAG</span>
           </div>
@@ -211,6 +219,9 @@
       </div>
 
       <div class="title-main-group">
+        <div class="title-logo-badge-wrap">
+          <img class="title-logo-emblem" src="assets/images/logo.png" alt="Ram Sena Sacred Logo Emblem">
+        </div>
         <h1 class="title-logo-text">RAM SENA</h1>
         <div class="title-hindi">राम सेना</div>
         <div class="title-author">AN EPIC OF DEVOTION (BHAKTI) • BY A FELLOW BHAKT</div>
@@ -340,12 +351,15 @@
         <div class="retro-modal-title">📖 श्री राम कथा एवं खेल परिचय (THE SACRED CHRONICLE)</div>
         <div class="retro-modal-body">
 
-          <!-- Intro Banner -->
-          <div class="story-intro-card">
-            <div style="font-weight: 700; color: var(--gold); margin-bottom: 0.35rem; font-family: var(--font-title); font-size: 0.95rem;">
-              ✦ श्री रामचरितमानस — किष्किन्धा से अयोध्या वापसी तक की दिव्य गाथा ✦
+          <!-- Intro Banner with Sacred Emblem -->
+          <div class="story-intro-card story-intro-card-flex">
+            <img src="assets/images/logo.png" alt="Ram Sena Emblem" class="about-modal-logo">
+            <div>
+              <div style="font-weight: 700; color: var(--gold); margin-bottom: 0.35rem; font-family: var(--font-title); font-size: 0.95rem;">
+                ✦ श्री रामचरितमानस — किष्किन्धा से अयोध्या वापसी तक की दिव्य गाथा ✦
+              </div>
+              यह खेल रामायण के उस पावन कालखंड को समर्पित है जहाँ भगवान श्री राम के अनुग्रह से वानर और रीछ सेना ने निष्काम भक्ति और सेवा का सर्वोच्च आदर्श स्थापित किया। आप इस सेना के एक विनम्र सेवक हैं।
             </div>
-            यह खेल रामायण के उस पावन कालखंड को समर्पित है जहाँ भगवान श्री राम के अनुग्रह से वानर और रीछ सेना ने निष्काम भक्ति और सेवा का सर्वोच्च आदर्श स्थापित किया। आप इस सेना के एक विनम्र सेवक हैं।
           </div>
 
           <!-- Chapter 1: Kishkindha Kanda -->
@@ -471,7 +485,10 @@
     <!-- 9. OPTIONS & VOLUME MODAL -->
     <div id="options-modal" class="retro-modal-backdrop hidden">
       <div class="retro-modal-frame">
-        <div class="retro-modal-title">OPTIONS & AUDIO</div>
+        <div class="retro-modal-title" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+          <img src="assets/images/logo.png" alt="Logo" style="width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid var(--gold); object-fit: cover;">
+          <span>OPTIONS & AUDIO</span>
+        </div>
         <div class="retro-modal-body" style="display: flex; flex-direction: column; gap: 1.1rem;">
           <!-- Volume Slider -->
           <div class="opt-row">
