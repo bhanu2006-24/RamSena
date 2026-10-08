@@ -75,7 +75,7 @@ class MapManager {
       window.npcManager.loadNPCsForMap(mapId);
     }
 
-    // Show Pokemon-style location banner on map transition
+    // Show retro location banner on map transition
     if (window.uiManager) {
       window.uiManager.showLocationBanner(mapData.name, mapData.subtitle);
       if (announce) {

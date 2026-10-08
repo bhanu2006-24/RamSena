@@ -1,6 +1,6 @@
 /**
  * RAM SENA - Turn-Based Combat Engine (scripts/combat.js)
- * Implements Pokemon RPG-style encounters on The Field (Map 7).
+ * Implements turn-based heroic devotional encounters on The Field (Map 7).
  * Archetype-specific attacks (Bear has higher attack/HP; Vanar has speed/agility).
  * 
  * SACRED IMMUTABLE RULE:

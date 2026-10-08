@@ -1,6 +1,6 @@
 /**
  * RAM SENA - Main Game Engine (scripts/main.js)
- * Fullscreen 2D Pokemon RPG game loop, dynamic resolution scaling,
+ * Fullscreen 2D Devotional RPG game loop, dynamic resolution scaling,
  * input handling, NPC/world interactions, and map transitions.
  */
 
@@ -13,7 +13,7 @@ class Game {
     this.canvasWidth = window.innerWidth;
     this.canvasHeight = window.innerHeight;
 
-    // Pokemon GBA Scale: Target ~15 tiles across viewport (110px - 130px per tile)
+    // Devotional RPG Tile Scale: Target ~14-15 tiles across viewport (110px - 130px per tile)
     this.tileSize = this.calculateTileSize();
 
     this.state = window.GAME_STATES.MENU;
@@ -25,7 +25,7 @@ class Game {
   }
 
   calculateTileSize() {
-    // Authentic GBA Pokemon Scale: Target ~13-14 tiles across screen, ~8-9 vertically
+    // Retro RPG Scale: Target ~13-14 tiles across screen, ~8-9 vertically
     const sizeByW = Math.floor(window.innerWidth / 14);
     const sizeByH = Math.floor(window.innerHeight / 8.8);
     return Math.max(110, Math.min(145, Math.min(sizeByW, sizeByH)));
@@ -560,7 +560,7 @@ class Game {
                 } else if (mapId === 'beach2' && r <= 5) {
                   // Northern landing of Ram Setu on Lanka water
                   ar.drawSetuStoneBridge(ctx, sx, sy, ts, c, r, this.animClock);
-                } else if ((mapId === 'beach1' && r >= 5) || (mapId === 'beach2' && r >= 6 && r <= 21)) {
+                } else if ((mapId === 'beach1' && r >= 5) || (mapId === 'beach2' && r >= 6 && r <= 19)) {
                   // Beach is pure sand! No artificial roads or kingdom stones
                   ar.drawSand(ctx, sx, sy, ts, c, r);
                 } else {
@@ -598,6 +598,10 @@ class Game {
             case window.TILE_TYPES.CAMP_TENT:
               ar.drawBaseGround(ctx, sx, sy, ts, c, r, window.mapManager.currentMapId);
               ar.drawTent(ctx, sx, sy, ts, this.animClock, c, r);
+              break;
+            case window.TILE_TYPES.MOUNTAIN:
+              ar.drawBaseGround(ctx, sx, sy, ts, c, r, window.mapManager.currentMapId);
+              ar.drawMountain(ctx, sx, sy, ts, c, r);
               break;
             default:
               ar.drawGrass(ctx, sx, sy, ts, c, r);

@@ -2,8 +2,8 @@
  * RAM SENA - UI & Menu Engine (scripts/ui.js)
  * Implements:
  * - Clean screen (nothing showing during gameplay)
- * - Authentic GBA Pokemon Start Menu (Keyboard navigable: BAG, HERO, SAVE, OPTION, EXIT)
- * - Authentic Pokemon Emerald Dialogue Box (with blinking red cursor ▼)
+ * - Retro Devotional Start Menu (Keyboard navigable: BAG, HERO, SAVE, OPTION, EXIT)
+ * - Retro Devotional Dialogue Box (with blinking cursor ▼)
  * - Fullscreen Title Screen (Matching Contract Demon reference)
  * - Fullscreen toggle button
  */
@@ -44,7 +44,7 @@ class UIManager {
     this.btnVolUp = document.getElementById('btn-vol-up');
     this.optVolumeVal = document.getElementById('opt-volume-val');
 
-    // 4. GBA Pokemon Start Menu
+    // 4. Retro Devotional Start Menu
     this.startMenu = document.getElementById('pokemon-start-menu');
     this.menuRows = document.querySelectorAll('.gba-menu-row');
     this.menuPlayerNameEl = document.getElementById('gba-player-name');
@@ -453,7 +453,7 @@ class UIManager {
   }
 
   // ===================================================================
-  // GBA POKEMON START MENU (Image 2 Reference)
+  // RETRO DEVOTIONAL START MENU
   // ===================================================================
 
   isMenuOpen() {
@@ -568,7 +568,7 @@ class UIManager {
   }
 
   // ===================================================================
-  // POKEMON BAG (INVENTORY MODAL)
+  // DEVOTIONAL SEVA SACK (INVENTORY MODAL)
   // ===================================================================
 
   openBag() {
@@ -690,7 +690,7 @@ class UIManager {
   }
 
   // ===================================================================
-  // POKEMON EMERALD DIALOGUE SYSTEM
+  // RETRO DEVOTIONAL DIALOGUE SYSTEM
   // ===================================================================
 
   getSpeakerImage(speaker) {
