@@ -11,12 +11,12 @@
 class UIManager {
   constructor() {
     // 1. Dialogue Elements
-    this.textboxWrapper = document.getElementById('pokemon-textbox-wrapper');
-    this.speakerTag = document.getElementById('poke-speaker-name');
-    this.speakerImg = document.getElementById('poke-speaker-img');
-    this.dialogueText = document.getElementById('poke-dialogue-text');
-    this.cursorIndicator = document.getElementById('poke-cursor');
-    this.choicesContainer = document.getElementById('poke-choices');
+    this.textboxWrapper = document.getElementById('retro-textbox-wrapper');
+    this.speakerTag = document.getElementById('retro-speaker-name');
+    this.speakerImg = document.getElementById('retro-speaker-img');
+    this.dialogueText = document.getElementById('retro-dialogue-text');
+    this.cursorIndicator = document.getElementById('retro-cursor');
+    this.choicesContainer = document.getElementById('retro-choices');
 
     // 2. Title Screen & Character Select
     this.titleScreen = document.getElementById('title-screen');
@@ -45,13 +45,13 @@ class UIManager {
     this.optVolumeVal = document.getElementById('opt-volume-val');
 
     // 4. Retro Devotional Start Menu
-    this.startMenu = document.getElementById('pokemon-start-menu');
+    this.startMenu = document.getElementById('retro-start-menu');
     this.menuRows = document.querySelectorAll('.gba-menu-row');
     this.menuPlayerNameEl = document.getElementById('gba-player-name');
     this.menuIndex = 0; // 0: BAG, 1: HERO, 2: SAVE, 3: OPTION, 4: EXIT
 
     // 5. Bag & Sevaka Card
-    this.bagModal = document.getElementById('pokemon-bag-modal');
+    this.bagModal = document.getElementById('retro-bag-modal');
     this.bagItemList = document.getElementById('bag-item-list');
     this.bagDetailIcon = document.getElementById('bag-detail-icon');
     this.bagDetailName = document.getElementById('bag-detail-name');
@@ -66,8 +66,8 @@ class UIManager {
 
     // 6. Big Character Portrait & Dialogue Elements
     this.optBigPortrait = document.getElementById('opt-big-portrait');
-    this.bigPortraitContainer = document.getElementById('poke-big-portrait-container');
-    this.bigPortraitImg = document.getElementById('poke-big-portrait-img');
+    this.bigPortraitContainer = document.getElementById('retro-big-portrait-container');
+    this.bigPortraitImg = document.getElementById('retro-big-portrait-img');
     this.bagGarlandCraftCard = document.getElementById('bag-garland-craft-card');
 
     this.showBigPortrait = localStorage.getItem('ram_sena_big_portrait') !== 'false';
@@ -306,7 +306,7 @@ class UIManager {
     // Dialogue box click to advance
     if (this.textboxWrapper) {
       this.textboxWrapper.addEventListener('click', (e) => {
-        if (!e.target.closest('.poke-choice-btn')) {
+        if (!e.target.closest('.retro-choice-btn')) {
           this.advanceDialogue();
         }
       });
@@ -622,7 +622,7 @@ class UIManager {
     this.bagItemList.innerHTML = '';
     itemsData.forEach(item => {
       const row = document.createElement('div');
-      row.className = `poke-bag-item-row ${this.selectedBagItemKey === item.key ? 'active' : ''}`;
+      row.className = `retro-bag-item-row ${this.selectedBagItemKey === item.key ? 'active' : ''}`;
       row.innerHTML = `
         <span>${item.icon} ${item.name}</span>
         <span class="item-qty">×${String(item.qty).padStart(2, '0')}</span>
@@ -662,7 +662,7 @@ class UIManager {
 
     this.updateBagCraftingStatus();
 
-    const rows = this.bagItemList.querySelectorAll('.poke-bag-item-row');
+    const rows = this.bagItemList.querySelectorAll('.retro-bag-item-row');
     rows.forEach(r => {
       if (r.textContent.includes(detail.name)) {
         r.classList.add('active');
@@ -807,7 +807,7 @@ class UIManager {
     if (choices && choices.length > 0 && this.choicesContainer) {
       choices.forEach(choice => {
         const btn = document.createElement('button');
-        btn.className = 'poke-choice-btn';
+        btn.className = 'retro-choice-btn';
         btn.innerHTML = choice.label;
         btn.addEventListener('click', (e) => {
           e.stopPropagation();

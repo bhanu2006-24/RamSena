@@ -16,12 +16,12 @@
   --gold: #fde047;
 
   /* Devotional UI Emerald Palette */
-  --poke-teal: #02bba4;
-  --poke-teal-dark: #018675;
-  --poke-teal-light: #44eccb;
-  --poke-bg: #ffffff;
-  --poke-text: #2c3338;
-  --poke-border-inner: #f1f5f9;
+  --retro-teal: #02bba4;
+  --retro-teal-dark: #018675;
+  --retro-teal-light: #44eccb;
+  --retro-bg: #ffffff;
+  --retro-text: #2c3338;
+  --retro-border-inner: #f1f5f9;
 
   /* GBA Menu Window Colors (Reference Image 2) */
   --gba-menu-bg: #ffffff;
@@ -30,7 +30,7 @@
   --gba-menu-text: #2c3338;
 
   --font-title: 'Cinzel', serif;
-  --font-pokemon: 'VT323', monospace;
+  --font-retro-dialog: 'VT323', monospace;
   --font-retro: 'Press Start 2P', monospace;
   --font-body: 'Outfit', -apple-system, sans-serif;
 }
@@ -141,7 +141,7 @@ canvas#gameCanvas {
    2. RETRO DEVOTIONAL START MENU (Image 2 Reference)
    ===================================================================== */
 
-#pokemon-start-menu {
+#retro-start-menu {
   position: absolute;
   top: 20px;
   right: 28px;
@@ -149,7 +149,7 @@ canvas#gameCanvas {
   transition: opacity 0.15s ease, transform 0.15s ease;
 }
 
-#pokemon-start-menu.hidden {
+#retro-start-menu.hidden {
   opacity: 0;
   transform: translateX(12px);
   pointer-events: none;
@@ -171,7 +171,7 @@ canvas#gameCanvas {
 .gba-menu-row {
   display: flex;
   align-items: center;
-  font-family: var(--font-pokemon);
+  font-family: var(--font-retro-dialog);
   font-size: 1.85rem;
   line-height: 1.25;
   color: var(--gba-menu-text);
@@ -208,7 +208,7 @@ canvas#gameCanvas {
    3. RETRO DEVOTIONAL DIALOGUE BOX
    ===================================================================== */
 
-#pokemon-textbox-wrapper {
+#retro-textbox-wrapper {
   position: absolute;
   bottom: 24px;
   left: 50%;
@@ -219,40 +219,40 @@ canvas#gameCanvas {
   transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
-#pokemon-textbox-wrapper.hidden {
+#retro-textbox-wrapper.hidden {
   opacity: 0;
   transform: translate(-50%, 20px);
   pointer-events: none;
 }
 
-.poke-speaker-tag {
+.retro-speaker-tag {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  background: var(--poke-teal-dark);
+  background: var(--retro-teal-dark);
   color: #ffffff;
   font-family: var(--font-retro);
   font-size: 0.7rem;
   padding: 0.35rem 0.85rem;
   border-radius: 6px 6px 0 0;
-  border: 2px solid var(--poke-teal);
+  border: 2px solid var(--retro-teal);
   border-bottom: none;
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.4);
   text-shadow: 1px 1px 0 #000;
 }
 
-.poke-speaker-tag:empty {
+.retro-speaker-tag:empty {
   display: none;
 }
 
-.poke-box {
-  background: var(--poke-bg);
-  border: 4px solid var(--poke-teal);
+.retro-box {
+  background: var(--retro-bg);
+  border: 4px solid var(--retro-teal);
   outline: 3px solid #042f2c;
   border-radius: 8px;
   box-shadow: 
     0 10px 30px rgba(0, 0, 0, 0.85),
-    inset 0 0 0 3px var(--poke-border-inner);
+    inset 0 0 0 3px var(--retro-border-inner);
   padding: 1.1rem 1.4rem;
   min-height: 110px;
   position: relative;
@@ -261,11 +261,11 @@ canvas#gameCanvas {
   justify-content: space-between;
 }
 
-.poke-text-content {
-  font-family: var(--font-pokemon);
+.retro-text-content {
+  font-family: var(--font-retro-dialog);
   font-size: 1.85rem;
   line-height: 1.35;
-  color: var(--poke-text);
+  color: var(--retro-text);
   letter-spacing: 0.03em;
   font-weight: 500;
   white-space: pre-line;
@@ -274,7 +274,7 @@ canvas#gameCanvas {
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
 }
 
-.poke-cursor-indicator {
+.retro-cursor-indicator {
   position: absolute;
   right: 18px;
   bottom: 12px;
@@ -282,23 +282,23 @@ canvas#gameCanvas {
   font-size: 1.25rem;
   line-height: 1;
   display: none;
-  animation: poke-cursor-blink 0.8s infinite steps(2, start);
+  animation: retro-cursor-blink 0.8s infinite steps(2, start);
 }
 
-.poke-cursor-indicator.active {
+.retro-cursor-indicator.active {
   display: block;
 }
 
-.poke-choices-container {
+.retro-choices-container {
   display: flex;
   gap: 0.65rem;
   flex-wrap: wrap;
   margin-top: 0.75rem;
 }
 
-.poke-choice-btn {
+.retro-choice-btn {
   background: #f1f5f9;
-  border: 2px solid var(--poke-teal-dark);
+  border: 2px solid var(--retro-teal-dark);
   color: #0f172a;
   font-family: var(--font-retro);
   font-size: 0.62rem;
@@ -311,8 +311,8 @@ canvas#gameCanvas {
   gap: 0.35rem;
 }
 
-.poke-choice-btn:hover {
-  background: var(--poke-teal);
+.retro-choice-btn:hover {
+  background: var(--retro-teal);
   color: #ffffff;
   border-color: #042f2c;
   transform: translateY(-1px);
@@ -322,7 +322,7 @@ canvas#gameCanvas {
    4. DEVOTIONAL SEVA SACK (INVENTORY MODAL)
    ===================================================================== */
 
-#pokemon-bag-modal {
+#retro-bag-modal {
   position: absolute;
   inset: 0;
   z-index: 80;
@@ -335,16 +335,16 @@ canvas#gameCanvas {
   transition: opacity 0.2s ease;
 }
 
-#pokemon-bag-modal.hidden {
+#retro-bag-modal.hidden {
   opacity: 0;
   pointer-events: none;
 }
 
-.poke-bag-frame {
+.retro-bag-frame {
   width: 90%;
   max-width: 680px;
   background: #0f172a;
-  border: 4px solid var(--poke-teal);
+  border: 4px solid var(--retro-teal);
   outline: 3px solid #042f2c;
   border-radius: 10px;
   box-shadow: 0 15px 50px rgba(0, 0, 0, 0.95);
@@ -353,37 +353,37 @@ canvas#gameCanvas {
   overflow: hidden;
 }
 
-.poke-bag-header {
-  background: var(--poke-teal-dark);
+.retro-bag-header {
+  background: var(--retro-teal-dark);
   color: #ffffff;
   padding: 0.75rem 1.2rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 2px solid var(--poke-teal);
+  border-bottom: 2px solid var(--retro-teal);
 }
 
-.poke-bag-title {
+.retro-bag-title {
   font-family: var(--font-retro);
   font-size: 0.85rem;
   letter-spacing: 0.05em;
 }
 
-.poke-bag-body {
+.retro-bag-body {
   display: grid;
   grid-template-columns: 1.4fr 1fr;
   min-height: 340px;
   max-height: 520px;
 }
 
-.poke-bag-list {
+.retro-bag-list {
   background: #1e293b;
   border-right: 2px solid #334155;
   overflow-y: auto;
   padding: 0.5rem 0;
 }
 
-.poke-bag-item-row {
+.retro-bag-item-row {
   padding: 0.65rem 1.2rem;
   display: flex;
   align-items: center;
@@ -395,25 +395,25 @@ canvas#gameCanvas {
   transition: background 0.15s ease;
 }
 
-.poke-bag-item-row:hover,
-.poke-bag-item-row.active {
+.retro-bag-item-row:hover,
+.retro-bag-item-row.active {
   background: rgba(2, 187, 164, 0.25);
   color: #ffffff;
 }
 
-.poke-bag-item-row.active::before {
+.retro-bag-item-row.active::before {
   content: "▶";
   margin-right: 6px;
-  color: var(--poke-teal);
+  color: var(--retro-teal);
 }
 
 .item-qty {
-  font-family: var(--font-pokemon);
+  font-family: var(--font-retro-dialog);
   font-size: 1.4rem;
   color: var(--gold);
 }
 
-.poke-bag-detail {
+.retro-bag-detail {
   padding: 1.2rem;
   display: flex;
   flex-direction: column;
@@ -432,7 +432,7 @@ canvas#gameCanvas {
 .item-detail-name {
   font-family: var(--font-retro);
   font-size: 0.75rem;
-  color: var(--poke-teal-light);
+  color: var(--retro-teal-light);
   margin-bottom: 0.6rem;
   text-align: center;
 }
@@ -444,16 +444,16 @@ canvas#gameCanvas {
   line-height: 1.45;
 }
 
-.poke-bag-actions {
+.retro-bag-actions {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   margin-top: 1rem;
 }
 
-.btn-poke-action {
-  background: var(--poke-teal-dark);
-  border: 2px solid var(--poke-teal);
+.btn-retro-action {
+  background: var(--retro-teal-dark);
+  border: 2px solid var(--retro-teal);
   color: #ffffff;
   font-family: var(--font-retro);
   font-size: 0.65rem;
@@ -464,12 +464,12 @@ canvas#gameCanvas {
   text-align: center;
 }
 
-.btn-poke-action:hover {
-  background: var(--poke-teal);
+.btn-retro-action:hover {
+  background: var(--retro-teal);
   transform: translateY(-1px);
 }
 
-.poke-bag-footer {
+.retro-bag-footer {
   background: #090d16;
   border-top: 2px solid #334155;
   padding: 0.65rem 1.2rem;
@@ -1091,7 +1091,7 @@ canvas#gameCanvas {
    DIALOGUE BOX WITH SPEAKER PORTRAIT
    ===================================================================== */
 
-.poke-speaker-header {
+.retro-speaker-header {
   display: inline-flex;
   align-items: center;
   gap: 10px;
@@ -1103,7 +1103,7 @@ canvas#gameCanvas {
   box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.5);
 }
 
-.poke-speaker-portrait {
+.retro-speaker-portrait {
   width: 36px;
   height: 36px;
   border-radius: 50%;
@@ -1116,7 +1116,7 @@ canvas#gameCanvas {
    PROMINENT CHARACTER BUST / BIG PORTRAIT
    ===================================================================== */
 
-.poke-big-portrait-container {
+.retro-big-portrait-container {
   position: absolute;
   bottom: calc(100% - 15px);
   right: 5%;
@@ -1144,7 +1144,7 @@ canvas#gameCanvas {
   }
 }
 
-.poke-big-portrait-img {
+.retro-big-portrait-img {
   width: auto;
   max-width: 100%;
   height: 100%;
@@ -1276,7 +1276,7 @@ canvas#gameCanvas {
 
 .retro-btn:hover { background: #ff758f; }
 
-@keyframes poke-cursor-blink {
+@keyframes retro-cursor-blink {
   from, to { opacity: 1; }
   50% { opacity: 0; }
 }

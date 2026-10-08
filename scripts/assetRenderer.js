@@ -71,6 +71,16 @@ class AssetRenderer {
         sacredGlow: 'rgba(245, 158, 11, 0.2)'
       },
 
+      // Mountain Peaks & Crags (Mount Mahendra & Trikuta)
+      mountain: {
+        peakColor: '#64748b',
+        ridgeColor: '#475569',
+        shadowColor: '#1e293b',
+        darkBase: '#0f172a',
+        snowCap: '#e2e8f0',
+        crevice: '#090d16'
+      },
+
       // Dharma Dhwaja Flag parameters
       flag: {
         staffColor: '#78350f',
@@ -104,22 +114,47 @@ class AssetRenderer {
   // 0. BASE GROUND RENDERER (UNIFIED SCENERY - NO ODD COLORED BOXES)
   // ===================================================================
   drawBaseGround(ctx, sx, sy, ts, col = 0, row = 0, mapId = 'camp1') {
-    // If on beach map and in the sandy shoreline area: draw sand
-    if (mapId === 'beach1') {
-      if (row >= 5) {
-        this.drawSand(ctx, sx, sy, ts, col, row);
-        return;
+    // Dynamic neighbor detection prevents mismatched color boxes under trees/props
+    let sandVotes = 0;
+    let grassVotes = 0;
+    const grid = window.mapManager && window.mapManager.grid;
+    if (grid && row >= 0 && row < grid.length && col >= 0 && col < grid[0].length) {
+      for (let dr = -1; dr <= 1; dr++) {
+        for (let dc = -1; dc <= 1; dc++) {
+          if (dr === 0 && dc === 0) continue;
+          const nr = row + dr;
+          const nc = col + dc;
+          if (nr >= 0 && nr < grid.length && nc >= 0 && nc < grid[0].length) {
+            const tile = grid[nr][nc];
+            const weight = (dr === 0 || dc === 0) ? 2 : 1;
+            if (tile === window.TILE_TYPES.SAND) {
+              sandVotes += weight;
+            } else if (tile === window.TILE_TYPES.GRASS || tile === window.TILE_TYPES.FLOWER) {
+              grassVotes += weight;
+            }
+          }
+        }
       }
-    } else if (mapId === 'beach2') {
-      this.drawSand(ctx, sx, sy, ts, col, row);
-      return;
     }
-    // Default natural grass terrain for all other maps & areas
-    this.drawGrass(ctx, sx, sy, ts, col, row);
+
+    if (sandVotes > grassVotes) {
+      this.drawSand(ctx, sx, sy, ts, col, row);
+    } else if (grassVotes > sandVotes) {
+      this.drawGrass(ctx, sx, sy, ts, col, row);
+    } else {
+      // Biome-based tie breaker
+      if (mapId === 'beach1' && row >= 5) {
+        this.drawSand(ctx, sx, sy, ts, col, row);
+      } else if (mapId === 'beach2' && row <= 19) {
+        this.drawSand(ctx, sx, sy, ts, col, row);
+      } else {
+        this.drawGrass(ctx, sx, sy, ts, col, row);
+      }
+    }
   }
 
   // ===================================================================
-  // 1. TALL ANCIENT FOREST TREE (GBA Pokemon Style Dense Canopy)
+  // 1. TALL ANCIENT FOREST TREE (Classic Retro Dense Canopy)
   // ===================================================================
   drawTree(ctx, sx, sy, ts, animClock = 0, col = 0, row = 0) {
     const cfg = this.config.tree;
@@ -495,6 +530,85 @@ class AssetRenderer {
     ctx.fillStyle = cfg.sacredGlow;
     ctx.beginPath();
     ctx.arc(cx, cy, w * 0.42, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // ===================================================================
+  // 5B. SACRED MOUNTAIN CRAG & PEAK (MOUNT MAHENDRAS & TRIKUTA)
+  // ===================================================================
+  drawMountain(ctx, sx, sy, ts, col = 0, row = 0) {
+    const cfg = this.config.mountain || {
+      peakColor: '#64748b',
+      ridgeColor: '#475569',
+      shadowColor: '#1e293b',
+      darkBase: '#0f172a',
+      snowCap: '#e2e8f0',
+      crevice: '#090d16'
+    };
+
+    const cx = sx + ts / 2;
+    const baseBottom = sy + ts;
+    const hash = ((col * 31 + row * 17) % 7);
+    const peakOffset = (hash - 3) * (ts * 0.04);
+    const peakX = cx + peakOffset;
+    const peakY = sy + ts * 0.08 + (hash % 3) * (ts * 0.04);
+
+    // 1. Mountain Base Mass (Deep dark slate bedrock)
+    ctx.fillStyle = cfg.darkBase;
+    ctx.beginPath();
+    ctx.moveTo(sx - ts * 0.05, baseBottom);
+    ctx.lineTo(sx, sy + ts * 0.55);
+    ctx.lineTo(peakX, peakY);
+    ctx.lineTo(sx + ts, sy + ts * 0.55);
+    ctx.lineTo(sx + ts * 1.05, baseBottom);
+    ctx.closePath();
+    ctx.fill();
+
+    // 2. Sunlit West Face (Granite illuminated facet)
+    ctx.fillStyle = cfg.peakColor;
+    ctx.beginPath();
+    ctx.moveTo(peakX, peakY);
+    ctx.lineTo(sx - ts * 0.05, baseBottom);
+    ctx.lineTo(cx, baseBottom);
+    ctx.closePath();
+    ctx.fill();
+
+    // 3. Shadowed East Face (Slate deep shadow facet)
+    ctx.fillStyle = cfg.shadowColor;
+    ctx.beginPath();
+    ctx.moveTo(peakX, peakY);
+    ctx.lineTo(cx, baseBottom);
+    ctx.lineTo(sx + ts * 1.05, baseBottom);
+    ctx.closePath();
+    ctx.fill();
+
+    // 4. Central Ridgeline
+    ctx.strokeStyle = cfg.ridgeColor;
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(peakX, peakY);
+    ctx.lineTo(cx - ts * 0.05, sy + ts * 0.5);
+    ctx.lineTo(cx, baseBottom);
+    ctx.stroke();
+
+    // 5. Rock fissures & crags
+    ctx.strokeStyle = cfg.crevice;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(peakX - ts * 0.1, peakY + ts * 0.25);
+    ctx.lineTo(peakX - ts * 0.22, peakY + ts * 0.45);
+    ctx.moveTo(peakX + ts * 0.12, peakY + ts * 0.3);
+    ctx.lineTo(peakX + ts * 0.25, peakY + ts * 0.5);
+    ctx.stroke();
+
+    // 6. Snowcap / Sun highlight at apex
+    ctx.fillStyle = cfg.snowCap;
+    ctx.beginPath();
+    ctx.moveTo(peakX, peakY);
+    ctx.lineTo(peakX - ts * 0.12, peakY + ts * 0.15);
+    ctx.lineTo(peakX, peakY + ts * 0.12);
+    ctx.lineTo(peakX + ts * 0.1, peakY + ts * 0.16);
+    ctx.closePath();
     ctx.fill();
   }
 

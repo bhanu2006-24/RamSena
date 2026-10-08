@@ -13,6 +13,7 @@
   
   <!-- Stylesheet -->
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/touchControls.css">
 </head>
 <body>
   <div id="game-app">
@@ -73,7 +74,7 @@
       </header>
 
       <!-- 2. RETRO DEVOTIONAL START MENU (POPS UP ON PRESSING M / ENTER) -->
-      <div id="pokemon-start-menu" class="hidden">
+      <div id="retro-start-menu" class="hidden">
         <div class="gba-menu-box">
           <div class="gba-menu-row selected" data-index="0" data-action="bag">
             <span class="gba-cursor">▶</span><span class="gba-label">BAG</span>
@@ -97,24 +98,24 @@
       </div>
 
       <!-- 3. MODERN RPG DIALOGUE BOX (WITH OPTIONAL BIG CHARACTER PORTRAIT) -->
-      <div id="pokemon-textbox-wrapper" class="hidden">
+      <div id="retro-textbox-wrapper" class="hidden">
         <!-- Prominent Character Portrait (Toggled in Options) -->
-        <div id="poke-big-portrait-container" class="poke-big-portrait-container hidden">
-          <img id="poke-big-portrait-img" class="poke-big-portrait-img" src="assets/images/ram.png" alt="Character Portrait">
+        <div id="retro-big-portrait-container" class="retro-big-portrait-container hidden">
+          <img id="retro-big-portrait-img" class="retro-big-portrait-img" src="assets/images/ram.png" alt="Character Portrait">
         </div>
 
-        <div class="poke-speaker-header">
-          <img id="poke-speaker-img" class="poke-speaker-portrait" src="assets/images/ram.png" alt="Speaker">
-          <div class="poke-speaker-tag" id="poke-speaker-name">Shri Ram</div>
+        <div class="retro-speaker-header">
+          <img id="retro-speaker-img" class="retro-speaker-portrait" src="assets/images/ram.png" alt="Speaker">
+          <div class="retro-speaker-tag" id="retro-speaker-name">Shri Ram</div>
         </div>
-        <div class="poke-box">
-          <div class="poke-text-content" id="poke-dialogue-text">
+        <div class="retro-box">
+          <div class="retro-text-content" id="retro-dialogue-text">
             Hi! Sorry to keep you waiting!
           </div>
           <!-- Blinking Red Down-Triangle Indicator (▼) -->
-          <div class="poke-cursor-indicator active" id="poke-cursor">▼</div>
+          <div class="retro-cursor-indicator active" id="retro-cursor">▼</div>
           <!-- Choice Buttons Container -->
-          <div class="poke-choices-container" id="poke-choices"></div>
+          <div class="retro-choices-container" id="retro-choices"></div>
         </div>
       </div>
     </main>
@@ -127,19 +128,19 @@
     </footer>
 
     <!-- 4. DEVOTIONAL SEVA SACK (WITH DIRECT GARLAND CRAFTING) -->
-    <div id="pokemon-bag-modal" class="hidden">
-      <div class="poke-bag-frame">
-        <div class="poke-bag-header">
-          <span class="poke-bag-title">🎒 SEVAKA POCKETS (ITEMS & CRAFTING)</span>
+    <div id="retro-bag-modal" class="hidden">
+      <div class="retro-bag-frame">
+        <div class="retro-bag-header">
+          <span class="retro-bag-title">🎒 SEVAKA POCKETS (ITEMS & CRAFTING)</span>
           <span style="font-family: var(--font-retro); font-size: 0.65rem; color: var(--gold);">BHAKTI SEVA</span>
         </div>
-        <div class="poke-bag-body">
+        <div class="retro-bag-body">
           <!-- Left: Items List -->
-          <div class="poke-bag-list" id="bag-item-list">
+          <div class="retro-bag-list" id="bag-item-list">
             <!-- Populated dynamically -->
           </div>
           <!-- Right: Item Detail & Garland Weaving Card -->
-          <div class="poke-bag-detail">
+          <div class="retro-bag-detail">
             <div>
               <div class="item-detail-icon" id="bag-detail-icon">🪨</div>
               <div class="item-detail-name" id="bag-detail-name">Sacred Stone</div>
@@ -157,18 +158,18 @@
               <p class="craft-card-hint">
                 Weave 5 fragrant forest blossoms (🌸) into a blessed garland (पुष्पमाला) to offer to Shri Ram or the army commanders for divine darshan!
               </p>
-              <button class="btn-poke-action btn-craft-hero" id="btn-quick-craft-garland">
+              <button class="btn-retro-action btn-craft-hero" id="btn-quick-craft-garland">
                 🌸 WEAVE GARLAND NOW
               </button>
             </div>
 
-            <div class="poke-bag-actions" id="bag-actions-container">
+            <div class="retro-bag-actions" id="bag-actions-container">
               <!-- Context actions -->
             </div>
           </div>
         </div>
-        <div class="poke-bag-footer">
-          <button class="btn-poke-action" id="btn-close-bag">BACK [B / X / Esc]</button>
+        <div class="retro-bag-footer">
+          <button class="btn-retro-action" id="btn-close-bag">BACK [B / X / Esc]</button>
         </div>
       </div>
     </div>
@@ -189,7 +190,7 @@
             <strong>SETU SERVICE:</strong> <span id="card-setu">0</span> / 10 Stones Delivered
           </div>
         </div>
-        <button class="btn-poke-action" id="btn-close-sevaka-card" style="align-self: center; padding: 0.5rem 2rem;">
+        <button class="btn-retro-action" id="btn-close-sevaka-card" style="align-self: center; padding: 0.5rem 2rem;">
           BACK [B / X / Esc]
         </button>
       </div>
@@ -317,10 +318,10 @@
         </div>
 
         <footer class="char-select-footer">
-          <button class="btn-poke-action btn-confirm-hero" id="btn-confirm-archetype">
+          <button class="btn-retro-action btn-confirm-hero" id="btn-confirm-archetype">
             ⚔️ ENTER THE SACRED ARMY (Enter / Z)
           </button>
-          <button class="btn-poke-action btn-back-hero" id="btn-back-to-title">
+          <button class="btn-retro-action btn-back-hero" id="btn-back-to-title">
             ↩ RETURN TO TITLE [Esc / X]
           </button>
         </footer>
@@ -358,9 +359,9 @@
           <div class="opt-row">
             <span>MUSIC VOLUME:</span>
             <div style="display: flex; align-items: center; gap: 0.5rem;">
-              <button class="btn-poke-action" id="btn-vol-down" style="padding: 0.3rem 0.6rem; font-size: 0.75rem;">➖</button>
+              <button class="btn-retro-action" id="btn-vol-down" style="padding: 0.3rem 0.6rem; font-size: 0.75rem;">➖</button>
               <input type="range" id="opt-volume-slider" min="0" max="100" value="40" style="width: 120px; accent-color: var(--gold); cursor: pointer;">
-              <button class="btn-poke-action" id="btn-vol-up" style="padding: 0.3rem 0.6rem; font-size: 0.75rem;">➕</button>
+              <button class="btn-retro-action" id="btn-vol-up" style="padding: 0.3rem 0.6rem; font-size: 0.75rem;">➕</button>
               <span id="opt-volume-val" style="min-width: 44px; text-align: right; font-family: var(--font-retro); font-size: 0.75rem; color: var(--gold);">40%</span>
             </div>
           </div>
@@ -368,25 +369,25 @@
           <!-- Bhajan Track Selector -->
           <div class="opt-row">
             <span>SELECT BHAJAN:</span>
-            <button class="btn-poke-action" id="opt-bhajan-select" style="padding: 0.45rem 1rem; min-width: 190px;">Bhajan 1</button>
+            <button class="btn-retro-action" id="opt-bhajan-select" style="padding: 0.45rem 1rem; min-width: 190px;">Bhajan 1</button>
           </div>
 
           <!-- Mute Toggle -->
           <div class="opt-row">
             <span>DEVOTIONAL MUSIC:</span>
-            <button class="btn-poke-action" id="opt-bgm-toggle" style="padding: 0.4rem 1.2rem;">ON</button>
+            <button class="btn-retro-action" id="opt-bgm-toggle" style="padding: 0.4rem 1.2rem;">ON</button>
           </div>
 
           <!-- Text Speed -->
           <div class="opt-row">
             <span>TEXT SPEED:</span>
-            <button class="btn-poke-action" id="opt-text-speed" style="padding: 0.4rem 1.2rem;">FAST</button>
+            <button class="btn-retro-action" id="opt-text-speed" style="padding: 0.4rem 1.2rem;">FAST</button>
           </div>
 
           <!-- Big Character Portrait Toggle -->
           <div class="opt-row">
             <span>BIG PORTRAIT (बड़ा चित्र):</span>
-            <button class="btn-poke-action" id="opt-big-portrait" style="padding: 0.4rem 1.2rem; border-color: #10b981;">ON</button>
+            <button class="btn-retro-action" id="opt-big-portrait" style="padding: 0.4rem 1.2rem; border-color: #10b981;">ON</button>
           </div>
 
           <!-- Developer Tools Link -->
@@ -421,5 +422,6 @@
   <script src="scripts/player.js"></script>
   <script src="scripts/ui.js"></script>
   <script src="scripts/main.js"></script>
+  <script src="scripts/touchControls.js"></script>
 </body>
 </html>

@@ -1,0 +1,260 @@
+/* =====================================================================
+   RAM SENA (राम सेना) - Mobile & Touch Controls Stylesheet (css/touchControls.css)
+   - Completely isolated: Zero impact on desktop viewports or styling.
+   - Click Destination Ripple Marker (Tactile visual feedback for all devices).
+   - Virtual Analog Joystick (Only appears on mobile/tablet/touch devices).
+   - Retro Action Buttons (A: Interact, B: Sack/Back, M: Menu, H: Hail).
+   ===================================================================== */
+
+/* 1. CLICK / TAP DESTINATION RIPPLE MARKER (WORKS ON ALL PLATFORMS) */
+.click-destination-marker {
+  position: absolute;
+  pointer-events: none;
+  width: 32px;
+  height: 32px;
+  margin-left: -16px;
+  margin-top: -16px;
+  border-radius: 50%;
+  border: 2px solid #f59e0b;
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.7);
+  animation: clickRipple 0.65s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  z-index: 60;
+}
+
+.click-destination-marker::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fbbf24 20%, transparent 70%);
+  opacity: 0.8;
+}
+
+@keyframes clickRipple {
+  0% {
+    transform: scale(0.3);
+    opacity: 1;
+  }
+  60% {
+    transform: scale(1.3);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+/* =====================================================================
+   2. DESKTOP SAFEGUARD: JOYSTICK & TOUCH BUTTONS HIDDEN BY DEFAULT
+   ===================================================================== */
+#touch-joystick-container,
+#touch-actions-panel {
+  display: none;
+}
+
+/* =====================================================================
+   3. MOBILE & TABLET ACTIVATION: ONLY ON TOUCH DEVICES / COARSE POINTER
+   ===================================================================== */
+@media (hover: none) and (pointer: coarse),
+       (max-width: 900px) and (pointer: coarse),
+       body.touch-device {
+
+  /* Prevent browser pull-to-refresh or accidental zoom gesture delays */
+  html, body {
+    touch-action: manipulation;
+    -webkit-touch-callout: none;
+  }
+
+  /* --- VIRTUAL ANALOG JOYSTICK (BOTTOM-LEFT) --- */
+  #touch-joystick-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    bottom: 24px;
+    left: 20px;
+    width: 120px;
+    height: 120px;
+    z-index: 90;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none;
+  }
+
+  .joystick-base {
+    position: relative;
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.92));
+    border: 3px solid rgba(245, 158, 11, 0.55);
+    box-shadow: 
+      0 8px 24px rgba(0, 0, 0, 0.75),
+      inset 0 0 15px rgba(0, 0, 0, 0.8),
+      0 0 15px rgba(245, 158, 11, 0.2);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: none;
+  }
+
+  /* Directional Compass Ring Indicators */
+  .joystick-base::before {
+    content: "▲";
+    position: absolute;
+    top: 6px;
+    font-size: 0.6rem;
+    color: rgba(245, 158, 11, 0.4);
+    font-family: monospace;
+  }
+  .joystick-base::after {
+    content: "▼";
+    position: absolute;
+    bottom: 6px;
+    font-size: 0.6rem;
+    color: rgba(245, 158, 11, 0.4);
+    font-family: monospace;
+  }
+
+  .joystick-thumb {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #fbbf24, #b45309);
+    border: 2px solid #fef08a;
+    box-shadow: 
+      0 4px 14px rgba(0, 0, 0, 0.8),
+      inset 0 2px 4px rgba(255, 255, 255, 0.4);
+    position: absolute;
+    top: calc(50% - 24px);
+    left: calc(50% - 24px);
+    cursor: grab;
+    touch-action: none;
+    transition: transform 0.05s ease-out;
+  }
+
+  .joystick-thumb:active {
+    cursor: grabbing;
+    background: radial-gradient(circle at 35% 35%, #fde047, #d97706);
+    box-shadow: 
+      0 2px 8px rgba(0, 0, 0, 0.9),
+      0 0 16px rgba(245, 158, 11, 0.65);
+  }
+
+  /* --- MOBILE RETRO ACTION BUTTONS (BOTTOM-RIGHT) --- */
+  #touch-actions-panel {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: absolute;
+    bottom: 24px;
+    right: 20px;
+    z-index: 90;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none;
+  }
+
+  .touch-cluster-aux {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .touch-cluster-main {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .touch-action-btn {
+    border-radius: 50%;
+    border: 2.5px solid var(--saffron, #f59e0b);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-family: 'Press Start 2P', monospace;
+    box-shadow: 
+      0 6px 18px rgba(0, 0, 0, 0.8),
+      inset 0 1px 3px rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    cursor: pointer;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.08s ease;
+  }
+
+  .touch-action-btn:active,
+  .touch-action-btn.active {
+    transform: scale(0.92);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+  }
+
+  /* Primary Button A: Interact / Confirm (Z key) */
+  .touch-btn-a {
+    width: 62px;
+    height: 62px;
+    background: radial-gradient(circle at 35% 35%, #059669, #064e3b);
+    border-color: #34d399;
+  }
+  .touch-btn-a:active,
+  .touch-btn-a.active {
+    background: radial-gradient(circle at 35% 35%, #10b981, #065f46);
+    box-shadow: 0 0 18px rgba(52, 211, 153, 0.7);
+  }
+
+  /* Secondary Button B: Sack / Back / Cancel (B / Esc key) */
+  .touch-btn-b {
+    width: 54px;
+    height: 54px;
+    background: radial-gradient(circle at 35% 35%, #dc2626, #7f1d1d);
+    border-color: #f87171;
+    margin-bottom: 12px;
+  }
+  .touch-btn-b:active,
+  .touch-btn-b.active {
+    background: radial-gradient(circle at 35% 35%, #ef4444, #991b1b);
+    box-shadow: 0 0 18px rgba(248, 113, 113, 0.7);
+  }
+
+  /* Menu Button M: GBA Start Menu (M key) */
+  .touch-btn-menu {
+    width: 44px;
+    height: 44px;
+    background: radial-gradient(circle at 35% 35%, #334155, #0f172a);
+    border-color: #94a3b8;
+    font-size: 0.55rem;
+  }
+
+  /* Devotional Chant Button H: "जय श्री राम!" */
+  .touch-btn-hail {
+    width: 44px;
+    height: 44px;
+    background: radial-gradient(circle at 35% 35%, #d97706, #78350f);
+    border-color: #fde047;
+    font-size: 0.9rem;
+  }
+
+  .btn-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    line-height: 1;
+    text-shadow: 1px 1px 0 #000;
+  }
+
+  .btn-sublabel {
+    font-size: 0.45rem;
+    color: rgba(255, 255, 255, 0.85);
+    margin-top: 3px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+  }
+}
