@@ -65,6 +65,12 @@ class ImageStudio {
     this.characters = [
       { key: 'vanar', name: 'Vanar Sevaka', file: 'vanar.png' },
       { key: 'bear', name: 'Riksha Bear', file: 'bear.png' },
+      { key: 'vanarsena', name: 'Vanar Soldier', file: 'vanarsena.png' },
+      { key: 'bhaluu', name: 'Bear Soldier', file: 'bhaluu.png' },
+      { key: 'nal', name: 'Architect Nal', file: 'nal.png' },
+      { key: 'neel', name: 'Architect Neel', file: 'neel.png' },
+      { key: 'sushena', name: 'Sushena Vaidya', file: 'sushena.png' },
+      { key: 'rakshsa', name: 'Lanka Rakshasa', file: 'rakshsa.png' },
       { key: 'ram', name: 'Shri Ram', file: 'ram.png' },
       { key: 'laxman', name: 'Lakshman', file: 'laxman.png' },
       { key: 'hanuman', name: 'Hanuman', file: 'hanuman.png' },

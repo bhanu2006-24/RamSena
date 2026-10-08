@@ -253,10 +253,32 @@ class Game {
     const tile = window.mapManager.getTile(targetX, targetY);
 
     if (tile === window.TILE_TYPES.SACRED_FIRE) {
+      const choices = [];
+      if (window.mapManager && window.mapManager.phase === 2) {
+        choices.push({
+          label: '🌅 Rest & Finish Day (रात का विश्राम / नई भोर)',
+          action: () => this.finishDay()
+        });
+      }
       window.uiManager.showDialogue(
         'Sacred Yajna Altar (पवित्र यज्ञवेदी)',
         'The sacred fire blazes bright with clarified butter and holy chants. You offer prayers with folded hands (प्रणाम 🙏).',
-        '🔥'
+        '🔥',
+        choices
+      );
+    } else if (tile === window.TILE_TYPES.CAMP_TENT) {
+      const choices = [];
+      if (window.mapManager && window.mapManager.phase === 2) {
+        choices.push({
+          label: '🌅 Rest & Finish Day (रात का विश्राम / नई भोर)',
+          action: () => this.finishDay()
+        });
+      }
+      window.uiManager.showDialogue(
+        'Royal Camp Pavilion (सेना शिविर)',
+        'The army pavilion provides shelter and rest for the valiant warriors of Shri Ram.',
+        '⛺',
+        choices
       );
     } else if (tile === window.TILE_TYPES.FLAG_BANNER) {
       window.uiManager.showDialogue(
@@ -275,12 +297,43 @@ class Game {
       );
     } else if (tile === window.TILE_TYPES.ROCK) {
       if (window.mapManager.phase === 1) {
+        const currentStones = window.inventory ? (window.inventory.items.stones || 0) : 0;
+        if (currentStones >= 1) {
+          window.uiManager.showDialogue(
+            'Carrying Sacred Stone (भार वहन)',
+            'You are already carrying a heavy sacred boulder (🪨) on your shoulders! Carry it south to Nal or Neel at the ocean shore before lifting another.',
+            '🪨'
+          );
+          return;
+        }
+
+        // Lift stone and remove it from the map grid so player cannot spam
         window.inventory.add('stones', 1);
+        if (window.mapManager.grid && window.mapManager.grid[targetY]) {
+          const mapId = window.mapManager.currentMapId || '';
+          let replacementTile = window.TILE_TYPES.GRASS;
+          if (mapId.startsWith('beach')) {
+            replacementTile = window.TILE_TYPES.SAND;
+          } else {
+            const neighbors = [
+              window.mapManager.grid[targetY - 1]?.[targetX],
+              window.mapManager.grid[targetY + 1]?.[targetX],
+              window.mapManager.grid[targetY]?.[targetX - 1],
+              window.mapManager.grid[targetY]?.[targetX + 1]
+            ];
+            if (neighbors.filter(t => t === window.TILE_TYPES.SAND).length >= 2) {
+              replacementTile = window.TILE_TYPES.SAND;
+            }
+          }
+          window.mapManager.grid[targetY][targetX] = replacementTile;
+        }
+
         window.uiManager.showDialogue(
-          'Sacred Mountain Stone',
-          'You lifted a solid stone (🪨). Bring it to Nal and Neel on the beach to build Ram Setu!',
+          'Sacred Mountain Stone (सेतु शिला)',
+          'You hoisted a heavy sacred boulder from Mount Mahendra (🪨)! Walk south to the beach and deliver it to Nal or Neel to build Ram Setu.',
           '🪨'
         );
+        window.uiManager.addLog('Lifted a sacred stone (1/1 carried). Bring it to Nal or Neel at the beach.', 'service');
       } else {
         window.uiManager.showDialogue(
           'Ancient Boulders of Lanka',
@@ -296,6 +349,51 @@ class Game {
       );
     } else {
       window.uiManager.showDialogue('Humble Vanar', 'You bow with folded hands: "जय श्री राम!"', '🙏');
+    }
+  }
+
+  finishDay() {
+    if (window.combatSystem) {
+      window.combatSystem.defeatedEncounters.clear();
+    }
+    if (window.FIELD_MAP && window.FIELD_MAP.encounters) {
+      window.FIELD_MAP.encounters.forEach(e => e.defeated = false);
+    }
+    if (window.mapManager && window.mapManager.encounters) {
+      window.mapManager.encounters.forEach(e => e.defeated = false);
+    }
+
+    if (window.player) {
+      window.player.hp = window.player.maxHp;
+    }
+
+    this.campaignDay = (this.campaignDay || 1) + 1;
+
+    if (window.uiManager) {
+      window.uiManager.showDialogue(
+        `Dawn of Day ${this.campaignDay} (रणभूमि की नई भोर)`,
+        `The sacred morning sun rises across the sea! The Vanar Sena awakens with prayers and war chants.\n\nYour strength is completely restored (HP: ${window.player.maxHp}/${window.player.maxHp}). Demon hosts have rallied again across the Great Battlefield!`,
+        '🌅',
+        [
+          {
+            label: '⚔️ March to the Battlefield (रणभूमि चलें)',
+            action: () => {
+              window.uiManager.hideDialogue();
+              window.mapManager.loadMap('field', 2, 12, true);
+            }
+          },
+          {
+            label: '⛺ Remain in Camp (शिविर में रहें)',
+            action: () => {
+              window.uiManager.hideDialogue();
+              if (window.mapManager.currentMapId !== 'camp2') {
+                window.mapManager.loadMap('camp2', 17, 14, true);
+              }
+            }
+          }
+        ]
+      );
+      window.uiManager.addLog(`🌅 Dawn of Day ${this.campaignDay}! All battlefield monsters have reappeared. Full HP restored.`, 'divine');
     }
   }
 
@@ -446,7 +544,30 @@ class Game {
               ar.drawFlowers(ctx, sx, sy, ts, c, r);
               break;
             case window.TILE_TYPES.DIRT_PATH:
-              ar.drawPath(ctx, sx, sy, ts, c, r);
+              {
+                const mapId = window.mapManager.currentMapId;
+                if (mapId === 'beach1' && r >= 19) {
+                  // Ram Setu: Floating sacred stones across ocean water
+                  const isComplete = window.mapManager.isSetuCompleted;
+                  const stones = window.mapManager.stonesDelivered;
+                  const completedRows = isComplete ? 7 : Math.floor((stones / window.mapManager.targetStones) * 7);
+                  if ((r - 19) < completedRows) {
+                    ar.drawSetuStoneBridge(ctx, sx, sy, ts, c, r, this.animClock);
+                  } else {
+                    // Open sea water until stones are placed!
+                    ar.drawWater(ctx, sx, sy, ts, this.animClock, c, r);
+                  }
+                } else if (mapId === 'beach2' && r <= 5) {
+                  // Northern landing of Ram Setu on Lanka water
+                  ar.drawSetuStoneBridge(ctx, sx, sy, ts, c, r, this.animClock);
+                } else if ((mapId === 'beach1' && r >= 5) || (mapId === 'beach2' && r >= 6 && r <= 21)) {
+                  // Beach is pure sand! No artificial roads or kingdom stones
+                  ar.drawSand(ctx, sx, sy, ts, c, r);
+                } else {
+                  // Forest / Jungle / Camp is the natural earthy mud trail
+                  ar.drawPath(ctx, sx, sy, ts, c, r);
+                }
+              }
               break;
             case window.TILE_TYPES.SAND:
               ar.drawSand(ctx, sx, sy, ts, c, r);

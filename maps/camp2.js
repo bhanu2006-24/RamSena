@@ -16,9 +16,9 @@ const CAMP2_MAP = {
   spawnX: 17,
   spawnY: 14,
   portals: [
-    { x: 17, y: 0, targetMap: 'forest2', targetX: 17, targetY: 23, label: 'To Lanka Forests (North) 🌴' },
-    { x: 17, y: 25, targetMap: 'beach2', targetX: 17, targetY: 2, label: 'To Lanka Shore (South) 🏖️' },
-    { x: 33, y: 12, targetMap: 'field', targetX: 1, targetY: 12, label: 'To The Battlefield (East) ⚔️' }
+    { x: 17, y: 0, targetMap: 'beach2', targetX: 17, targetY: 23, label: 'To Lanka Shore & Ram Setu (North) 🏖️' },
+    { x: 17, y: 25, targetMap: 'forest2', targetX: 17, targetY: 2, label: 'To Lanka Sacred Forest (South) 🌴' },
+    { x: 33, y: 12, targetMap: 'field', targetX: 1, targetY: 12, label: 'To The Great Battlefield (East) ⚔️' }
   ],
   grid: [
     // Rows 0-3: Northern exit to Lanka forest

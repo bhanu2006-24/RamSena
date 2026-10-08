@@ -618,9 +618,78 @@ class AssetRenderer {
     ctx.fillStyle = (col + row) % 2 === 0 ? cfg.path2 : cfg.path1;
     ctx.fillRect(sx, sy, ts, ts);
 
+    // Natural earthy mud trail with soft pebbles
     ctx.fillStyle = cfg.pathPebble;
     ctx.fillRect(sx + ts * 0.42, sy + ts * 0.42, 5, 4);
     ctx.fillRect(sx + ts * 0.72, sy + ts * 0.25, 4, 3);
+  }
+
+  // ===================================================================
+  // 9B. RAM SETU FLOATING SACRED BOULDERS (NATURAL CHISELED BOULDERS FLOATING UPON OCEAN)
+  // ===================================================================
+  drawSetuStoneBridge(ctx, sx, sy, ts, col = 0, row = 0, animClock = 0) {
+    // 1. Draw animated ocean water base underneath
+    this.drawWater(ctx, sx, sy, ts, animClock, col, row);
+
+    // 2. Gentle natural water bobbing for floating stones
+    const bob = Math.sin((animClock * 0.0035) + (col * 0.8) + (row * 0.6)) * 2.2;
+    const cx = sx + ts / 2;
+    const cy = sy + ts / 2 + bob;
+
+    // 3. Ocean foam ring around floating stones
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
+    ctx.beginPath();
+    ctx.ellipse(cx, cy + ts * 0.36, ts * 0.46, ts * 0.16, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 4. Floating Shadow beneath rocks
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.65)';
+    ctx.beginPath();
+    ctx.ellipse(cx, cy + ts * 0.32, ts * 0.42, ts * 0.14, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 5. Large Ancient Sacred Boulders (Interlocked Chiseled Granite Stones)
+    // Primary central boulder
+    ctx.fillStyle = (col + row) % 2 === 0 ? '#57534e' : '#44403c';
+    ctx.beginPath();
+    ctx.moveTo(cx - ts * 0.44, cy + ts * 0.28);
+    ctx.lineTo(cx - ts * 0.48, cy - ts * 0.12);
+    ctx.lineTo(cx - ts * 0.28, cy - ts * 0.42);
+    ctx.lineTo(cx + ts * 0.24, cy - ts * 0.44);
+    ctx.lineTo(cx + ts * 0.46, cy - ts * 0.18);
+    ctx.lineTo(cx + ts * 0.42, cy + ts * 0.28);
+    ctx.closePath();
+    ctx.fill();
+
+    // Sunlit top facets
+    ctx.fillStyle = '#78716c';
+    ctx.beginPath();
+    ctx.moveTo(cx - ts * 0.42, cy - ts * 0.12);
+    ctx.lineTo(cx - ts * 0.28, cy - ts * 0.42);
+    ctx.lineTo(cx + ts * 0.24, cy - ts * 0.44);
+    ctx.lineTo(cx + ts * 0.1, cy - ts * 0.1);
+    ctx.lineTo(cx - ts * 0.2, cy - ts * 0.05);
+    ctx.closePath();
+    ctx.fill();
+
+    // Bright stone edge highlight
+    ctx.fillStyle = '#a8a29e';
+    ctx.beginPath();
+    ctx.moveTo(cx - ts * 0.26, cy - ts * 0.4);
+    ctx.lineTo(cx + ts * 0.22, cy - ts * 0.42);
+    ctx.lineTo(cx + ts * 0.12, cy - ts * 0.28);
+    ctx.lineTo(cx - ts * 0.18, cy - ts * 0.26);
+    ctx.closePath();
+    ctx.fill();
+
+    // Weathered fissures and rock texture
+    ctx.strokeStyle = '#292524';
+    ctx.lineWidth = 1.8;
+    ctx.beginPath();
+    ctx.moveTo(cx - ts * 0.18, cy - ts * 0.25);
+    ctx.lineTo(cx - ts * 0.05, cy + ts * 0.05);
+    ctx.lineTo(cx + ts * 0.12, cy + ts * 0.18);
+    ctx.stroke();
   }
 
   drawSand(ctx, sx, sy, ts, col = 0, row = 0) {
@@ -660,10 +729,9 @@ class AssetRenderer {
 
     // 3. Draw Character Sprite
     if (img && img.complete && img.naturalWidth) {
-      // Detect 2x2 directional sheet (Vanar and Bear sprites)
-      const isDirectionalSheet = (isSheet !== null)
-        ? isSheet
-        : (img.src && (img.src.includes('vanar.png') || img.src.includes('bear.png') || img.src.includes('bhaluu') || img.src.includes('vanarsena')));
+      // ONLY the player (isSheet === true) uses 2x2 directional sprite sheet!
+      // ALL NPCs, soldiers (bhaluu, vanarsena), and divine leaders are complete single sprites!
+      const isDirectionalSheet = (isSheet === true);
 
       if (isDirectionalSheet) {
         // 2x2 directional sprite sheet:
@@ -698,7 +766,7 @@ class AssetRenderer {
 
         ctx.drawImage(img, sx_src, sy_src, sw, sh, posX, posY, drawW, drawH);
       } else {
-        // Single full-character portrait/sprite (Shri Ram, Lakshman, Hanuman, Sugreev, etc.)
+        // Single full-character portrait/sprite (Shri Ram, Lakshman, Hanuman, Sugreev, Sushena, Bhaluu, Vanarsena, etc.)
         const drawH = ts * 1.25;
         const aspect = img.naturalWidth / img.naturalHeight;
         const drawW = drawH * aspect;
@@ -724,46 +792,64 @@ class AssetRenderer {
   }
 
   // ===================================================================
-  // 11. BATTLEFIELD ENCOUNTER DEMON SPRITE
+  // 11. BATTLEFIELD ENCOUNTER DEMON SPRITE (RAKSHASA)
   // ===================================================================
   drawDemonWarrior(ctx, sx, sy, ts, enc, animClock = 0) {
     const cx = sx + ts / 2;
     const cy = sy + ts / 2;
+    const bob = Math.sin(animClock * 0.005) * 3;
 
-    // Ominous Crimson Aura
-    const auraGrad = ctx.createRadialGradient(cx, cy, ts * 0.1, cx, cy, ts * 0.8);
-    auraGrad.addColorStop(0, 'rgba(225, 29, 72, 0.5)');
+    // 1. Ominous Crimson Demonic Aura
+    const auraGrad = ctx.createRadialGradient(cx, cy + bob, ts * 0.1, cx, cy + bob, ts * 0.85);
+    auraGrad.addColorStop(0, 'rgba(225, 29, 72, 0.6)');
+    auraGrad.addColorStop(0.6, 'rgba(159, 18, 57, 0.3)');
     auraGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
     ctx.fillStyle = auraGrad;
     ctx.beginPath();
-    ctx.arc(cx, cy, ts * 0.75, 0, Math.PI * 2);
+    ctx.arc(cx, cy + bob, ts * 0.85, 0, Math.PI * 2);
     ctx.fill();
 
-    // Demon figure silhouette / armor
-    const bob = Math.sin(animClock * 0.005) * 3;
-    ctx.fillStyle = '#1e1b4b';
+    // 2. Soft Ground Drop Shadow
     ctx.beginPath();
-    ctx.ellipse(cx, cy + ts * 0.35, ts * 0.32, ts * 0.15, 0, 0, Math.PI * 2);
+    ctx.ellipse(cx, sy + ts * 0.9, ts * 0.42, ts * 0.18, 0, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
     ctx.fill();
 
-    // Dark armor torso
-    ctx.fillStyle = '#4c0519';
-    ctx.fillRect(cx - ts * 0.22, cy - ts * 0.2 + bob, ts * 0.44, ts * 0.45);
+    // 3. Render high-res Rakshasa sprite from manifest
+    const rakshsaImg = window.spriteManager ? window.spriteManager.getImage('rakshsa') : null;
+    if (rakshsaImg && rakshsaImg.complete && rakshsaImg.naturalWidth) {
+      const drawH = ts * 1.35;
+      const aspect = rakshsaImg.naturalWidth / rakshsaImg.naturalHeight;
+      const drawW = drawH * aspect;
+      const posX = cx - drawW / 2;
+      const posY = sy + ts - drawH + bob - 2;
+      ctx.drawImage(rakshsaImg, posX, posY, drawW, drawH);
+    } else {
+      // Fallback demon figure silhouette / armor
+      ctx.fillStyle = '#1e1b4b';
+      ctx.beginPath();
+      ctx.ellipse(cx, cy + ts * 0.35, ts * 0.32, ts * 0.15, 0, 0, Math.PI * 2);
+      ctx.fill();
 
-    // Glowing Crimson Eyes
-    ctx.fillStyle = '#fb7185';
-    ctx.fillRect(cx - ts * 0.12, cy - ts * 0.08 + bob, 5, 4);
-    ctx.fillRect(cx + ts * 0.06, cy - ts * 0.08 + bob, 5, 4);
+      // Dark armor torso
+      ctx.fillStyle = '#4c0519';
+      ctx.fillRect(cx - ts * 0.22, cy - ts * 0.2 + bob, ts * 0.44, ts * 0.45);
 
-    // Horns
-    ctx.strokeStyle = '#e11d48';
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.moveTo(cx - ts * 0.15, cy - ts * 0.2 + bob);
-    ctx.lineTo(cx - ts * 0.25, cy - ts * 0.38 + bob);
-    ctx.moveTo(cx + ts * 0.15, cy - ts * 0.2 + bob);
-    ctx.lineTo(cx + ts * 0.25, cy - ts * 0.38 + bob);
-    ctx.stroke();
+      // Glowing Crimson Eyes
+      ctx.fillStyle = '#fb7185';
+      ctx.fillRect(cx - ts * 0.12, cy - ts * 0.08 + bob, 5, 4);
+      ctx.fillRect(cx + ts * 0.06, cy - ts * 0.08 + bob, 5, 4);
+
+      // Horns
+      ctx.strokeStyle = '#e11d48';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(cx - ts * 0.15, cy - ts * 0.2 + bob);
+      ctx.lineTo(cx - ts * 0.25, cy - ts * 0.38 + bob);
+      ctx.moveTo(cx + ts * 0.15, cy - ts * 0.2 + bob);
+      ctx.lineTo(cx + ts * 0.25, cy - ts * 0.38 + bob);
+      ctx.stroke();
+    }
   }
 }
 

@@ -422,7 +422,22 @@ class UIManager {
     }
 
     if (window.mapManager) {
+      window.mapManager.stonesDelivered = 0;
+      window.mapManager.isSetuCompleted = false;
+      window.mapManager.phase = 1;
       window.mapManager.registerMaps();
+    }
+
+    if (window.inventory) {
+      window.inventory.items = {
+        berries: 0,
+        coconuts: 0,
+        flowers: 0,
+        fruits: 0,
+        garlands: 0,
+        stones: 0,
+        wood: 0
+      };
     }
 
     if (window.game) {
@@ -535,6 +550,18 @@ class UIManager {
     } else if (action === 'option') {
       this.updateOptionsDisplay();
       this.optionsModal.classList.remove('hidden');
+    } else if (action === 'rest') {
+      if (window.mapManager && window.mapManager.phase === 2) {
+        if (window.game && window.game.finishDay) {
+          window.game.finishDay();
+        }
+      } else {
+        this.showDialogue(
+          'Camp Rest (विश्राम)',
+          'You sit by the holy altar and offer prayers to Shri Ram: "जय श्री राम!" (Resting to finish the day and respawn monsters is active during Phase 2 on the Battlefield & Lanka Camp).',
+          '🙏'
+        );
+      }
     } else if (action === 'exit') {
       this.closeStartMenu();
     }
@@ -669,15 +696,27 @@ class UIManager {
   getSpeakerImage(speaker) {
     if (!speaker) return null;
     const s = speaker.toLowerCase();
+    if (s.includes('rakshsa') || s.includes('demon') || s.includes('monster') || s.includes('sentry') || s.includes('commander') || s.includes('night-stalker') || s.includes('club-bearer')) {
+      return 'assets/images/rakshsa.png';
+    }
+    if (s.includes('sushen')) return 'assets/images/sushena.png';
     if (s.includes('ram') && !s.includes('sugreev') && !s.includes('balram')) return 'assets/images/ram.png';
     if (s.includes('laxman') || s.includes('lakshman') || s.includes('saumitri')) return 'assets/images/laxman.png';
     if (s.includes('hanuman') || s.includes('maruti') || s.includes('anjaneya') || s.includes('pavanputra')) return 'assets/images/hanuman.png';
     if (s.includes('sugreev') || s.includes('sugriva')) return 'assets/images/sugreev.png';
     if (s.includes('jambavan') || s.includes('jambvant') || s.includes('riksharaj')) return 'assets/images/jambavan.png';
     if (s.includes('vibhisan') || s.includes('vibhisana') || s.includes('vibhishan')) return 'assets/images/vibhisan.png';
-    if (s.includes('angad') || s.includes('angada') || s.includes('yuvaraj')) return 'assets/images/angad.png';
+    if (s.includes('neel') && !s.includes('nal')) return 'assets/images/neel.png';
+    if (s.includes('nal')) return 'assets/images/nal.png';
+    if (s.includes('neel')) return 'assets/images/neel.png';
+    if (s.includes('bhaluu') || s.includes('bear warrior') || s.includes('bear soldier') || s.includes('stalwart bear') || s.includes('riksha warrior')) {
+      return 'assets/images/bhaluu.png';
+    }
+    if (s.includes('vanarsena') || s.includes('vanar warrior') || s.includes('vanar scout') || s.includes('forager') || s.includes('guard') || s.includes('sainik') || s.includes('senik')) {
+      return 'assets/images/vanarsena.png';
+    }
     if (s.includes('bear') || s.includes('riksha')) return 'assets/images/bear_front.png';
-    if (s.includes('vanar') || s.includes('nal') || s.includes('neel') || s.includes('sushen')) return 'assets/images/vanar_front.png';
+    if (s.includes('vanar')) return 'assets/images/vanar_front.png';
     if (s.includes('humble') || s.includes('sevaka') || s.includes('devotee')) {
       return (window.player && window.player.typeId === 'riksha') ? 'assets/images/bear_front.png' : 'assets/images/vanar_front.png';
     }
@@ -730,6 +769,8 @@ class UIManager {
     }
 
     this.currentFullText = text;
+    this.currentChoices = choices || [];
+    this.currentOnComplete = onComplete || null;
     this.dialogueText.textContent = '';
     this.isTyping = true;
 
@@ -743,7 +784,7 @@ class UIManager {
         clearInterval(this.typewriterTimer);
         this.typewriterTimer = null;
         this.isTyping = false;
-        this.finishDialogue(choices, onComplete);
+        this.finishDialogue(this.currentChoices, this.currentOnComplete);
       }
     }, this.textSpeed);
   }
@@ -754,7 +795,7 @@ class UIManager {
       this.typewriterTimer = null;
       this.dialogueText.textContent = this.currentFullText;
       this.isTyping = false;
-      this.finishDialogue();
+      this.finishDialogue(this.currentChoices, this.currentOnComplete);
     }
   }
 

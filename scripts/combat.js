@@ -16,9 +16,27 @@ class CombatSystem {
     this.currentEnemy = null;
     this.turn = 'player'; // 'player' | 'enemy'
     this.activeEncounterId = null;
+    this.defeatedEncounters = new Set();
+  }
+
+  getPlayerMoves() {
+    const isBear = window.player && window.player.typeId === 'riksha';
+    return isBear ? [
+      { label: '🐾 Crushing Paw (वज्र प्रहार)', action: () => this.playerAttack('Crushing Paw', 28) },
+      { label: '🦷 Heavy Bite (मल्ल दन्त)', action: () => this.playerAttack('Heavy Bite', 26) },
+      { label: '🪨 Hurl Boulder (महाशिला प्रक्षेप)', action: () => this.playerAttack('Hurl Boulder', 34) },
+      { label: '🪵 Uprooted Trunk (वृक्ष प्रहार)', action: () => this.playerAttack('Uprooted Trunk', 30) }
+    ] : [
+      { label: '🐾 Swift Scratch (नख प्रहार)', action: () => this.playerAttack('Swift Scratch', 22) },
+      { label: '🦷 Quick Bite (दन्त प्रहार)', action: () => this.playerAttack('Quick Bite', 24) },
+      { label: '🪨 Throw Rock (शिला प्रक्षेप)', action: () => this.playerAttack('Throw Rock', 28) },
+      { label: '🪵 Throw Wood (दण्ड प्रहार)', action: () => this.playerAttack('Throw Wood', 23) }
+    ];
   }
 
   startBattle(encounterId = null, customEnemyName = null) {
+    if (this.inCombat) return;
+
     this.activeEncounterId = encounterId;
     this.inCombat = true;
     this.turn = 'player';
@@ -32,9 +50,9 @@ class CombatSystem {
       'Fierce Night-Stalker Rakshasa'
     ];
     const name = customEnemyName || enemyNames[Math.floor(Math.random() * enemyNames.length)];
-    const hp = 95 + Math.floor(Math.random() * 35); // 95 to 130 HP
+    const hp = 85 + Math.floor(Math.random() * 30); // 85 to 115 HP
     const atk = 14 + Math.floor(Math.random() * 8);  // 14 to 22 Attack
-    const def = 6 + Math.floor(Math.random() * 6);   // 6 to 12 Defense
+    const def = 4 + Math.floor(Math.random() * 6);   // 4 to 10 Defense
 
     this.currentEnemy = {
       name,
@@ -48,36 +66,29 @@ class CombatSystem {
       window.game.state = window.GAME_STATES.COMBAT;
     }
 
-    // Determine attacks based on player archetype
-    const isBear = window.player.typeId === 'riksha';
-    const moves = isBear ? [
-      { label: '🐾 Crushing Paw (वज्र प्रहार)', action: () => this.playerAttack('Crushing Paw', 26) },
-      { label: '🦷 Heavy Bite (मल्ल दन्त)', action: () => this.playerAttack('Heavy Bite', 24) },
-      { label: '🪨 Hurl Boulder (महाशिला प्रक्षेप)', action: () => this.playerAttack('Hurl Boulder', 32) },
-      { label: '🪵 Uprooted Trunk (वृक्ष प्रहार)', action: () => this.playerAttack('Uprooted Trunk', 28) }
-    ] : [
-      { label: '🐾 Swift Scratch (नख प्रहार)', action: () => this.playerAttack('Swift Scratch', 20) },
-      { label: '🦷 Quick Bite (दन्त प्रहार)', action: () => this.playerAttack('Quick Bite', 22) },
-      { label: '🪨 Throw Rock (शिला प्रक्षेप)', action: () => this.playerAttack('Throw Rock', 25) },
-      { label: '🪵 Throw Wood (दण्ड प्रहार)', action: () => this.playerAttack('Throw Wood', 21) }
-    ];
+    const moves = this.getPlayerMoves();
 
     if (window.uiManager) {
-      const greeting = `A ferocious ${name} leaps from the shadows with weapons drawn! (HP: ${hp} • ATK: ${atk} • DEF: ${def})`;
-      window.uiManager.showDialogue('Battle on the Field (रणभूमि)', greeting, '⚔️', moves);
-      window.uiManager.addLog(`Encountered ${name} on the battlefield!`, 'info');
+      const greeting = `A ferocious ${name} leaps from the shadows with weapons drawn! (HP: ${hp} • ATK: ${atk} • DEF: ${def})\nChoose your move:`;
+      window.uiManager.showDialogue(name, greeting, '⚔️', moves);
+      window.uiManager.addLog(`⚔️ Encountered ${name} on the battlefield!`, 'info');
     }
   }
 
   playerAttack(moveName, baseDamage) {
     if (!this.inCombat || !this.currentEnemy || this.turn !== 'player') return;
 
+    // Clear buttons immediately so player cannot spam during animation
+    if (window.uiManager && window.uiManager.choicesContainer) {
+      window.uiManager.choicesContainer.innerHTML = '';
+    }
+
     // Calculate damage taking enemy defense into account
-    const statBonus = window.player.attackStat || 20;
-    const netDamage = Math.max(8, Math.floor(baseDamage * (statBonus / 20) - this.currentEnemy.defense * 0.4));
+    const statBonus = (window.player && window.player.attackStat) || 20;
+    const netDamage = Math.max(10, Math.floor(baseDamage * (statBonus / 20) - this.currentEnemy.defense * 0.35));
     
     // Critical hit chance
-    const isCrit = Math.random() < (window.player.critChance || 0.15);
+    const isCrit = Math.random() < ((window.player && window.player.critChance) || 0.18);
     const finalDamage = isCrit ? Math.floor(netDamage * 1.5) : netDamage;
 
     this.currentEnemy.hp = Math.max(0, this.currentEnemy.hp - finalDamage);
@@ -93,52 +104,52 @@ class CombatSystem {
       return;
     }
 
-    // Transition to enemy turn
+    // Show strike message then queue enemy counter
     this.turn = 'enemy';
+    if (window.uiManager) {
+      window.uiManager.showDialogue(
+        window.player.role,
+        `${window.player.role} strikes with ${moveName}! Dealt ${finalDamage} damage${critText}! (${this.currentEnemy.name} HP: ${this.currentEnemy.hp}/${this.currentEnemy.maxHp})`,
+        '💥',
+        []
+      );
+    }
+
     setTimeout(() => {
       this.enemyTurn();
-    }, 600);
+    }, 700);
   }
 
   enemyTurn() {
     if (!this.inCombat || !this.currentEnemy) return;
 
     const baseEnemyAtk = this.currentEnemy.attackPower;
-    const playerDef = window.player.defenseStat || 10;
-    const damage = Math.max(6, Math.floor(baseEnemyAtk - playerDef * 0.4));
+    const playerDef = (window.player && window.player.defenseStat) || 10;
+    const damage = Math.max(5, Math.floor(baseEnemyAtk - playerDef * 0.35));
 
-    window.player.takeDamage(damage);
+    if (window.player) {
+      window.player.takeDamage(damage);
+    }
+
     window.uiManager.addLog(
-      `${this.currentEnemy.name} strikes with demonic fury! You take ${damage} damage. (Player HP: ${window.player.hp}/${window.player.maxHp})`,
+      `${this.currentEnemy.name} strikes with demonic fury! You take ${damage} damage. (HP: ${window.player.hp}/${window.player.maxHp})`,
       'info'
     );
 
     // DIVINE INTERVENTION CHECK
-    if (window.player.hp <= 0) {
+    if (window.player && window.player.hp <= 0) {
       this.triggerDivineIntervention();
       return;
     }
 
     // Return turn to player
     this.turn = 'player';
-
-    const isBear = window.player.typeId === 'riksha';
-    const moves = isBear ? [
-      { label: '🐾 Crushing Paw', action: () => this.playerAttack('Crushing Paw', 26) },
-      { label: '🦷 Heavy Bite', action: () => this.playerAttack('Heavy Bite', 24) },
-      { label: '🪨 Hurl Boulder', action: () => this.playerAttack('Hurl Boulder', 32) },
-      { label: '🪵 Uprooted Trunk', action: () => this.playerAttack('Uprooted Trunk', 28) }
-    ] : [
-      { label: '🐾 Swift Scratch', action: () => this.playerAttack('Swift Scratch', 20) },
-      { label: '🦷 Quick Bite', action: () => this.playerAttack('Quick Bite', 22) },
-      { label: '🪨 Throw Rock', action: () => this.playerAttack('Throw Rock', 25) },
-      { label: '🪵 Throw Wood', action: () => this.playerAttack('Throw Wood', 21) }
-    ];
+    const moves = this.getPlayerMoves();
 
     if (window.uiManager) {
       window.uiManager.showDialogue(
-        'Combat: Choose Your Action',
-        `Enemy ${this.currentEnemy.name} HP: ${this.currentEnemy.hp}/${this.currentEnemy.maxHp}. Defend the sacred cause!`,
+        this.currentEnemy.name,
+        `${this.currentEnemy.name} counter-attacks dealing ${damage} damage! (Your HP: ${window.player.hp}/${window.player.maxHp} • Enemy HP: ${this.currentEnemy.hp}/${this.currentEnemy.maxHp})\nChoose your next action:`,
         '⚔️',
         moves
       );
@@ -147,18 +158,33 @@ class CombatSystem {
 
   triggerDivineIntervention() {
     // Divine Intervention: Player never dies
-    window.player.hp = Math.floor(window.player.maxHp * 0.5); // Grace restores strength
+    if (window.player) {
+      window.player.hp = Math.floor(window.player.maxHp * 0.6);
+    }
     if (this.currentEnemy) {
       this.currentEnemy.hp = 0;
+    }
+
+    if (this.activeEncounterId) {
+      this.defeatedEncounters.add(this.activeEncounterId);
+      if (window.mapManager && window.mapManager.encounters) {
+        const enc = window.mapManager.encounters.find(e => e.id === this.activeEncounterId);
+        if (enc) enc.defeated = true;
+      }
     }
 
     if (window.uiManager) {
       window.uiManager.showDialogue(
         'Divine Grace (श्री राम कृपा)',
-        'An arrow from Shri Ram strikes the enemy with radiant golden light! The rakshasa dissolves into dust instantly. You are protected by the Lord of the Universe.',
+        'An arrow from Shri Ram strikes the enemy with radiant golden light! The rakshasa dissolves into dust instantly. You are protected by the Lord of the Universe!',
         '🏹',
         [
-          { label: '🙏 Praise Shri Ram (जय श्री राम)', action: () => this.endBattle() }
+          {
+            label: '🙏 Praise Shri Ram (जय श्री राम)',
+            action: () => {
+              this.endBattle();
+            }
+          }
         ]
       );
       window.uiManager.addLog(
@@ -169,21 +195,49 @@ class CombatSystem {
   }
 
   winBattle() {
-    if (this.activeEncounterId && window.mapManager.encounters) {
-      const enc = window.mapManager.encounters.find(e => e.id === this.activeEncounterId);
-      if (enc) enc.defeated = true;
+    if (this.activeEncounterId) {
+      this.defeatedEncounters.add(this.activeEncounterId);
+      if (window.mapManager && window.mapManager.encounters) {
+        const enc = window.mapManager.encounters.find(e => e.id === this.activeEncounterId);
+        if (enc) enc.defeated = true;
+      }
+    }
+
+    const allDefeated = window.mapManager && window.mapManager.encounters && window.mapManager.encounters.every(e => e.defeated || e.id === this.activeEncounterId);
+
+    const choices = [
+      {
+        label: 'Continue March (आगे बढ़ें)',
+        action: () => {
+          this.endBattle();
+        }
+      }
+    ];
+
+    if (allDefeated) {
+      choices.unshift({
+        label: '🌅 Finish Day & Rest (दिन समाप्त करें - नया सवेरा)',
+        action: () => {
+          this.endBattle();
+          if (window.game && window.game.finishDay) {
+            window.game.finishDay();
+          }
+        }
+      });
     }
 
     if (window.uiManager) {
+      const victoryMsg = allDefeated
+        ? `The ${this.currentEnemy.name} was repelled! ✦ ALL ENEMY BATTALIONS ON THE BATTLEFIELD HAVE BEEN DEFEATED TODAY! ✦\nYou may finish the day to rest and rally for tomorrow\'s battles, or continue patrolling.`
+        : `The ${this.currentEnemy.name} was defeated! The vanguard path is clear. You offer your devotion to Shri Ram and continue your march!`;
+
       window.uiManager.showDialogue(
         'Victory in Dharma',
-        `The ${this.currentEnemy.name} was repelled from the vanguard. You offer your devotion to Shri Ram and continue your march!`,
+        victoryMsg,
         '✨',
-        [
-          { label: 'Continue (आगे बढ़ें)', action: () => this.endBattle() }
-        ]
+        choices
       );
-      window.uiManager.addLog(`Defeated ${this.currentEnemy.name}! Victory for the Sena.`, 'service');
+      window.uiManager.addLog(`✨ Defeated ${this.currentEnemy.name}! Victory for the Sena.`, 'service');
     }
   }
 
@@ -191,8 +245,13 @@ class CombatSystem {
     this.inCombat = false;
     this.currentEnemy = null;
     this.activeEncounterId = null;
+
     if (window.game) {
       window.game.state = window.GAME_STATES.OVERWORLD;
+    }
+
+    if (window.uiManager) {
+      window.uiManager.hideDialogue();
     }
   }
 }

@@ -17,6 +17,23 @@ class NPCManager {
     this.npcs = [];
 
     if (mapId === 'camp1') {
+      if (window.mapManager && window.mapManager.isSetuCompleted) {
+        // Phase 2: All divine leaders have crossed Ram Setu into Lanka!
+        this.npcs = [
+          {
+            id: 'camp1_caretaker',
+            name: 'Camp Caretaker Vanar (शिविर रक्षक)',
+            x: 16, y: 6,
+            symbol: '🐒',
+            color: '#92400e',
+            dialogues: [
+              'Shri Ram, Lakshman, Hanuman, and the entire army have crossed Ram Setu into Lanka! The vanguard camp is established across the sea.'
+            ]
+          }
+        ];
+        return;
+      }
+
       this.npcs = [
         // Revered Leaders in Camp 1
         {
@@ -158,18 +175,34 @@ class NPCManager {
       ];
     } else if (mapId === 'beach1') {
       this.npcs = [
-        // Master Architects Nal & Neel
+        // Master Architect Nal
         {
-          id: 'nal_neel',
-          name: 'Nal & Neel (शिल्पकार नल-नील)',
-          x: 17, y: 11,
+          id: 'nal',
+          name: 'Nal (शिल्पकार नल)',
+          x: 16, y: 11,
           symbol: '🌊',
           color: '#0891b2',
           aura: 'rgba(6, 182, 212, 0.45)',
-          title: 'Divine Architects of Ram Setu',
+          title: 'Divine Architect Nal (विश्वकर्मा-सुत)',
           isSetuArchitect: true,
           dialogues: [
-            'Jai Shri Ram! Bring us the gathered stones from the northern forest. By divine blessing and sacred remembrance of Ram Naam, every stone placed upon the ocean waves floats without sinking!'
+            'Jai Shri Ram! I am Nal, blessed son of Vishwakarma. Give me the sacred boulders from the forest; by divine boon and our heartfelt devotion to Shri Ram, whatever stone we place floats upon the ocean waves without sinking!',
+            'Every stone must be aligned with devotion. Bring your boulders to me or Neel to bridge this mighty ocean!'
+          ]
+        },
+        // Master Architect Neel
+        {
+          id: 'neel',
+          name: 'Neel (शिल्पकार नील)',
+          x: 18, y: 11,
+          symbol: '🌊',
+          color: '#0284c7',
+          aura: 'rgba(2, 132, 199, 0.45)',
+          title: 'Divine Architect Neel (विश्वकर्मा-सुत)',
+          isSetuArchitect: true,
+          dialogues: [
+            'Jai Shri Ram! I am Neel. While Nal measures the span toward Lanka, I secure and interlock the floating boulders upon the sea in Shri Ram\'s holy name!',
+            'With each stone you carry from Mount Mahendra, the sacred Setu stretches further across the turbulent waters!'
           ]
         },
         {
@@ -180,6 +213,30 @@ class NPCManager {
           color: '#92400e',
           dialogues: [
             'The southern breeze carries the fragrance of ocean spray. Nal and Neel are placing stones continuously—the bridge is growing closer to Lanka every hour!'
+          ]
+        }
+      ];
+    } else if (mapId === 'beach2') {
+      this.npcs = [
+        {
+          id: 'beach_guard_lanka',
+          name: 'Lanka Shore Sentinel (तट रक्षक सेनानी)',
+          x: 15, y: 7,
+          symbol: '🐒',
+          color: '#92400e',
+          dialogues: [
+            'We stand firm on the shores of Lanka! The bridge behind us connects to Bharat, but our army moves only forward. Turning back from the battle of Dharma is unthinkable!',
+            'Lord Ram and the commanders await in the Lanka Vanguard Camp to the south. March forward, valiant warrior!'
+          ]
+        },
+        {
+          id: 'beach_bear_lanka',
+          name: 'Shore Watch Bear (तट पहरेदार भालू)',
+          x: 19, y: 7,
+          symbol: '🐻',
+          color: '#451a03',
+          dialogues: [
+            'Our eyes scan the sea and the cliffs of Lanka. The entire army has landed safely. Advance southward to join the vanguard camp!'
           ]
         }
       ];
@@ -357,20 +414,10 @@ class NPCManager {
         choices.push({
           label: '⚔️ Cross Ram Setu to Lanka (Phase 2)',
           action: () => {
-            window.mapManager.loadMap('camp2', 17, 14, true);
+            window.mapManager.loadMap('beach2', 17, 6, true);
           }
         });
       }
-    }
-
-    // Return to Rameshwaram from Lanka shore
-    if ((npc.id === 'beach_guard' || npc.id === 'beach_guard_lanka') && window.mapManager && window.mapManager.currentMapId === 'beach2') {
-      choices.push({
-        label: '🏖️ Cross Ram Setu back to Rameshwaram',
-        action: () => {
-          window.mapManager.loadMap('beach1', 17, 24, true);
-        }
-      });
     }
 
     // 3. Offering Fruits
@@ -513,7 +560,8 @@ class NPCManager {
           bob,
           'down',
           npc.isDivine,
-          npc.aura
+          npc.aura,
+          false
         );
       }
     });

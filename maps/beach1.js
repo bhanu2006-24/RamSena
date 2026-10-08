@@ -15,8 +15,8 @@ const BEACH1_MAP = {
   spawnY: 3,
   portals: [
     { x: 17, y: 0, targetMap: 'camp1', targetX: 17, targetY: 23, label: 'To Vanar Camp (North) ⛺' },
-    { x: 16, y: 25, targetMap: 'camp2', targetX: 17, targetY: 2, label: 'Cross Ram Setu to Lanka (South) ⚔️' },
-    { x: 17, y: 25, targetMap: 'camp2', targetX: 17, targetY: 2, label: 'Cross Ram Setu to Lanka (South) ⚔️' }
+    { x: 16, y: 25, targetMap: 'beach2', targetX: 17, targetY: 6, label: 'Cross Ram Setu to Lanka (South) ⚔️' },
+    { x: 17, y: 25, targetMap: 'beach2', targetX: 17, targetY: 6, label: 'Cross Ram Setu to Lanka (South) ⚔️' }
   ],
   grid: [
     // Rows 0-3: Northern entrance from Camp (Grass Transition)
