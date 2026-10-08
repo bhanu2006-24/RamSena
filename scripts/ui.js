@@ -64,7 +64,15 @@ class UIManager {
     this.sevakaCardModal = document.getElementById('sevaka-card-modal');
     this.btnCloseSevakaCard = document.getElementById('btn-close-sevaka-card');
 
-    // 6. Interactive Modern RPG HUD Buttons
+    // 6. Big Character Portrait & Dialogue Elements
+    this.optBigPortrait = document.getElementById('opt-big-portrait');
+    this.bigPortraitContainer = document.getElementById('poke-big-portrait-container');
+    this.bigPortraitImg = document.getElementById('poke-big-portrait-img');
+    this.bagGarlandCraftCard = document.getElementById('bag-garland-craft-card');
+
+    this.showBigPortrait = localStorage.getItem('ram_sena_big_portrait') !== 'false';
+
+    // 7. Interactive Modern RPG HUD Buttons
     this.hudBtnBag = document.getElementById('hud-btn-bag');
     this.hudBtnMenu = document.getElementById('hud-btn-menu');
     this.hudBtnOptions = document.getElementById('hud-btn-options');
@@ -231,8 +239,18 @@ class UIManager {
       this.btnQuickCraftGarland.addEventListener('click', () => {
         if (window.inventory && window.inventory.craftGarland()) {
           this.renderBagItems();
+          this.selectBagItem('garlands');
           this.updateBagCraftingStatus();
         }
+      });
+    }
+
+    // Big Character Portrait Toggle
+    if (this.optBigPortrait) {
+      this.optBigPortrait.addEventListener('click', () => {
+        this.showBigPortrait = !this.showBigPortrait;
+        localStorage.setItem('ram_sena_big_portrait', this.showBigPortrait ? 'true' : 'false');
+        this.updateOptionsDisplay();
       });
     }
 
@@ -324,6 +342,10 @@ class UIManager {
       else if (this.textSpeed === 6) this.optTextSpeed.textContent = 'INSTANT';
       else this.optTextSpeed.textContent = 'FAST';
     }
+    if (this.optBigPortrait) {
+      this.optBigPortrait.textContent = this.showBigPortrait ? 'ON' : 'OFF';
+      this.optBigPortrait.style.borderColor = this.showBigPortrait ? '#10b981' : '#f43f5e';
+    }
   }
 
   toggleBag() {
@@ -352,7 +374,7 @@ class UIManager {
 
     if (window.player) {
       if (heroNameEl) heroNameEl.textContent = window.player.typeId === 'riksha' ? 'RIKSHA SEVAKA' : 'VANAR SEVAKA';
-      if (avatarImgEl) avatarImgEl.src = window.player.typeId === 'riksha' ? 'assets/images/bear.png' : 'assets/images/vanar.png';
+      if (avatarImgEl) avatarImgEl.src = window.player.typeId === 'riksha' ? 'assets/images/bear_front.png' : 'assets/images/vanar_front.png';
       if (hpBarEl) {
         const pct = Math.max(0, Math.min(100, (window.player.hp / window.player.maxHp) * 100));
         hpBarEl.style.width = `${pct}%`;
@@ -603,24 +625,13 @@ class UIManager {
     this.bagDetailName.textContent = detail.name;
     this.bagDetailDesc.textContent = detail.desc;
 
+    // Show garland craft card ONLY when key is 'garlands'!
+    if (this.bagGarlandCraftCard) {
+      this.bagGarlandCraftCard.style.display = (key === 'garlands') ? 'flex' : 'none';
+    }
+
     // Render Actions
     this.bagActionsContainer.innerHTML = '';
-
-    if (key === 'flowers') {
-      const count = inv.flowers || 0;
-      const craftBtn = document.createElement('button');
-      craftBtn.className = 'btn-poke-action';
-      craftBtn.textContent = count >= 5 ? '🌸 CRAFT GARLAND (WEAVE 5)' : '🌸 NEED 5 TO CRAFT';
-      if (count < 5) craftBtn.style.opacity = '0.5';
-      craftBtn.addEventListener('click', () => {
-        if (window.inventory && window.inventory.craftGarland()) {
-          this.renderBagItems();
-          this.selectBagItem('flowers');
-          this.updateBagCraftingStatus();
-        }
-      });
-      this.bagActionsContainer.appendChild(craftBtn);
-    }
 
     this.updateBagCraftingStatus();
 
@@ -665,12 +676,12 @@ class UIManager {
     if (s.includes('jambavan') || s.includes('jambvant') || s.includes('riksharaj')) return 'assets/images/jambavan.png';
     if (s.includes('vibhisan') || s.includes('vibhisana') || s.includes('vibhishan')) return 'assets/images/vibhisan.png';
     if (s.includes('angad') || s.includes('angada') || s.includes('yuvaraj')) return 'assets/images/angad.png';
-    if (s.includes('bear') || s.includes('riksha')) return 'assets/images/bear.png';
-    if (s.includes('vanar') || s.includes('nal') || s.includes('neel') || s.includes('sushen')) return 'assets/images/vanar.png';
+    if (s.includes('bear') || s.includes('riksha')) return 'assets/images/bear_front.png';
+    if (s.includes('vanar') || s.includes('nal') || s.includes('neel') || s.includes('sushen')) return 'assets/images/vanar_front.png';
     if (s.includes('humble') || s.includes('sevaka') || s.includes('devotee')) {
-      return (window.player && window.player.typeId === 'riksha') ? 'assets/images/bear.png' : 'assets/images/vanar.png';
+      return (window.player && window.player.typeId === 'riksha') ? 'assets/images/bear_front.png' : 'assets/images/vanar_front.png';
     }
-    return (window.player && window.player.typeId === 'riksha') ? 'assets/images/bear.png' : 'assets/images/vanar.png';
+    return (window.player && window.player.typeId === 'riksha') ? 'assets/images/bear_front.png' : 'assets/images/vanar_front.png';
   }
 
   showDialogue(speaker, text, icon = '', choices = [], onComplete = null) {
@@ -688,6 +699,21 @@ class UIManager {
         this.speakerImg.style.display = 'block';
       } else {
         this.speakerImg.style.display = 'none';
+      }
+    }
+
+    // Big Character Portrait (Toggled via Options)
+    if (this.bigPortraitContainer && this.bigPortraitImg) {
+      if (this.showBigPortrait) {
+        const imgSrc = this.getSpeakerImage(speaker);
+        if (imgSrc) {
+          this.bigPortraitImg.src = imgSrc;
+          this.bigPortraitContainer.classList.remove('hidden');
+        } else {
+          this.bigPortraitContainer.classList.add('hidden');
+        }
+      } else {
+        this.bigPortraitContainer.classList.add('hidden');
       }
     }
 
@@ -766,6 +792,9 @@ class UIManager {
   hideDialogue() {
     if (this.textboxWrapper) {
       this.textboxWrapper.classList.add('hidden');
+    }
+    if (this.bigPortraitContainer) {
+      this.bigPortraitContainer.classList.add('hidden');
     }
     if (this.typewriterTimer) {
       clearInterval(this.typewriterTimer);

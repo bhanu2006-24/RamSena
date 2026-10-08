@@ -22,7 +22,7 @@ class NPCManager {
         {
           id: 'shri_ram',
           name: 'Shri Ram (मर्यादा पुरुषोत्तम)',
-          x: 16, y: 5,
+          x: 16, y: 6,
           symbol: '🏹',
           color: '#0284c7', // Radiant dark cloud hue (Neel-Megha-Shyama)
           aura: 'rgba(56, 189, 248, 0.45)',
@@ -37,7 +37,7 @@ class NPCManager {
         {
           id: 'lakshman',
           name: 'Lakshman (श्री लक्ष्मण)',
-          x: 18, y: 5,
+          x: 18, y: 6,
           symbol: '🏹',
           color: '#ca8a04',
           aura: 'rgba(234, 179, 8, 0.4)',
@@ -51,7 +51,7 @@ class NPCManager {
         {
           id: 'hanuman',
           name: 'Hanuman (पवनपुत्र हनुमान)',
-          x: 14, y: 9,
+          x: 14, y: 10,
           symbol: '🚩',
           color: '#ea580c',
           aura: 'rgba(249, 115, 22, 0.5)',
@@ -66,7 +66,7 @@ class NPCManager {
         {
           id: 'sugreev',
           name: 'Sugreev (वानरराज सुग्रीव)',
-          x: 12, y: 5,
+          x: 11, y: 6,
           symbol: '👑',
           color: '#d97706',
           title: 'King of Kishkindha & General of the Sena',
@@ -77,7 +77,7 @@ class NPCManager {
         {
           id: 'jambavan',
           name: 'Jambavan (ऋक्षराज जाम्बवन्त)',
-          x: 20, y: 5,
+          x: 21, y: 6,
           symbol: '🐻',
           color: '#522610',
           title: 'Venerable Patriarch of the Bears',
@@ -88,7 +88,7 @@ class NPCManager {
         {
           id: 'vibhishan',
           name: 'Vibhishan (भक्त विभीषण)',
-          x: 10, y: 5,
+          x: 8, y: 6,
           symbol: '📿',
           color: '#475569',
           title: 'Devotee of Dharma & Refuge of Shri Ram',
@@ -99,7 +99,7 @@ class NPCManager {
         {
           id: 'angad',
           name: 'Angad (युवराज अंगद)',
-          x: 22, y: 5,
+          x: 24, y: 6,
           symbol: '🛡️',
           color: '#b45309',
           title: 'Crown Prince of Kishkindha',
@@ -189,7 +189,7 @@ class NPCManager {
         {
           id: 'shri_ram_lanka',
           name: 'Shri Ram (श्री राम)',
-          x: 16, y: 5,
+          x: 16, y: 6,
           symbol: '🏹',
           color: '#0284c7',
           aura: 'rgba(56, 189, 248, 0.45)',
@@ -202,7 +202,7 @@ class NPCManager {
         {
           id: 'lakshman_lanka',
           name: 'Lakshman (श्री लक्ष्मण)',
-          x: 18, y: 5,
+          x: 18, y: 6,
           symbol: '🏹',
           color: '#ca8a04',
           aura: 'rgba(234, 179, 8, 0.4)',
@@ -227,7 +227,7 @@ class NPCManager {
         {
           id: 'hanuman_lanka',
           name: 'Hanuman (महावीर हनुमान)',
-          x: 20, y: 9,
+          x: 20, y: 10,
           symbol: '🚩',
           color: '#ea580c',
           aura: 'rgba(249, 115, 22, 0.5)',
@@ -237,9 +237,20 @@ class NPCManager {
           ]
         },
         {
+          id: 'sugreev_lanka',
+          name: 'Sugreev (वानरराज सुग्रीव)',
+          x: 11, y: 6,
+          symbol: '👑',
+          color: '#d97706',
+          title: 'King of Kishkindha',
+          dialogues: [
+            'Our vanguard holds the mountain pass firmly. Ensure the sentries maintain vigil!'
+          ]
+        },
+        {
           id: 'jambavan_lanka',
           name: 'Jambavan (ऋक्षराज जाम्बवन्त)',
-          x: 22, y: 5,
+          x: 21, y: 6,
           symbol: '🐻',
           color: '#522610',
           dialogues: [
@@ -249,11 +260,22 @@ class NPCManager {
         {
           id: 'vibhishan_lanka',
           name: 'Vibhishan (विभीषण)',
-          x: 10, y: 5,
+          x: 8, y: 6,
           symbol: '📿',
           color: '#475569',
           dialogues: [
             'Ravana’s pride has brought doom upon his own golden city. The end of tyranny is at hand.'
+          ]
+        },
+        {
+          id: 'angad_lanka',
+          name: 'Angad (युवराज अंगद)',
+          x: 24, y: 6,
+          symbol: '🛡️',
+          color: '#b45309',
+          title: 'Crown Prince of Kishkindha',
+          dialogues: [
+            'No power in Lanka can move the foot planted by faith in Shri Ram! Victory belongs to Dharma!'
           ]
         },
         {
@@ -319,9 +341,9 @@ class NPCManager {
       action: () => this.showNPCLoreDialogue(npc)
     });
 
-    // 2. Special Setu stone delivery for Nal & Neel
+    // 2. Special Setu stone delivery & Lanka crossing for Nal & Neel
     if (npc.isSetuArchitect) {
-      const stones = window.inventory.items.stones;
+      const stones = window.inventory ? (window.inventory.items.stones || 0) : 0;
       if (stones > 0) {
         choices.push({
           label: `🪨 Offer ${stones} Stones to Build Setu`,
@@ -331,6 +353,24 @@ class NPCManager {
           }
         });
       }
+      if (window.mapManager && window.mapManager.stonesDelivered >= window.mapManager.targetStones) {
+        choices.push({
+          label: '⚔️ Cross Ram Setu to Lanka (Phase 2)',
+          action: () => {
+            window.mapManager.loadMap('camp2', 17, 14, true);
+          }
+        });
+      }
+    }
+
+    // Return to Rameshwaram from Lanka shore
+    if ((npc.id === 'beach_guard' || npc.id === 'beach_guard_lanka') && window.mapManager && window.mapManager.currentMapId === 'beach2') {
+      choices.push({
+        label: '🏖️ Cross Ram Setu back to Rameshwaram',
+        action: () => {
+          window.mapManager.loadMap('beach1', 17, 24, true);
+        }
+      });
     }
 
     // 3. Offering Fruits

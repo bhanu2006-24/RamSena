@@ -162,10 +162,10 @@ class Player {
         bobY,
         this.direction,
         false,
-        this.auraColor
+        this.auraColor,
+        true
       );
     }
-    ctx.restore();
   }
 
   takeDamage(amount) {

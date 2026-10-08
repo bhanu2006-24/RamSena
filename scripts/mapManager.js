@@ -132,7 +132,7 @@ class MapManager {
   deliverStonesToSetu(amount) {
     this.stonesDelivered += amount;
 
-    if (this.stonesDelivered >= this.targetStones && !this.isSetuCompleted) {
+    if (this.stonesDelivered >= this.targetStones) {
       this.completeRamSetu();
     } else {
       const remaining = Math.max(0, this.targetStones - this.stonesDelivered);
@@ -156,7 +156,7 @@ class MapManager {
       'By the divine grace of Shri Ram and the relentless devotion of every Vanar and Bear, ' +
       'millions of floating stones bearing the holy name "RAM" now form an unbreakable bridge spanning across the vast ocean! ' +
       'The entire Sena roars with devotion: "हर हर महादेव! जय श्री राम!" ' +
-      'Shri Ram and the army have crossed over to Lanka. Phase 2: The War has begun!';
+      'Shri Ram and the army are ready to cross over to Lanka. Phase 2: The War has begun!';
 
     if (window.uiManager) {
       window.uiManager.showDialogue(
@@ -165,9 +165,15 @@ class MapManager {
         '✨',
         [
           {
-            label: '⚔️ Advance to Lanka Camp (Phase 2)',
+            label: '⚔️ Advance across Ram Setu to Lanka (Phase 2)',
             action: () => {
               this.loadMap('camp2', 17, 14, true);
+            }
+          },
+          {
+            label: '🏖️ Remain on Shore for now',
+            action: () => {
+              window.uiManager.hideDialogue();
             }
           }
         ]

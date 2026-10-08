@@ -25,7 +25,7 @@
         <!-- Hero Profile & Map Location -->
         <div class="hud-profile-card">
           <div class="hud-avatar-box">
-            <img id="hud-avatar-img" class="hud-avatar-img" src="assets/images/vanar.png" alt="Devotee Avatar">
+            <img id="hud-avatar-img" class="hud-avatar-img" src="assets/images/vanar_front.png" alt="Devotee Avatar">
           </div>
           <div class="hud-profile-meta">
             <div class="hud-hero-line">
@@ -97,8 +97,13 @@
         </div>
       </div>
 
-      <!-- 3. MODERN RPG DIALOGUE BOX (WITH SPEAKER PORTRAIT) -->
+      <!-- 3. MODERN RPG DIALOGUE BOX (WITH OPTIONAL BIG CHARACTER PORTRAIT) -->
       <div id="pokemon-textbox-wrapper" class="hidden">
+        <!-- Prominent Character Portrait (Toggled in Options) -->
+        <div id="poke-big-portrait-container" class="poke-big-portrait-container hidden">
+          <img id="poke-big-portrait-img" class="poke-big-portrait-img" src="assets/images/ram.png" alt="Character Portrait">
+        </div>
+
         <div class="poke-speaker-header">
           <img id="poke-speaker-img" class="poke-speaker-portrait" src="assets/images/ram.png" alt="Speaker">
           <div class="poke-speaker-tag" id="poke-speaker-name">Shri Ram</div>
@@ -144,8 +149,8 @@
               </div>
             </div>
 
-            <!-- PROMINENT GARLAND WEAVING CRAFTING SECTION -->
-            <div class="bag-craft-card">
+            <!-- PROMINENT GARLAND WEAVING CRAFTING SECTION (ONLY SHOWN FOR GARLAND ITEM) -->
+            <div class="bag-craft-card" id="bag-garland-craft-card" style="display: none;">
               <div class="craft-card-top">
                 <span class="craft-card-title">📿 WEAVE SACRED GARLAND</span>
                 <span class="craft-card-count" id="craft-flower-count">Flowers: 0 / 5</span>
@@ -235,7 +240,7 @@
             <div class="char-card-glow"></div>
             <div class="char-badge">KISHKINDHA SCOUT</div>
             <div class="char-portrait-wrap">
-              <img src="assets/images/vanar.png" alt="Vanar Devotee" class="char-portrait-img">
+              <img src="assets/images/vanar_front.png" alt="Vanar Devotee" class="char-portrait-img">
             </div>
             <div class="char-name-title">VANAR SEVAKA</div>
             <div class="char-hindi-name">वानर सेवक (सुग्रीव सेना)</div>
@@ -274,7 +279,7 @@
             <div class="char-card-glow"></div>
             <div class="char-badge">JAMBAVAN CLAN</div>
             <div class="char-portrait-wrap">
-              <img src="assets/images/bear.png" alt="Riksha Bear Devotee" class="char-portrait-img">
+              <img src="assets/images/bear_front.png" alt="Riksha Bear Devotee" class="char-portrait-img">
             </div>
             <div class="char-name-title">RIKSHA SEVAKA</div>
             <div class="char-hindi-name">ऋक्ष सेवक (भालू वीर)</div>
@@ -378,6 +383,12 @@
           <div class="opt-row">
             <span>TEXT SPEED:</span>
             <button class="btn-poke-action" id="opt-text-speed" style="padding: 0.4rem 1.2rem;">FAST</button>
+          </div>
+
+          <!-- Big Character Portrait Toggle -->
+          <div class="opt-row">
+            <span>BIG PORTRAIT (बड़ा चित्र):</span>
+            <button class="btn-poke-action" id="opt-big-portrait" style="padding: 0.4rem 1.2rem; border-color: #10b981;">ON</button>
           </div>
 
           <!-- Sprite & Image Studio Link -->

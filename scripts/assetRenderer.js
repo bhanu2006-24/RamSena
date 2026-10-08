@@ -637,7 +637,7 @@ class AssetRenderer {
   // ===================================================================
   // 10. LARGE, CRISP CHARACTER SPRITE RENDERING (NO YELLOW DOTS!)
   // ===================================================================
-  drawCharacter(ctx, img, sx, sy, ts, bobY = 0, direction = 'down', isDivine = false, auraColor = null) {
+  drawCharacter(ctx, img, sx, sy, ts, bobY = 0, direction = 'down', isDivine = false, auraColor = null, isSheet = null) {
     const cx = sx + ts / 2;
     const baseCy = sy + ts * 0.9;
 
@@ -660,28 +660,67 @@ class AssetRenderer {
 
     // 3. Draw Character Sprite
     if (img && img.complete && img.naturalWidth) {
-      const drawH = ts * 1.15; // Prominent, heroic character scale
-      const aspect = img.naturalWidth / img.naturalHeight;
-      const drawW = drawH * aspect;
-      const posX = cx - drawW / 2;
-      const posY = sy + ts - drawH + bobY - 2;
+      // Detect 2x2 directional sheet (Vanar and Bear sprites)
+      const isDirectionalSheet = (isSheet !== null)
+        ? isSheet
+        : (img.src && (img.src.includes('vanar.png') || img.src.includes('bear.png') || img.src.includes('bhaluu') || img.src.includes('vanarsena')));
 
-      ctx.save();
-      // Mirror horizontally if facing left
-      if (direction === 'left') {
-        ctx.translate(posX + drawW, posY);
-        ctx.scale(-1, 1);
-        ctx.drawImage(img, 0, 0, drawW, drawH);
+      if (isDirectionalSheet) {
+        // 2x2 directional sprite sheet:
+        // Top-Left (0, 0): Facing Down (Front)
+        // Top-Right (sw, 0): Facing Up (Back)
+        // Bottom-Left (0, sh): Facing Left
+        // Bottom-Right (sw, sh): Facing Right
+        const sw = img.naturalWidth / 2;
+        const sh = img.naturalHeight / 2;
+        let sx_src = 0;
+        let sy_src = 0;
+
+        if (direction === 'up') {
+          sx_src = sw;
+          sy_src = 0; // Top-Right: Facing Up / Back
+        } else if (direction === 'left') {
+          sx_src = 0;
+          sy_src = sh; // Bottom-Left: Facing Left
+        } else if (direction === 'right') {
+          sx_src = sw;
+          sy_src = sh; // Bottom-Right: Facing Right
+        } else {
+          // 'down' or default
+          sx_src = 0;
+          sy_src = 0; // Top-Left: Facing Down / Front
+        }
+
+        const drawH = ts * 1.25; // Large, prominent, heroic
+        const drawW = drawH;
+        const posX = cx - drawW / 2;
+        const posY = sy + ts - drawH + bobY - 2;
+
+        ctx.drawImage(img, sx_src, sy_src, sw, sh, posX, posY, drawW, drawH);
       } else {
-        ctx.drawImage(img, posX, posY, drawW, drawH);
+        // Single full-character portrait/sprite (Shri Ram, Lakshman, Hanuman, Sugreev, etc.)
+        const drawH = ts * 1.25;
+        const aspect = img.naturalWidth / img.naturalHeight;
+        const drawW = drawH * aspect;
+        const posX = cx - drawW / 2;
+        const posY = sy + ts - drawH + bobY - 2;
+
+        ctx.save();
+        // Mirror horizontally if facing left
+        if (direction === 'left') {
+          ctx.translate(posX + drawW, posY);
+          ctx.scale(-1, 1);
+          ctx.drawImage(img, 0, 0, drawW, drawH);
+        } else {
+          ctx.drawImage(img, posX, posY, drawW, drawH);
+        }
+        ctx.restore();
       }
-      ctx.restore();
     } else {
       // Fallback avatar block
       ctx.fillStyle = '#b45309';
       ctx.fillRect(cx - ts * 0.3, sy + ts * 0.2 + bobY, ts * 0.6, ts * 0.7);
     }
-    // Note: Yellow dots completely removed as requested
   }
 
   // ===================================================================

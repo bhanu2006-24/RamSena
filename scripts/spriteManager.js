@@ -8,12 +8,14 @@ class SpriteManager {
   constructor() {
     this.manifest = {
       angad: 'assets/images/angad.png',
-      bear: 'assets/images/bhaluu.png',
+      bear: 'assets/images/bear.png',
+      bear_front: 'assets/images/bear_front.png',
       hanuman: 'assets/images/hanuman.png',
       laxman: 'assets/images/laxman.png',
       ram: 'assets/images/ram.png',
       sugreev: 'assets/images/sugreev.png',
-      vanar: 'assets/images/vanarsena.png',
+      vanar: 'assets/images/vanar.png',
+      vanar_front: 'assets/images/vanar_front.png',
       vibhisan: 'assets/images/vibhisan.png',
       jambavan: 'assets/images/jambavan.png'
     };
@@ -51,20 +53,18 @@ class SpriteManager {
   }
 
   getSpriteKeyForNPC(npcId) {
-    switch (npcId) {
-      case 'shri_ram': return 'ram';
-      case 'lakshman': return 'laxman';
-      case 'hanuman': return 'hanuman';
-      case 'sugreev': return 'sugreev';
-      case 'jambavan': return 'jambavan';
-      case 'vibhishan': return 'vibhisan';
-      case 'angad': return 'angad';
-      case 'sushena': return 'vanar';
-      case 'nal_neel': return 'vanar';
-      default:
-        if (npcId && npcId.includes('bear')) return 'bear';
-        return 'vanar';
-    }
+    if (!npcId) return 'vanar';
+    if (npcId.startsWith('shri_ram')) return 'ram';
+    if (npcId.startsWith('lakshman')) return 'laxman';
+    if (npcId.startsWith('hanuman')) return 'hanuman';
+    if (npcId.startsWith('sugreev')) return 'sugreev';
+    if (npcId.startsWith('jambavan')) return 'jambavan';
+    if (npcId.startsWith('vibhishan')) return 'vibhisan';
+    if (npcId.startsWith('angad')) return 'angad';
+    if (npcId === 'sushena') return 'vanar';
+    if (npcId === 'nal_neel') return 'vanar';
+    if (npcId.includes('bear') || npcId.includes('riksha') || npcId.includes('bhaluu')) return 'bear';
+    return 'vanar';
   }
 }
 
