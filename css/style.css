@@ -1,8 +1,8 @@
 /* =====================================================================
-   RAM SENA (राम सेना) - GBA Pokemon RPG Stylesheet
+   RAM SENA (राम सेना) - Devotional 2D RPG Stylesheet
    - 100% Clean Game Viewport (Nothing showing on-screen during play)
    - Bottom GBA Emulator Controls Bar (Matching Reference Image 1)
-   - Authentic GBA Pokemon Start Menu (Matching Reference Image 2)
+   - Retro GBA Devotional Start Menu (Matching Reference Image 2)
    - Fullscreen Title Screen (Matching Contract Demon Reference Image)
    ===================================================================== */
 
@@ -15,7 +15,7 @@
   --saffron-glow: rgba(245, 158, 11, 0.4);
   --gold: #fde047;
 
-  /* GBA Pokemon Emerald Colors */
+  /* Devotional UI Emerald Palette */
   --poke-teal: #02bba4;
   --poke-teal-dark: #018675;
   --poke-teal-light: #44eccb;
@@ -138,7 +138,7 @@ canvas#gameCanvas {
 }
 
 /* =====================================================================
-   2. AUTHENTIC GBA POKEMON START MENU (Image 2 Reference)
+   2. RETRO DEVOTIONAL START MENU (Image 2 Reference)
    ===================================================================== */
 
 #pokemon-start-menu {
@@ -205,7 +205,7 @@ canvas#gameCanvas {
 }
 
 /* =====================================================================
-   3. AUTHENTIC POKEMON EMERALD DIALOGUE BOX
+   3. RETRO DEVOTIONAL DIALOGUE BOX
    ===================================================================== */
 
 #pokemon-textbox-wrapper {
@@ -319,7 +319,7 @@ canvas#gameCanvas {
 }
 
 /* =====================================================================
-   4. POKEMON BAG (INVENTORY MODAL)
+   4. DEVOTIONAL SEVA SACK (INVENTORY MODAL)
    ===================================================================== */
 
 #pokemon-bag-modal {

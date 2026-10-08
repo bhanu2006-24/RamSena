@@ -1,6 +1,6 @@
 /**
  * RAM SENA - Input Controller (scripts/input.js)
- * Modular keyboard handling for Pokemon RPG style grid navigation and UI interaction.
+ * Modular keyboard handling for devotional 2D RPG grid navigation and UI interaction.
  */
 
 class InputHandler {

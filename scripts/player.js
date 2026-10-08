@@ -1,7 +1,7 @@
 /**
  * RAM SENA - Player Entity (scripts/player.js)
  * Manages character stats, archetype stats (Vanar vs Riksha/Bear),
- * Pokemon-style grid movement, step completion, and rendering.
+ * Smooth 2D grid movement, step completion, and rendering.
  */
 
 class Player {

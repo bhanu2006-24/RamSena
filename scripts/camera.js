@@ -1,6 +1,6 @@
 /**
  * RAM SENA - 2D RPG Camera (scripts/camera.js)
- * Pokemon RPG-style scrolling camera that follows the player through the world.
+ * Classic 2D retro scrolling camera that follows the player through the world.
  * Clamps to map borders and prevents the full map from being seen at once.
  */
 
