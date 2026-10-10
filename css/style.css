@@ -581,17 +581,17 @@ canvas#gameCanvas {
 
 .sevaka-card-frame {
   width: 90%;
-  max-width: 380px;
-  background: rgba(15, 23, 42, 0.97);
+  max-width: 345px;
+  background: rgba(15, 23, 42, 0.98);
   backdrop-filter: blur(16px);
   border: 2px solid var(--saffron);
   outline: 2px solid rgba(0, 0, 0, 0.8);
-  border-radius: 14px;
-  padding: 1.1rem 1.3rem;
+  border-radius: 12px;
+  padding: 0.95rem 1.15rem;
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
-  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.9), 0 0 25px rgba(245, 158, 11, 0.25);
+  gap: 0.65rem;
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.95), 0 0 25px rgba(245, 158, 11, 0.25);
 }
 
 .card-header {
@@ -863,48 +863,71 @@ canvas#gameCanvas {
 
 .title-author {
   font-family: var(--font-body);
-  font-size: 0.85rem;
-  letter-spacing: 0.35em;
+  font-size: clamp(0.72rem, 1.8vw, 0.85rem);
+  letter-spacing: clamp(0.12em, 0.6vw, 0.32em);
   color: #fda4af;
   text-transform: uppercase;
-  margin-top: 1rem;
+  margin-top: 0.8rem;
   opacity: 0.85;
+  text-align: center;
+  max-width: 90%;
+}
+
+.title-chaupai-verse {
+  font-family: 'Rozha One', 'Cinzel', serif;
+  font-size: clamp(0.74rem, 2.2vw, 0.95rem);
+  color: #fef08a;
+  margin-top: 0.6rem;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.95), 0 0 15px rgba(245, 158, 11, 0.45);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-align: center;
+  max-width: 94%;
+  line-height: 1.45;
 }
 
 .title-nav-ribbon {
-  width: 100%;
-  max-width: 820px;
+  width: 92%;
+  max-width: 760px;
   border-top: 2px solid #ff2d55;
   border-bottom: 2px solid #ff2d55;
-  padding: 0.85rem 1.5rem;
+  padding: 0.65rem 1.2rem;
   display: flex;
   align-items: center;
   justify-content: space-around;
-  background: rgba(15, 3, 7, 0.75);
-  box-shadow: 0 0 25px rgba(255, 45, 85, 0.3);
+  background: rgba(15, 3, 7, 0.85);
+  box-shadow: 0 0 25px rgba(255, 45, 85, 0.35);
   position: relative;
   z-index: 2;
-  border-radius: 4px;
+  border-radius: 6px;
+  box-sizing: border-box;
+  gap: 0.5rem;
 }
 
 .title-nav-btn {
   background: transparent;
-  border: none;
+  border: 1px solid transparent;
   font-family: var(--font-title);
-  font-size: clamp(1.1rem, 2vw, 1.45rem);
+  font-size: clamp(0.95rem, 1.8vw, 1.35rem);
   font-weight: 700;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.12em;
   color: #ff758f;
   cursor: pointer;
   transition: all 0.2s ease;
-  padding: 0.3rem 1.2rem;
+  padding: 0.4rem 1rem;
   text-transform: uppercase;
+  border-radius: 6px;
+  text-align: center;
+  white-space: nowrap;
 }
 
-.title-nav-btn:hover {
+.title-nav-btn:hover,
+.title-nav-btn:active {
   color: #ffffff;
+  background: rgba(255, 45, 85, 0.18);
+  border-color: rgba(255, 45, 85, 0.6);
   text-shadow: 0 0 15px #ff2d55, 0 0 25px #ff2d55;
-  transform: scale(1.08);
+  transform: scale(1.04);
 }
 
 /* =====================================================================
@@ -1541,24 +1564,115 @@ canvas#gameCanvas {
     padding: 0.4rem 0.75rem;
   }
 
+  /* --- TITLE SCREEN MOBILE OVERRIDES --- */
+  #title-screen {
+    padding: 1.2rem 0.8rem;
+    justify-content: space-between;
+  }
+
+  .title-logo-badge-wrap {
+    width: clamp(70px, 16vw, 92px);
+    height: clamp(70px, 16vw, 92px);
+    margin-bottom: 0.35rem;
+  }
+
+  .title-logo-text {
+    font-size: clamp(2.2rem, 9.5vw, 3.4rem);
+    letter-spacing: 0.08em;
+  }
+
+  .title-hindi {
+    font-size: clamp(1.2rem, 4.8vw, 1.8rem);
+    margin-top: 0.1rem;
+  }
+
+  .title-author {
+    font-size: clamp(0.62rem, 2.1vw, 0.76rem);
+    letter-spacing: clamp(0.12em, 0.8vw, 0.22em);
+    margin-top: 0.45rem;
+    max-width: 95%;
+    line-height: 1.35;
+  }
+
+  .title-chaupai-verse {
+    font-size: clamp(0.66rem, 2.4vw, 0.8rem);
+    margin-top: 0.4rem;
+    max-width: 96%;
+    line-height: 1.35;
+  }
+
+  .title-candles-silhouette {
+    bottom: 68px;
+    padding: 0 1.2rem;
+    font-size: 1.25rem;
+    opacity: 0.3;
+  }
+
+  .title-nav-ribbon {
+    width: 96%;
+    max-width: 96%;
+    padding: 0.45rem 0.3rem;
+    gap: 0.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .title-nav-btn {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 0.45rem 0.15rem;
+    font-size: clamp(0.72rem, 2.7vw, 0.86rem);
+    letter-spacing: 0.03em;
+    background: rgba(255, 45, 85, 0.1);
+    border: 1px solid rgba(255, 45, 85, 0.3);
+    border-radius: 4px;
+    text-align: center;
+  }
+
   /* --- OPTIONS MODAL MOBILE OVERRIDES --- */
-  #options-modal .retro-modal-frame {
-    max-width: 94%;
-    padding: 1rem;
-    gap: 0.75rem;
+  .options-modal-frame {
+    width: 95%;
+    max-width: 95%;
+    padding: 0.85rem 0.95rem;
+    gap: 0.6rem;
   }
-  #options-modal .opt-row {
-    font-size: 0.8rem;
-    gap: 0.5rem;
+
+  .options-modal-title {
+    font-size: 0.88rem;
   }
-  #opt-volume-slider {
-    width: 85px !important;
+
+  .options-row {
+    padding: 0.4rem 0.6rem;
+    gap: 0.4rem;
   }
-  #opt-bhajan-select {
-    min-width: 140px !important;
-    max-width: 160px !important;
-    font-size: 0.72rem !important;
-    padding: 0.35rem 0.6rem !important;
+
+  .options-label {
+    font-size: 0.72rem;
+  }
+
+  .options-slider {
+    width: 75px;
+  }
+
+  .options-track-btn {
+    min-width: 105px;
+    max-width: 130px;
+    font-size: 0.72rem;
+    padding: 0.3rem 0.45rem;
+  }
+
+  .options-btn-toggle {
+    min-width: 65px;
+    font-size: 0.72rem;
+    padding: 0.3rem 0.5rem;
+  }
+
+  /* --- SEVAKA MODAL MOBILE OVERRIDES --- */
+  .sevaka-card-frame {
+    max-width: 95%;
+    padding: 0.85rem 1rem;
+    gap: 0.55rem;
   }
 }
 
@@ -1725,56 +1839,244 @@ canvas#gameCanvas {
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
 }
 
-/* Compact, elegant Options & Audio modal */
-#options-modal .retro-modal-frame {
-  max-width: 440px;
-  background: rgba(13, 18, 31, 0.98);
-  backdrop-filter: blur(14px);
+/* =====================================================================
+   OPTIONS & AUDIO MODAL (HIGH-END MODERN RPG CARD)
+   ===================================================================== */
+
+.options-modal-frame {
+  width: 92%;
+  max-width: 410px;
+  background: rgba(15, 23, 42, 0.98);
+  backdrop-filter: blur(16px);
   border: 2px solid var(--saffron);
+  outline: 2px solid rgba(0, 0, 0, 0.85);
   border-radius: 14px;
-  padding: 1.15rem 1.35rem;
-  gap: 0.85rem;
+  padding: 1.1rem 1.3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
   box-shadow: 0 16px 45px rgba(0, 0, 0, 0.95), 0 0 25px rgba(245, 158, 11, 0.25);
+  box-sizing: border-box;
 }
 
-#options-modal .retro-modal-title {
+.options-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(245, 158, 11, 0.35);
+  padding-bottom: 0.65rem;
+}
+
+.options-modal-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-family: var(--font-title);
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 700;
   color: var(--gold);
   letter-spacing: 0.05em;
-  border-bottom: 1px solid rgba(245, 158, 11, 0.35);
-  padding-bottom: 0.5rem;
 }
 
-#options-modal .opt-row {
-  font-family: var(--font-body);
-  font-size: 0.85rem;
-  font-weight: 600;
+.options-title-emblem {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1.5px solid var(--gold);
+  object-fit: cover;
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.5);
+}
+
+.options-modal-close-icon {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.35);
   color: #cbd5e1;
-}
-
-#options-modal .btn-retro-action {
-  font-family: var(--font-title);
-  font-size: 0.78rem;
-  font-weight: 700;
-}
-
-#options-modal #btn-close-options {
-  font-family: var(--font-title);
-  font-weight: 700;
-  font-size: 0.85rem;
-  padding: 0.6rem 1rem;
-  width: 100%;
-  background: #334155;
-  border: 1px solid #64748b;
+  width: 28px;
+  height: 28px;
   border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+.options-modal-close-icon:hover {
+  background: rgba(239, 68, 68, 0.25);
+  border-color: #ef4444;
   color: #ffffff;
 }
 
-#options-modal #btn-close-options:hover {
-  background: #475569;
+.options-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.options-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  background: rgba(30, 41, 59, 0.45);
+  border: 1px solid rgba(245, 158, 11, 0.16);
+  border-radius: 8px;
+  padding: 0.48rem 0.75rem;
+}
+
+.options-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-title);
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #e2e8f0;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.options-icon {
+  font-size: 0.85rem;
+  filter: drop-shadow(0 0 4px rgba(245, 158, 11, 0.4));
+}
+
+.options-volume-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.options-btn-step {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  color: var(--gold);
+  font-size: 0.72rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  padding: 0;
+}
+
+.options-btn-step:hover {
+  background: rgba(245, 158, 11, 0.3);
+  border-color: var(--gold);
+  transform: scale(1.05);
+}
+
+.options-slider {
+  width: 90px;
+  accent-color: var(--saffron);
+  cursor: pointer;
+}
+
+.options-volume-val {
+  min-width: 38px;
+  text-align: right;
+  font-family: var(--font-title);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.options-btn-toggle {
+  background: rgba(15, 23, 42, 0.85);
+  border: 1.5px solid rgba(245, 158, 11, 0.45);
+  color: var(--gold);
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: 0.76rem;
+  letter-spacing: 0.04em;
+  padding: 0.35rem 0.8rem;
+  border-radius: 6px;
+  min-width: 75px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.options-btn-toggle:hover {
+  border-color: var(--gold);
+  background: rgba(245, 158, 11, 0.2);
+  transform: translateY(-1px);
+}
+
+.options-btn-toggle.opt-state-on {
+  color: #34d399 !important;
+  border-color: #10b981 !important;
+  background: rgba(16, 185, 129, 0.15) !important;
+}
+
+.options-btn-toggle.opt-state-off {
+  color: #f87171 !important;
+  border-color: #ef4444 !important;
+  background: rgba(239, 68, 68, 0.15) !important;
+}
+
+.options-track-btn {
+  min-width: 130px;
+  white-space: nowrap;
+}
+
+.options-dev-footer {
+  margin-top: 0.1rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed rgba(245, 158, 11, 0.25);
+  text-align: center;
+}
+
+.options-dev-hint {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  color: #94a3b8;
+}
+
+.options-dev-link {
+  font-family: var(--font-title);
+  font-size: 0.74rem;
+  color: var(--gold);
+  text-decoration: none;
+  font-weight: 700;
+  transition: color 0.2s;
+}
+
+.options-dev-link:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.options-btn-close-main {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  font-family: var(--font-title);
+  font-size: 0.84rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.22) 0%, rgba(220, 38, 38, 0.25) 100%);
+  border: 1.5px solid rgba(245, 158, 11, 0.65);
+  border-radius: 8px;
+  color: #ffffff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  margin-top: 0.15rem;
+}
+
+.options-btn-close-main:hover {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.35) 0%, rgba(220, 38, 38, 0.4) 100%);
+  border-color: var(--gold);
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+  transform: translateY(-1px);
 }
 
 .retro-modal-title {

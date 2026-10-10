@@ -254,7 +254,7 @@
         <h1 class="title-logo-text">RAM SENA</h1>
         <div class="title-hindi">राम सेना</div>
         <div class="title-author">AN EPIC OF DEVOTION (BHAKTI) • BY A FELLOW BHAKT</div>
-        <div class="title-chaupai-verse" style="font-family: 'Cinzel', serif; font-size: 0.88rem; color: #fef08a; margin-top: 0.6rem; text-shadow: 0 2px 8px rgba(0,0,0,0.9); font-weight: 600; letter-spacing: 0.03em;">
+        <div class="title-chaupai-verse">
           🚩 मंगल भवन अमंगल हारी। द्रवउ सुदसरथ अजिर बिहारी॥ 🚩
         </div>
       </div>
@@ -485,54 +485,77 @@
 
     <!-- 9. OPTIONS & VOLUME MODAL -->
     <div id="options-modal" class="retro-modal-backdrop hidden">
-      <div class="retro-modal-frame">
-        <div class="retro-modal-title" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
-          <img src="assets/images/logo.png" alt="Logo" style="width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid var(--gold); object-fit: cover;">
-          <span>OPTIONS & AUDIO</span>
-        </div>
-        <div class="retro-modal-body" style="display: flex; flex-direction: column; gap: 1.1rem;">
+      <div class="options-modal-frame">
+        <header class="options-modal-header">
+          <div class="options-modal-title">
+            <img src="assets/images/logo.png" alt="Ram Sena Logo" class="options-title-emblem">
+            <span>OPTIONS & AUDIO (विकल्प)</span>
+          </div>
+          <button class="options-modal-close-icon" id="btn-close-options-x" aria-label="Close Options">✕</button>
+        </header>
+
+        <div class="options-modal-body">
           <!-- Volume Slider -->
-          <div class="opt-row">
-            <span>MUSIC VOLUME:</span>
-            <div style="display: flex; align-items: center; gap: 0.5rem;">
-              <button class="btn-retro-action" id="btn-vol-down" style="padding: 0.3rem 0.6rem; font-size: 0.75rem;">➖</button>
-              <input type="range" id="opt-volume-slider" min="0" max="100" value="40" style="width: 120px; accent-color: var(--gold); cursor: pointer;">
-              <button class="btn-retro-action" id="btn-vol-up" style="padding: 0.3rem 0.6rem; font-size: 0.75rem;">➕</button>
-              <span id="opt-volume-val" style="min-width: 44px; text-align: right; font-family: var(--font-retro); font-size: 0.75rem; color: var(--gold);">40%</span>
+          <div class="options-row">
+            <div class="options-label">
+              <span class="options-icon">🎵</span>
+              <span>MUSIC VOLUME</span>
+            </div>
+            <div class="options-volume-group">
+              <button class="options-btn-step" id="btn-vol-down" aria-label="Volume Down">➖</button>
+              <input type="range" id="opt-volume-slider" min="0" max="100" value="40" class="options-slider">
+              <button class="options-btn-step" id="btn-vol-up" aria-label="Volume Up">➕</button>
+              <span id="opt-volume-val" class="options-volume-val">40%</span>
             </div>
           </div>
 
-          <!-- Bhajan Track Selector -->
-          <div class="opt-row">
-            <span>SELECT BHAJAN:</span>
-            <button class="btn-retro-action" id="opt-bhajan-select" style="padding: 0.45rem 1rem; min-width: 190px;">Bhajan 1</button>
+          <!-- Devotional Music BGM -->
+          <div class="options-row">
+            <div class="options-label">
+              <span class="options-icon">🪕</span>
+              <span>DEVOTIONAL BGM</span>
+            </div>
+            <button class="options-btn-toggle" id="opt-bgm-toggle">ON</button>
           </div>
 
-          <!-- Mute Toggle -->
-          <div class="opt-row">
-            <span>DEVOTIONAL MUSIC:</span>
-            <button class="btn-retro-action" id="opt-bgm-toggle" style="padding: 0.4rem 1.2rem;">ON</button>
+          <!-- Bhajan Selector -->
+          <div class="options-row">
+            <div class="options-label">
+              <span class="options-icon">🎶</span>
+              <span>BHAJAN TRACK</span>
+            </div>
+            <button class="options-btn-toggle options-track-btn" id="opt-bhajan-select">Bhajan 1</button>
           </div>
 
-          <!-- Text Speed -->
-          <div class="opt-row">
-            <span>TEXT SPEED:</span>
-            <button class="btn-retro-action" id="opt-text-speed" style="padding: 0.4rem 1.2rem;">FAST</button>
+          <!-- Dialogue Speed -->
+          <div class="options-row">
+            <div class="options-label">
+              <span class="options-icon">⚡</span>
+              <span>TEXT SPEED</span>
+            </div>
+            <button class="options-btn-toggle" id="opt-text-speed">FAST</button>
           </div>
 
-          <!-- Big Character Portrait Toggle -->
-          <div class="opt-row">
-            <span>BIG PORTRAIT (बड़ा चित्र):</span>
-            <button class="btn-retro-action" id="opt-big-portrait" style="padding: 0.4rem 1.2rem; border-color: #10b981;">ON</button>
+          <!-- Big Portrait Toggle -->
+          <div class="options-row">
+            <div class="options-label">
+              <span class="options-icon">👤</span>
+              <span>BIG PORTRAIT</span>
+            </div>
+            <button class="options-btn-toggle" id="opt-big-portrait">ON</button>
           </div>
 
           <!-- Developer Tools Link -->
-          <div style="margin-top: 0.3rem; padding-top: 0.7rem; border-top: 1px dashed rgba(245, 158, 11, 0.25); text-align: center;">
-            <span style="font-size: 0.72rem; color: #94a3b8;">Developer Tools: </span>
-            <a href="image-editor.html" style="font-size: 0.75rem; color: #f59e0b; text-decoration: none;">🎨 Sprite Studio</a>
+          <div class="options-dev-footer">
+            <span class="options-dev-hint">Developer Tools: </span>
+            <a href="image-editor.html" class="options-dev-link">🎨 Sprite Studio</a>
           </div>
         </div>
-        <button class="retro-btn" id="btn-close-options" style="margin-top: 1rem;">CLOSE [B / X / Esc]</button>
+
+        <button class="options-btn-close-main" id="btn-close-options">
+          <span>↩ BACK TO GAME</span>
+          <span class="kbd-hint">[B / X / Esc]</span>
+        </button>
       </div>
     </div>
   </div>

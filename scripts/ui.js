@@ -136,6 +136,30 @@ class UIManager {
       });
     }
 
+    const btnCloseOptionsX = document.getElementById('btn-close-options-x');
+    if (btnCloseOptionsX) {
+      btnCloseOptionsX.addEventListener('click', () => {
+        this.optionsModal.classList.add('hidden');
+      });
+    }
+
+    // Dismiss modals when tapping backdrop outside the modal card
+    if (this.optionsModal) {
+      this.optionsModal.addEventListener('click', (e) => {
+        if (e.target === this.optionsModal) this.optionsModal.classList.add('hidden');
+      });
+    }
+    if (this.aboutModal) {
+      this.aboutModal.addEventListener('click', (e) => {
+        if (e.target === this.aboutModal) this.aboutModal.classList.add('hidden');
+      });
+    }
+    if (this.sevakaCardModal) {
+      this.sevakaCardModal.addEventListener('click', (e) => {
+        if (e.target === this.sevakaCardModal) this.closeSevakaCard();
+      });
+    }
+
     // Modern HUD Buttons
     if (this.hudBtnBag) {
       this.hudBtnBag.addEventListener('click', () => this.toggleBag());
@@ -205,8 +229,8 @@ class UIManager {
     if (this.optBgmToggle) {
       this.optBgmToggle.addEventListener('click', () => {
         if (window.audioManager) {
-          const isMuted = window.audioManager.toggleMute();
-          this.optBgmToggle.textContent = isMuted ? 'OFF' : 'ON';
+          window.audioManager.toggleMute();
+          this.updateOptionsDisplay();
         }
       });
     }
@@ -351,7 +375,10 @@ class UIManager {
 
   updateOptionsDisplay() {
     if (this.optBgmToggle && window.audioManager) {
-      this.optBgmToggle.textContent = window.audioManager.isMuted ? 'OFF' : 'ON';
+      const isMuted = window.audioManager.isMuted;
+      this.optBgmToggle.textContent = isMuted ? 'OFF' : 'ON';
+      this.optBgmToggle.classList.toggle('opt-state-off', isMuted);
+      this.optBgmToggle.classList.toggle('opt-state-on', !isMuted);
     }
     if (this.optBhajanSelect && window.audioManager) {
       const track = window.audioManager.getCurrentTrack();
@@ -369,7 +396,8 @@ class UIManager {
     }
     if (this.optBigPortrait) {
       this.optBigPortrait.textContent = this.showBigPortrait ? 'ON' : 'OFF';
-      this.optBigPortrait.style.borderColor = this.showBigPortrait ? '#10b981' : '#f43f5e';
+      this.optBigPortrait.classList.toggle('opt-state-off', !this.showBigPortrait);
+      this.optBigPortrait.classList.toggle('opt-state-on', this.showBigPortrait);
     }
   }
 
