@@ -524,10 +524,13 @@ class NPCManager {
 
   echoChant() {
     this.npcs.forEach(npc => {
+      // Shri Ram does not chant His own name; He bestows divine blessings
+      const isShriRam = npc.id === 'shri_ram' || npc.id === 'shri_ram_lanka' || (npc.name && npc.name.includes('Ram'));
+      const chantText = isShriRam ? 'कल्याणमस्तु! 🌸' : 'जय श्री राम! 🙏';
       this.floatingChants.push({
         x: npc.x,
         y: npc.y,
-        text: 'जय श्री राम! 🙏',
+        text: chantText,
         opacity: 1.0,
         age: 0
       });

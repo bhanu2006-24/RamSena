@@ -432,7 +432,9 @@
 
       // Button H: Hail "जय श्री राम!"
       attachFastTap(btnHail, () => {
-        if (window.game && window.game.hailShriRam) {
+        if (window.audioManager && typeof window.audioManager.hailShriRam === 'function') {
+          window.audioManager.hailShriRam();
+        } else if (window.game && typeof window.game.hailShriRam === 'function') {
           window.game.hailShriRam();
         }
       });

@@ -149,6 +149,13 @@ class AudioManager {
    * Hail Shri Ram! (जय श्री राम)
    */
   hailShriRam() {
+    try {
+      const ctx = this.getAudioContext();
+      if (ctx && ctx.state === 'suspended') {
+        ctx.resume();
+      }
+    } catch (e) {}
+
     this.playTempleBell();
 
     if (window.uiManager) {
