@@ -348,18 +348,30 @@
 
     <!-- 8. ABOUT & SACRED RAMAYANA CHRONICLE MODAL -->
     <div id="about-modal" class="retro-modal-backdrop hidden">
-      <div class="retro-modal-frame">
-        <div class="retro-modal-title">📖 श्री राम कथा एवं खेल परिचय (THE SACRED CHRONICLE)</div>
-        <div class="retro-modal-body">
+      <div class="about-modal-frame">
+        <header class="about-modal-header">
+          <div class="about-modal-title-group">
+            <img src="assets/images/logo.png" alt="Ram Sena Logo" class="about-title-emblem">
+            <div>
+              <div class="about-modal-title">श्री राम कथा एवं खेल परिचय</div>
+              <div class="about-modal-subtitle">THE SACRED CHRONICLE OF RAM SENA</div>
+            </div>
+          </div>
+          <button class="about-modal-close-icon" id="btn-close-about-x" aria-label="Close About">✕</button>
+        </header>
+
+        <div class="about-modal-body">
 
           <!-- Intro Banner with Sacred Emblem -->
           <div class="story-intro-card story-intro-card-flex">
             <img src="assets/images/logo.png" alt="Ram Sena Emblem" class="about-modal-logo">
             <div>
-              <div style="font-weight: 700; color: var(--gold); margin-bottom: 0.35rem; font-family: var(--font-title); font-size: 0.95rem;">
+              <div class="story-intro-headline">
                 ✦ श्री रामचरितमानस — किष्किन्धा से अयोध्या वापसी तक की दिव्य गाथा ✦
               </div>
-              यह खेल रामायण के उस पावन कालखंड को समर्पित है जहाँ भगवान श्री राम के अनुग्रह से वानर और रीछ सेना ने निष्काम भक्ति और सेवा का सर्वोच्च आदर्श स्थापित किया। आप इस सेना के एक विनम्र सेवक हैं।
+              <div class="story-intro-text">
+                यह खेल रामायण के उस पावन कालखंड को समर्पित है जहाँ भगवान श्री राम के अनुग्रह से वानर और रीछ सेना ने निष्काम भक्ति और सेवा का सर्वोच्च आदर्श स्थापित किया। आप इस सेना के एक विनम्र सेवक हैं।
+              </div>
             </div>
           </div>
 
@@ -479,7 +491,10 @@
           </div>
 
         </div>
-        <button class="retro-btn" id="btn-close-about">प्रणाम एवं वापसी [B / X / Esc]</button>
+        <button class="about-btn-close-main" id="btn-close-about">
+          <span>प्रणाम एवं वापसी (BACK)</span>
+          <span class="kbd-hint">[B / X / Esc]</span>
+        </button>
       </div>
     </div>
 
@@ -495,17 +510,21 @@
         </header>
 
         <div class="options-modal-body">
-          <!-- Volume Slider -->
-          <div class="options-row">
-            <div class="options-label">
-              <span class="options-icon">🎵</span>
-              <span>MUSIC VOLUME</span>
-            </div>
-            <div class="options-volume-group">
-              <button class="options-btn-step" id="btn-vol-down" aria-label="Volume Down">➖</button>
-              <input type="range" id="opt-volume-slider" min="0" max="100" value="40" class="options-slider">
-              <button class="options-btn-step" id="btn-vol-up" aria-label="Volume Up">➕</button>
+          <!-- Volume Slider: Stacked for 100% Responsive Fit -->
+          <div class="options-row options-row-stacked">
+            <div class="options-row-top">
+              <div class="options-label">
+                <span class="options-icon">🎵</span>
+                <span>MUSIC VOLUME</span>
+              </div>
               <span id="opt-volume-val" class="options-volume-val">40%</span>
+            </div>
+            <div class="options-volume-control">
+              <button class="options-btn-step" id="btn-vol-down" aria-label="Volume Down">➖</button>
+              <div class="options-slider-track-wrap">
+                <input type="range" id="opt-volume-slider" min="0" max="100" value="40" class="options-slider">
+              </div>
+              <button class="options-btn-step" id="btn-vol-up" aria-label="Volume Up">➕</button>
             </div>
           </div>
 

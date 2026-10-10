@@ -1630,50 +1630,7 @@ canvas#gameCanvas {
     text-align: center;
   }
 
-  /* --- OPTIONS MODAL MOBILE OVERRIDES --- */
-  .options-modal-frame {
-    width: 95%;
-    max-width: 95%;
-    padding: 0.85rem 0.95rem;
-    gap: 0.6rem;
-  }
 
-  .options-modal-title {
-    font-size: 0.88rem;
-  }
-
-  .options-row {
-    padding: 0.4rem 0.6rem;
-    gap: 0.4rem;
-  }
-
-  .options-label {
-    font-size: 0.72rem;
-  }
-
-  .options-slider {
-    width: 75px;
-  }
-
-  .options-track-btn {
-    min-width: 105px;
-    max-width: 130px;
-    font-size: 0.72rem;
-    padding: 0.3rem 0.45rem;
-  }
-
-  .options-btn-toggle {
-    min-width: 65px;
-    font-size: 0.72rem;
-    padding: 0.3rem 0.5rem;
-  }
-
-  /* --- SEVAKA MODAL MOBILE OVERRIDES --- */
-  .sevaka-card-frame {
-    max-width: 95%;
-    padding: 0.85rem 1rem;
-    gap: 0.55rem;
-  }
 }
 
 /* =====================================================================
@@ -1844,19 +1801,20 @@ canvas#gameCanvas {
    ===================================================================== */
 
 .options-modal-frame {
-  width: 92%;
-  max-width: 410px;
+  width: 90%;
+  max-width: 360px;
   background: rgba(15, 23, 42, 0.98);
   backdrop-filter: blur(16px);
   border: 2px solid var(--saffron);
   outline: 2px solid rgba(0, 0, 0, 0.85);
-  border-radius: 14px;
-  padding: 1.1rem 1.3rem;
+  border-radius: 12px;
+  padding: 0.95rem 1.15rem;
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  gap: 0.65rem;
   box-shadow: 0 16px 45px rgba(0, 0, 0, 0.95), 0 0 25px rgba(245, 158, 11, 0.25);
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .options-modal-header {
@@ -1864,7 +1822,7 @@ canvas#gameCanvas {
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid rgba(245, 158, 11, 0.35);
-  padding-bottom: 0.65rem;
+  padding-bottom: 0.55rem;
 }
 
 .options-modal-title {
@@ -1872,35 +1830,37 @@ canvas#gameCanvas {
   align-items: center;
   gap: 8px;
   font-family: var(--font-title);
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   font-weight: 700;
   color: var(--gold);
   letter-spacing: 0.05em;
 }
 
 .options-title-emblem {
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   border: 1.5px solid var(--gold);
   object-fit: cover;
   box-shadow: 0 0 8px rgba(245, 158, 11, 0.5);
+  flex-shrink: 0;
 }
 
 .options-modal-close-icon {
   background: rgba(245, 158, 11, 0.1);
   border: 1px solid rgba(245, 158, 11, 0.35);
   color: #cbd5e1;
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 700;
   transition: all 0.2s ease;
+  flex-shrink: 0;
 }
 
 .options-modal-close-icon:hover {
@@ -1912,41 +1872,74 @@ canvas#gameCanvas {
 .options-modal-body {
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
+  gap: 0.55rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .options-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.6rem;
+  gap: 0.5rem;
   background: rgba(30, 41, 59, 0.45);
-  border: 1px solid rgba(245, 158, 11, 0.16);
+  border: 1px solid rgba(245, 158, 11, 0.18);
   border-radius: 8px;
-  padding: 0.48rem 0.75rem;
+  padding: 0.42rem 0.65rem;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.options-row-stacked {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.45rem;
+  padding: 0.5rem 0.65rem;
+}
+
+.options-row-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .options-label {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
   font-family: var(--font-title);
-  font-size: 0.76rem;
+  font-size: 0.74rem;
   font-weight: 700;
   color: #e2e8f0;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
   white-space: nowrap;
 }
 
 .options-icon {
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   filter: drop-shadow(0 0 4px rgba(245, 158, 11, 0.4));
 }
 
-.options-volume-group {
+.options-volume-control {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  width: 100%;
+}
+
+.options-slider-track-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.options-slider {
+  width: 100%;
+  height: 6px;
+  accent-color: var(--saffron);
+  cursor: pointer;
 }
 
 .options-btn-step {
@@ -1956,13 +1949,14 @@ canvas#gameCanvas {
   background: rgba(245, 158, 11, 0.12);
   border: 1px solid rgba(245, 158, 11, 0.4);
   color: var(--gold);
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.15s ease;
   padding: 0;
+  flex-shrink: 0;
 }
 
 .options-btn-step:hover {
@@ -1971,17 +1965,11 @@ canvas#gameCanvas {
   transform: scale(1.05);
 }
 
-.options-slider {
-  width: 90px;
-  accent-color: var(--saffron);
-  cursor: pointer;
-}
-
 .options-volume-val {
-  min-width: 38px;
+  min-width: 36px;
   text-align: right;
   font-family: var(--font-title);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 700;
   color: var(--gold);
 }
@@ -1992,14 +1980,16 @@ canvas#gameCanvas {
   color: var(--gold);
   font-family: var(--font-title);
   font-weight: 700;
-  font-size: 0.76rem;
+  font-size: 0.74rem;
   letter-spacing: 0.04em;
-  padding: 0.35rem 0.8rem;
+  padding: 0.3rem 0.65rem;
   border-radius: 6px;
-  min-width: 75px;
+  min-width: 65px;
   text-align: center;
   cursor: pointer;
   transition: all 0.2s ease;
+  flex-shrink: 0;
+  box-sizing: border-box;
 }
 
 .options-btn-toggle:hover {
@@ -2012,35 +2002,40 @@ canvas#gameCanvas {
   color: #34d399 !important;
   border-color: #10b981 !important;
   background: rgba(16, 185, 129, 0.15) !important;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.25);
 }
 
 .options-btn-toggle.opt-state-off {
   color: #f87171 !important;
   border-color: #ef4444 !important;
   background: rgba(239, 68, 68, 0.15) !important;
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.25);
 }
 
 .options-track-btn {
-  min-width: 130px;
+  max-width: 110px;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0.3rem 0.5rem;
 }
 
 .options-dev-footer {
-  margin-top: 0.1rem;
-  padding-top: 0.5rem;
+  margin-top: 0.05rem;
+  padding-top: 0.4rem;
   border-top: 1px dashed rgba(245, 158, 11, 0.25);
   text-align: center;
 }
 
 .options-dev-hint {
   font-family: var(--font-body);
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   color: #94a3b8;
 }
 
 .options-dev-link {
   font-family: var(--font-title);
-  font-size: 0.74rem;
+  font-size: 0.72rem;
   color: var(--gold);
   text-decoration: none;
   font-weight: 700;
@@ -2054,11 +2049,11 @@ canvas#gameCanvas {
 
 .options-btn-close-main {
   width: 100%;
-  padding: 0.6rem 1rem;
+  padding: 0.55rem 1rem;
   font-family: var(--font-title);
-  font-size: 0.84rem;
+  font-size: 0.82rem;
   font-weight: 700;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
   background: linear-gradient(135deg, rgba(245, 158, 11, 0.22) 0%, rgba(220, 38, 38, 0.25) 100%);
   border: 1.5px solid rgba(245, 158, 11, 0.65);
   border-radius: 8px;
@@ -2069,7 +2064,8 @@ canvas#gameCanvas {
   justify-content: center;
   gap: 8px;
   transition: all 0.2s ease;
-  margin-top: 0.15rem;
+  margin-top: 0.1rem;
+  box-sizing: border-box;
 }
 
 .options-btn-close-main:hover {
@@ -2115,130 +2111,386 @@ canvas#gameCanvas {
    SACRED STORY CHRONICLE & MANAS CHAUPAI STYLING
    ===================================================================== */
 
-#about-modal .retro-modal-frame {
-  max-width: 760px;
+/* =====================================================================
+   SACRED STORY CHRONICLE & ABOUT MODAL
+   ===================================================================== */
+
+.about-modal-frame {
+  width: 92%;
+  max-width: 680px;
   max-height: 88vh;
-  border: 3px solid var(--saffron, #f59e0b);
-  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.95), 0 0 25px rgba(245, 158, 11, 0.2);
-}
-
-#about-modal .retro-modal-title {
-  color: var(--gold, #fde047);
-  border-bottom: 2px solid rgba(245, 158, 11, 0.35);
-  font-size: 1.35rem;
-  letter-spacing: 0.05em;
-}
-
-#about-modal .retro-modal-body {
-  max-height: 62vh;
+  background: rgba(13, 18, 31, 0.98);
+  backdrop-filter: blur(16px);
+  border: 2px solid var(--saffron, #f59e0b);
+  outline: 2px solid rgba(0, 0, 0, 0.85);
+  border-radius: 14px;
+  padding: 1.1rem 1.35rem;
   display: flex;
   flex-direction: column;
-  gap: 1.3rem;
-  padding-right: 0.6rem;
+  gap: 0.85rem;
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.95), 0 0 25px rgba(245, 158, 11, 0.25);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.about-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(245, 158, 11, 0.35);
+  padding-bottom: 0.65rem;
+  gap: 10px;
+}
+
+.about-modal-title-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.about-title-emblem {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid var(--gold);
+  object-fit: cover;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+  flex-shrink: 0;
+}
+
+.about-modal-title {
+  font-family: var(--font-title);
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: var(--gold, #fde047);
+  letter-spacing: 0.03em;
+  line-height: 1.25;
+}
+
+.about-modal-subtitle {
+  font-family: var(--font-title);
+  font-size: 0.64rem;
+  font-weight: 700;
+  color: #fda4af;
+  letter-spacing: 0.08em;
+  margin-top: 2px;
+}
+
+.about-modal-close-icon {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: #cbd5e1;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 700;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.about-modal-close-icon:hover {
+  background: rgba(239, 68, 68, 0.25);
+  border-color: #ef4444;
+  color: #ffffff;
+}
+
+.about-modal-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-right: 0.4rem;
   scrollbar-width: thin;
   scrollbar-color: var(--saffron) rgba(15, 23, 42, 0.6);
 }
 
 .story-intro-card {
-  background: radial-gradient(circle at top left, rgba(245, 158, 11, 0.15), rgba(15, 23, 42, 0.8));
-  border: 1px solid rgba(245, 158, 11, 0.4);
+  background: radial-gradient(circle at top left, rgba(245, 158, 11, 0.15), rgba(15, 23, 42, 0.85));
+  border: 1px solid rgba(245, 158, 11, 0.35);
   border-radius: 8px;
-  padding: 1rem 1.25rem;
-  font-size: 0.88rem;
-  line-height: 1.6;
+  padding: 0.85rem 1rem;
+  font-size: 0.85rem;
+  line-height: 1.55;
   color: #f1f5f9;
 }
 
 .story-intro-card-flex {
   display: flex;
   align-items: center;
-  gap: 1.1rem;
+  gap: 1rem;
 }
 
 .about-modal-logo {
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   border: 2px solid var(--gold);
-  box-shadow: 0 0 18px rgba(245, 158, 11, 0.6);
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.5);
   flex-shrink: 0;
   object-fit: cover;
 }
 
-@media (max-width: 600px) {
-  .story-intro-card-flex {
-    flex-direction: column;
-    text-align: center;
-  }
+.story-intro-headline {
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 0.3rem;
+  font-family: var(--font-title);
+  font-size: 0.88rem;
+  line-height: 1.3;
+}
+
+.story-intro-text {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: #e2e8f0;
 }
 
 .story-chapter {
   background: rgba(15, 23, 42, 0.75);
-  border: 1px solid rgba(245, 158, 11, 0.3);
+  border: 1px solid rgba(245, 158, 11, 0.25);
   border-radius: 8px;
-  padding: 1.1rem 1.35rem;
+  padding: 0.95rem 1.15rem;
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+  gap: 0.7rem;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
 }
 
 .chapter-title {
   font-family: var(--font-title);
-  font-size: 1.05rem;
+  font-size: 0.92rem;
   color: var(--saffron-bright, #fbbf24);
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
   border-bottom: 1px dashed rgba(245, 158, 11, 0.3);
-  padding-bottom: 0.45rem;
+  padding-bottom: 0.4rem;
+  line-height: 1.35;
 }
 
 .chaupai-box {
   background: rgba(30, 41, 59, 0.85);
-  border-left: 4px solid #f59e0b;
+  border-left: 3px solid #f59e0b;
   border-radius: 0 6px 6px 0;
-  padding: 0.8rem 1.15rem;
+  padding: 0.65rem 0.95rem;
   box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
 .chaupai-sanskrit {
-  font-size: 0.96rem;
+  font-size: 0.88rem;
   font-weight: 700;
   color: #fef08a;
   letter-spacing: 0.02em;
-  line-height: 1.65;
+  line-height: 1.6;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
   font-family: 'Cinzel', serif, -apple-system;
 }
 
 .chaupai-meaning {
-  margin-top: 0.4rem;
-  font-size: 0.82rem;
+  margin-top: 0.35rem;
+  font-size: 0.78rem;
   color: #94a3b8;
   font-style: italic;
   font-family: var(--font-body);
-  line-height: 1.45;
+  line-height: 1.4;
 }
 
 .chapter-narrative {
-  font-size: 0.86rem;
-  line-height: 1.65;
+  font-size: 0.82rem;
+  line-height: 1.55;
   color: #e2e8f0;
 }
 
-#about-modal .retro-btn {
-  background: linear-gradient(135deg, #f59e0b, #d97706);
+.about-btn-close-main {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  font-family: var(--font-title);
+  font-size: 0.84rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.25) 0%, rgba(220, 38, 38, 0.3) 100%);
+  border: 1.5px solid rgba(245, 158, 11, 0.65);
+  border-radius: 8px;
   color: #ffffff;
-  border: 1px solid #fef08a;
-  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
-  letter-spacing: 0.05em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  margin-top: 0.2rem;
+  box-sizing: border-box;
+  flex-shrink: 0;
 }
 
-#about-modal .retro-btn:hover {
-  background: linear-gradient(135deg, #fbbf24, #f59e0b);
-  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.6);
+.about-btn-close-main:hover {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.38) 0%, rgba(220, 38, 38, 0.45) 100%);
+  border-color: var(--gold);
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
   transform: translateY(-1px);
+}
+
+/* =====================================================================
+   DEFINITIVE MOBILE RESPONSIVE OVERRIDES (MAX-WIDTH: 650PX)
+   PLACED AT THE BOTTOM TO GUARANTEE PRIORITY
+   ===================================================================== */
+
+@media (max-width: 650px) {
+  .retro-modal-backdrop {
+    padding: 0.65rem !important;
+  }
+
+  /* --- OPTIONS MODAL MOBILE --- */
+  .options-modal-frame {
+    width: 96% !important;
+    max-width: 345px !important;
+    padding: 0.75rem 0.85rem !important;
+    gap: 0.5rem !important;
+    border-radius: 10px !important;
+  }
+
+  .options-modal-title {
+    font-size: 0.84rem !important;
+  }
+
+  .options-title-emblem {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  .options-row {
+    padding: 0.35rem 0.55rem !important;
+    gap: 0.35rem !important;
+  }
+
+  .options-row-stacked {
+    padding: 0.4rem 0.55rem !important;
+    gap: 0.35rem !important;
+  }
+
+  .options-label {
+    font-size: 0.7rem !important;
+  }
+
+  .options-volume-val {
+    font-size: 0.74rem !important;
+  }
+
+  .options-btn-step {
+    width: 24px !important;
+    height: 24px !important;
+    font-size: 0.65rem !important;
+  }
+
+  .options-btn-toggle {
+    min-width: 58px !important;
+    font-size: 0.7rem !important;
+    padding: 0.28rem 0.45rem !important;
+  }
+
+  .options-track-btn {
+    max-width: 95px !important;
+    font-size: 0.68rem !important;
+    padding: 0.28rem 0.4rem !important;
+  }
+
+  /* --- ABOUT MODAL MOBILE --- */
+  .about-modal-frame {
+    width: 96% !important;
+    max-width: 96% !important;
+    max-height: 92vh !important;
+    padding: 0.7rem 0.8rem !important;
+    gap: 0.5rem !important;
+    border-radius: 10px !important;
+  }
+
+  .about-modal-title {
+    font-size: 0.85rem !important;
+  }
+
+  .about-modal-subtitle {
+    font-size: 0.6rem !important;
+  }
+
+  .about-title-emblem {
+    width: 26px !important;
+    height: 26px !important;
+  }
+
+  .about-modal-logo {
+    width: 44px !important;
+    height: 44px !important;
+  }
+
+  .story-intro-card {
+    padding: 0.65rem 0.8rem !important;
+  }
+
+  .story-intro-card-flex {
+    flex-direction: row !important;
+    gap: 0.75rem !important;
+    align-items: flex-start !important;
+    text-align: left !important;
+  }
+
+  .story-intro-headline {
+    font-size: 0.78rem !important;
+  }
+
+  .story-intro-text {
+    font-size: 0.74rem !important;
+    line-height: 1.45 !important;
+  }
+
+  .story-chapter {
+    padding: 0.7rem 0.8rem !important;
+    gap: 0.45rem !important;
+  }
+
+  .chapter-title {
+    font-size: 0.8rem !important;
+  }
+
+  .chaupai-box {
+    padding: 0.45rem 0.65rem !important;
+  }
+
+  .chaupai-sanskrit {
+    font-size: 0.76rem !important;
+    line-height: 1.5 !important;
+  }
+
+  .chaupai-meaning {
+    font-size: 0.7rem !important;
+    line-height: 1.35 !important;
+  }
+
+  .chapter-narrative {
+    font-size: 0.74rem !important;
+    line-height: 1.45 !important;
+  }
+
+  .about-btn-close-main {
+    padding: 0.5rem 0.8rem !important;
+    font-size: 0.78rem !important;
+    margin-top: 0.1rem !important;
+  }
+
+  /* --- SEVAKA CARD MODAL MOBILE --- */
+  .sevaka-card-frame {
+    max-width: 95% !important;
+    padding: 0.75rem 0.9rem !important;
+    gap: 0.5rem !important;
+  }
 }
 
 @keyframes retro-cursor-blink {

@@ -130,6 +130,13 @@ class UIManager {
       });
     }
 
+    const btnCloseAboutX = document.getElementById('btn-close-about-x');
+    if (btnCloseAboutX) {
+      btnCloseAboutX.addEventListener('click', () => {
+        this.aboutModal.classList.add('hidden');
+      });
+    }
+
     if (this.btnCloseOptions) {
       this.btnCloseOptions.addEventListener('click', () => {
         this.optionsModal.classList.add('hidden');
