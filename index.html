@@ -115,9 +115,12 @@
           <img id="retro-big-portrait-img" class="retro-big-portrait-img" src="assets/images/ram.png" alt="Character Portrait">
         </div>
 
-        <div class="retro-speaker-header">
-          <img id="retro-speaker-img" class="retro-speaker-portrait" src="assets/images/ram.png" alt="Speaker">
-          <div class="retro-speaker-tag" id="retro-speaker-name">Shri Ram</div>
+        <div class="retro-dialogue-topbar">
+          <div class="retro-speaker-header">
+            <img id="retro-speaker-img" class="retro-speaker-portrait" src="assets/images/ram.png" alt="Speaker">
+            <div class="retro-speaker-tag" id="retro-speaker-name">Shri Ram</div>
+          </div>
+          <button id="btn-dialogue-close" class="retro-dialogue-close-btn" title="Cancel / Dismiss Dialogue">✕ CANCEL</button>
         </div>
         <div class="retro-box">
           <div class="retro-text-content" id="retro-dialogue-text">
@@ -180,7 +183,9 @@
           </div>
         </div>
         <div class="retro-bag-footer">
-          <button class="btn-retro-action" id="btn-close-bag">BACK [B / X / Esc]</button>
+          <button class="btn-retro-action" id="btn-close-bag">
+            <span class="btn-hero-text">↩ BACK</span> <span class="kbd-hint">[B / X / Esc]</span>
+          </button>
         </div>
       </div>
     </div>
@@ -202,7 +207,7 @@
           </div>
         </div>
         <button class="btn-retro-action" id="btn-close-sevaka-card" style="align-self: center; padding: 0.5rem 2rem;">
-          BACK [B / X / Esc]
+          <span class="btn-hero-text">↩ BACK</span> <span class="kbd-hint">[B / X / Esc]</span>
         </button>
       </div>
     </div>
@@ -243,103 +248,75 @@
     <div id="character-select-screen" class="hidden">
       <div class="char-select-modern-frame">
         <header class="char-select-modern-header">
-          <div class="char-sacred-subtitle">TRETA YUGA • THE HOLY VANGUARD OF SHRI RAM</div>
-          <h2 class="char-select-modern-title">CHOOSE YOUR DEVOTEE ROLE</h2>
+          <div class="char-sacred-subtitle">🚩 TRETA YUGA • THE HOLY VANGUARD 🚩</div>
+          <h2 class="char-select-modern-title">CHOOSE YOUR DEVOTEE</h2>
           <p class="char-select-modern-desc">
-            Enter the sacred army of Maryada Purushottam Shri Ram. Choose your devotee:
+            Select your humble service in the sacred army of Shri Ram
           </p>
         </header>
 
         <div class="char-options-grid">
           <!-- Option 1: VANAR -->
-          <div class="char-card selected" id="opt-vanar">
-            <div class="char-card-glow"></div>
-            <div class="char-badge">KISHKINDHA SCOUT</div>
+          <div class="char-card selected" id="opt-vanar" role="button" tabindex="0">
+            <div class="char-card-topbar">
+              <span class="char-badge">KISHKINDHA SCOUT</span>
+              <span class="char-radio-indicator">✓ SELECTED</span>
+            </div>
+            
             <div class="char-portrait-wrap">
               <img src="assets/images/vanar_front.png" alt="Vanar Devotee" class="char-portrait-img">
             </div>
+            
             <div class="char-name-title">VANAR SEVAKA</div>
-            <div class="char-hindi-name">वानर सेवक (सुग्रीव सेना)</div>
-            <p class="char-card-summary">
-              Agile and devoted monkey soldier of Kishkindha. High speed across terrain, rapid harvesting of forest fruits and flowers, and lightning critical strikes in combat.
-            </p>
-            <div class="char-stat-meter-group">
-              <div class="stat-bar-row">
-                <span class="stat-lbl">HEALTH (HP)</span>
-                <div class="stat-track"><div class="stat-prog" style="width: 77%;"></div></div>
-                <span class="stat-num">100</span>
-              </div>
-              <div class="stat-bar-row">
-                <span class="stat-lbl">ATTACK (ATK)</span>
-                <div class="stat-track"><div class="stat-prog" style="width: 78%;"></div></div>
-                <span class="stat-num">22</span>
-              </div>
-              <div class="stat-bar-row">
-                <span class="stat-lbl">DEFENSE (DEF)</span>
-                <div class="stat-track"><div class="stat-prog" style="width: 61%;"></div></div>
-                <span class="stat-num">11</span>
-              </div>
-              <div class="stat-bar-row">
-                <span class="stat-lbl">AGILITY (SPD)</span>
-                <div class="stat-track"><div class="stat-prog" style="width: 95%;"></div></div>
-                <span class="stat-num">26</span>
-              </div>
+            <div class="char-hindi-name">वानर सेवक • Swift Scout</div>
+
+            <div class="char-quick-stats">
+              <span class="cstat-chip">❤️ 100 HP</span>
+              <span class="cstat-chip">⚔️ 22 ATK</span>
+              <span class="cstat-chip chip-highlight">⚡ 26 SPD</span>
             </div>
+
             <div class="char-blessing-pill">
-              ✦ BLESSING: VAYU-GATI (Swift Grid Movement & High Agility)
+              ✦ VAYU-GATI: High Agility & Critical Strikes
             </div>
           </div>
 
           <!-- Option 2: RIKSHA (BEAR) -->
-          <div class="char-card" id="opt-riksha">
-            <div class="char-card-glow"></div>
-            <div class="char-badge">JAMBAVAN CLAN</div>
+          <div class="char-card" id="opt-riksha" role="button" tabindex="0">
+            <div class="char-card-topbar">
+              <span class="char-badge">JAMBAVAN CLAN</span>
+              <span class="char-radio-indicator">○ SELECT</span>
+            </div>
+
             <div class="char-portrait-wrap">
               <img src="assets/images/bear_front.png" alt="Riksha Bear Devotee" class="char-portrait-img">
             </div>
+
             <div class="char-name-title">RIKSHA SEVAKA</div>
-            <div class="char-hindi-name">ऋक्ष सेवक (भालू वीर)</div>
-            <p class="char-card-summary">
-              Stalwart warrior of elder Jambavan’s ancient clan. Endowed with colossal health reserves, patient mountain endurance, and crushing attack power against demonic forces.
-            </p>
-            <div class="char-stat-meter-group">
-              <div class="stat-bar-row">
-                <span class="stat-lbl">HEALTH (HP)</span>
-                <div class="stat-track"><div class="stat-prog" style="width: 100%;"></div></div>
-                <span class="stat-num">130</span>
-              </div>
-              <div class="stat-bar-row">
-                <span class="stat-lbl">ATTACK (ATK)</span>
-                <div class="stat-track"><div class="stat-prog" style="width: 98%;"></div></div>
-                <span class="stat-num">28</span>
-              </div>
-              <div class="stat-bar-row">
-                <span class="stat-lbl">DEFENSE (DEF)</span>
-                <div class="stat-track"><div class="stat-prog" style="width: 90%;"></div></div>
-                <span class="stat-num">18</span>
-              </div>
-              <div class="stat-bar-row">
-                <span class="stat-lbl">AGILITY (SPD)</span>
-                <div class="stat-track"><div class="stat-prog" style="width: 50%;"></div></div>
-                <span class="stat-num">14</span>
-              </div>
+            <div class="char-hindi-name">ऋक्ष सेवक • Heavy Warrior</div>
+
+            <div class="char-quick-stats">
+              <span class="cstat-chip chip-highlight">❤️ 130 HP</span>
+              <span class="cstat-chip chip-highlight">⚔️ 28 ATK</span>
+              <span class="cstat-chip">🛡️ 18 DEF</span>
             </div>
+
             <div class="char-blessing-pill">
-              ✦ BLESSING: VAJRA-BALA (Colossal Strength & Heavy Defense)
+              ✦ VAJRA-BALA: Colossal Health & Heavy Defense
             </div>
           </div>
         </div>
 
         <div class="permanent-notice">
-          🔒 SACRED PLEDGE: Your devotee choice is locked for this playthrough until a New Game is started.
+          🔒 Devotee choice is locked for this journey
         </div>
 
         <footer class="char-select-footer">
           <button class="btn-retro-action btn-confirm-hero" id="btn-confirm-archetype">
-            ⚔️ ENTER THE SACRED ARMY (Enter / Z)
+            <span class="btn-hero-text">⚔️ BEGIN AS VANAR</span> <span class="kbd-hint">(Enter / Z)</span>
           </button>
           <button class="btn-retro-action btn-back-hero" id="btn-back-to-title">
-            ↩ RETURN TO TITLE [Esc / X]
+            <span class="btn-hero-text">↩ BACK</span> <span class="kbd-hint">[Esc / X]</span>
           </button>
         </footer>
       </div>

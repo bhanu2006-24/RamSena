@@ -53,6 +53,27 @@
   display: none;
 }
 
+/* --- AUTO-HIDE TOUCH CONTROLS WHEN ANY MODAL, DIALOGUE, OR SCREEN IS ACTIVE --- */
+body.modal-open #touch-joystick-container,
+body.modal-open #touch-actions-panel,
+body.in-dialogue #touch-joystick-container,
+#game-app:has(#retro-bag-modal:not(.hidden)) #touch-joystick-container,
+#game-app:has(#retro-bag-modal:not(.hidden)) #touch-actions-panel,
+#game-app:has(#character-select-screen:not(.hidden)) #touch-joystick-container,
+#game-app:has(#character-select-screen:not(.hidden)) #touch-actions-panel,
+#game-app:has(#title-screen:not(.hidden)) #touch-joystick-container,
+#game-app:has(#title-screen:not(.hidden)) #touch-actions-panel,
+#game-app:has(#options-modal:not(.hidden)) #touch-joystick-container,
+#game-app:has(#options-modal:not(.hidden)) #touch-actions-panel,
+#game-app:has(#about-modal:not(.hidden)) #touch-joystick-container,
+#game-app:has(#about-modal:not(.hidden)) #touch-actions-panel,
+#game-app:has(#sevaka-card-modal:not(.hidden)) #touch-joystick-container,
+#game-app:has(#sevaka-card-modal:not(.hidden)) #touch-actions-panel,
+#game-app:has(#retro-textbox-wrapper:not(.hidden)) #touch-joystick-container,
+#game-app:has(#retro-textbox-wrapper:not(.hidden)) #touch-actions-panel {
+  display: none !important;
+}
+
 /* =====================================================================
    3. MOBILE & TABLET ACTIVATION: ONLY ON TOUCH DEVICES / COARSE POINTER
    ===================================================================== */

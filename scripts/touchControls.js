@@ -78,10 +78,71 @@
     enableTouchMode() {
       this.isTouchDevice = true;
       document.body.classList.add('touch-device');
+      this.updateVisibility();
+      this.startModalObserver();
+    }
+
+    startModalObserver() {
+      if (this.modalObserver) return;
+      const app = document.getElementById('game-app') || document.body;
+      this.modalObserver = new MutationObserver(() => {
+        this.updateVisibility();
+      });
+      this.modalObserver.observe(app, {
+        attributes: true,
+        subtree: true,
+        attributeFilter: ['class', 'style']
+      });
+    }
+
+    isAnyModalOrScreenOpen() {
+      const getHidden = (id) => {
+        const el = document.getElementById(id);
+        if (!el) return true;
+        return el.classList.contains('hidden') || el.style.display === 'none';
+      };
+
+      const titleHidden = getHidden('title-screen');
+      const charSelectHidden = getHidden('character-select-screen');
+      const bagHidden = getHidden('retro-bag-modal');
+      const sevakaHidden = getHidden('sevaka-card-modal');
+      const optionsHidden = getHidden('options-modal');
+      const aboutHidden = getHidden('about-modal');
+      const dialogueHidden = getHidden('retro-textbox-wrapper');
+
+      return (
+        !titleHidden ||
+        !charSelectHidden ||
+        !bagHidden ||
+        !sevakaHidden ||
+        !optionsHidden ||
+        !aboutHidden ||
+        !dialogueHidden
+      );
+    }
+
+    updateVisibility() {
+      if (!this.isTouchDevice) return;
       const joystickEl = document.getElementById('touch-joystick-container');
       const actionsEl = document.getElementById('touch-actions-panel');
-      if (joystickEl) joystickEl.style.display = 'flex';
-      if (actionsEl) actionsEl.style.display = 'flex';
+      if (!joystickEl || !actionsEl) return;
+
+      const isModalOpen = this.isAnyModalOrScreenOpen();
+      if (isModalOpen) {
+        document.body.classList.add('modal-open');
+        joystickEl.style.display = 'none';
+        actionsEl.style.display = 'none';
+        this.cancelActiveMovement();
+      } else {
+        document.body.classList.remove('modal-open');
+        joystickEl.style.display = 'flex';
+        actionsEl.style.display = 'flex';
+      }
+    }
+
+    cancelActiveMovement() {
+      this.stopJoystickLoop();
+      this.cancelAutoWalk();
     }
 
     createMobileDOMElements() {
@@ -281,101 +342,100 @@
         if (navigator.vibrate) navigator.vibrate(12);
       };
 
-      // Button A: Interact / Confirm
-      if (btnA) {
-        btnA.addEventListener('click', (e) => {
+      const attachFastTap = (element, callback) => {
+        if (!element) return;
+        let lastTapTime = 0;
+
+        const handleTap = (e) => {
           e.preventDefault();
           e.stopPropagation();
+          const now = Date.now();
+          if (now - lastTapTime < 320) return; // Prevent double trigger
+          lastTapTime = now;
           triggerHaptic();
+          callback();
+        };
 
-          if (window.uiManager) {
-            if (window.uiManager.isCharSelectOpen()) {
-              window.uiManager.confirmCharacterAndStart();
-              return;
-            }
-            if (window.uiManager.isTitleScreenOpen()) {
-              window.uiManager.openCharacterSelect();
-              return;
-            }
-            if (window.uiManager.isDialogueOpen()) {
-              window.uiManager.advanceDialogue();
-              return;
-            }
-            if (window.uiManager.isMenuOpen()) {
-              window.uiManager.triggerSelectedMenuAction();
-              return;
-            }
-          }
-
-          if (window.game) {
-            if (typeof window.game.handleInteract === 'function') {
-              window.game.handleInteract();
-            } else if (typeof window.game.interactWithWorld === 'function') {
-              window.game.interactWithWorld();
-            }
-          }
+        element.addEventListener('pointerdown', (e) => {
+          if (e.isPrimary) handleTap(e);
         });
-      }
+
+        element.addEventListener('click', (e) => {
+          handleTap(e);
+        });
+      };
+
+      // Button A: Interact / Confirm
+      attachFastTap(btnA, () => {
+        if (window.uiManager) {
+          if (window.uiManager.isCharSelectOpen()) {
+            window.uiManager.confirmCharacterAndStart();
+            return;
+          }
+          if (window.uiManager.isTitleScreenOpen()) {
+            window.uiManager.openCharacterSelect();
+            return;
+          }
+          if (window.uiManager.isDialogueOpen()) {
+            window.uiManager.advanceDialogue();
+            return;
+          }
+          if (window.uiManager.isMenuOpen()) {
+            window.uiManager.triggerSelectedMenuAction();
+            return;
+          }
+        }
+
+        if (window.game) {
+          if (typeof window.game.handleInteract === 'function') {
+            window.game.handleInteract();
+          } else if (typeof window.game.interactWithWorld === 'function') {
+            window.game.interactWithWorld();
+          }
+        }
+      });
 
       // Button B: Devotional Sack / Cancel
-      if (btnB) {
-        btnB.addEventListener('click', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          triggerHaptic();
-
-          if (window.uiManager) {
-            if (window.uiManager.isDialogueOpen()) {
-              if (window.combatSystem && window.combatSystem.inCombat) {
-                window.combatSystem.retreatBattle();
-              } else {
-                window.uiManager.hideDialogue();
-              }
-              return;
+      attachFastTap(btnB, () => {
+        if (window.uiManager) {
+          if (window.uiManager.isDialogueOpen()) {
+            if (window.combatSystem && window.combatSystem.inCombat) {
+              window.combatSystem.retreatBattle();
+            } else {
+              window.uiManager.hideDialogue();
             }
-            if (window.uiManager.isBagOpen()) {
-              window.uiManager.toggleBag();
-              return;
-            }
-            if (window.uiManager.isMenuOpen()) {
-              window.uiManager.toggleStartMenu();
-              return;
-            }
-            if (window.uiManager.isCharSelectOpen()) {
-              window.uiManager.closeCharacterSelect();
-              return;
-            }
-            // If in normal play, toggle Bag
-            window.uiManager.toggleBag();
+            return;
           }
-        });
-      }
+          if (window.uiManager.isBagOpen()) {
+            window.uiManager.toggleBag();
+            return;
+          }
+          if (window.uiManager.isMenuOpen()) {
+            window.uiManager.toggleStartMenu();
+            return;
+          }
+          if (window.uiManager.isCharSelectOpen()) {
+            window.uiManager.closeCharacterSelect();
+            return;
+          }
+          // If in normal play, toggle Bag
+          window.uiManager.toggleBag();
+        }
+      });
 
       // Button M: Retro Start Menu
-      if (btnMenu) {
-        btnMenu.addEventListener('click', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          triggerHaptic();
-
-          if (window.uiManager && window.uiManager.toggleStartMenu) {
-            window.uiManager.toggleStartMenu();
-          }
-        });
-      }
+      attachFastTap(btnMenu, () => {
+        if (window.uiManager && window.uiManager.toggleStartMenu) {
+          window.uiManager.toggleStartMenu();
+        }
+      });
 
       // Button H: Hail "जय श्री राम!"
-      if (btnHail) {
-        btnHail.addEventListener('click', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          triggerHaptic();
-
-          if (window.game && window.game.hailShriRam) {
-            window.game.hailShriRam();
-          }
-        });
-      }
+      attachFastTap(btnHail, () => {
+        if (window.game && window.game.hailShriRam) {
+          window.game.hailShriRam();
+        }
+      });
     }
 
     // ===================================================================
@@ -399,7 +459,11 @@
         // Check if dialogues or menus are open
         if (window.uiManager) {
           if (window.uiManager.isDialogueOpen()) {
-            window.uiManager.advanceDialogue();
+            if (window.uiManager.isTyping) {
+              window.uiManager.skipTypewriter();
+            } else {
+              window.uiManager.hideDialogue();
+            }
             return;
           }
           if (window.uiManager.isMenuOpen() || 

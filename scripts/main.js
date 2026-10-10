@@ -290,6 +290,10 @@ class Game {
           label: '🌅 Rest & Finish Day (रात का विश्राम / नई भोर)',
           action: () => this.finishDay()
         });
+        choices.push({
+          label: '↩ Cancel / Continue Patrolling',
+          action: () => window.uiManager.hideDialogue()
+        });
       }
       window.uiManager.showDialogue(
         'Sacred Yajna Altar (पवित्र यज्ञवेदी)',
@@ -303,6 +307,10 @@ class Game {
         choices.push({
           label: '🌅 Rest & Finish Day (रात का विश्राम / नई भोर)',
           action: () => this.finishDay()
+        });
+        choices.push({
+          label: '↩ Cancel / Continue Patrolling',
+          action: () => window.uiManager.hideDialogue()
         });
       }
       window.uiManager.showDialogue(

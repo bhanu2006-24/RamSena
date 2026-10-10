@@ -17,6 +17,7 @@ class UIManager {
     this.dialogueText = document.getElementById('retro-dialogue-text');
     this.cursorIndicator = document.getElementById('retro-cursor');
     this.choicesContainer = document.getElementById('retro-choices');
+    this.btnDialogueClose = document.getElementById('btn-dialogue-close');
 
     // 2. Title Screen & Character Select
     this.titleScreen = document.getElementById('title-screen');
@@ -306,21 +307,45 @@ class UIManager {
     // Dialogue box click to advance
     if (this.textboxWrapper) {
       this.textboxWrapper.addEventListener('click', (e) => {
-        if (!e.target.closest('.retro-choice-btn')) {
+        if (!e.target.closest('.retro-choice-btn') && !e.target.closest('.retro-dialogue-close-btn')) {
           this.advanceDialogue();
         }
+      });
+    }
+
+    if (this.btnDialogueClose) {
+      this.btnDialogueClose.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.hideDialogue();
       });
     }
   }
 
   selectArchetype(type) {
     this.selectedArchetype = type;
-    if (type === 'vanar') {
-      if (this.optVanar) this.optVanar.classList.add('selected');
-      if (this.optRiksha) this.optRiksha.classList.remove('selected');
-    } else {
-      if (this.optRiksha) this.optRiksha.classList.add('selected');
-      if (this.optVanar) this.optVanar.classList.remove('selected');
+    const isVanar = type === 'vanar';
+
+    if (this.optVanar) {
+      this.optVanar.classList.toggle('selected', isVanar);
+      const radio = this.optVanar.querySelector('.char-radio-indicator');
+      if (radio) radio.textContent = isVanar ? '✓ SELECTED' : '○ SELECT';
+    }
+
+    if (this.optRiksha) {
+      this.optRiksha.classList.toggle('selected', !isVanar);
+      const radio = this.optRiksha.querySelector('.char-radio-indicator');
+      if (radio) radio.textContent = !isVanar ? '✓ SELECTED' : '○ SELECT';
+    }
+
+    if (this.btnConfirmArchetype) {
+      const heroText = isVanar ? '⚔️ BEGIN AS VANAR' : '⚔️ BEGIN AS RIKSHA';
+      const textSpan = this.btnConfirmArchetype.querySelector('.btn-hero-text');
+      if (textSpan) {
+        textSpan.textContent = heroText;
+      } else {
+        this.btnConfirmArchetype.innerHTML = `<span class="btn-hero-text">${heroText}</span> <span class="kbd-hint">(Enter / Z)</span>`;
+      }
     }
   }
 
@@ -624,7 +649,7 @@ class UIManager {
       const row = document.createElement('div');
       row.className = `retro-bag-item-row ${this.selectedBagItemKey === item.key ? 'active' : ''}`;
       row.innerHTML = `
-        <span>${item.icon} ${item.name}</span>
+        <span class="bag-item-label">${item.icon} ${item.name}</span>
         <span class="item-qty">×${String(item.qty).padStart(2, '0')}</span>
       `;
       row.addEventListener('click', () => {
@@ -808,6 +833,9 @@ class UIManager {
       choices.forEach(choice => {
         const btn = document.createElement('button');
         btn.className = 'retro-choice-btn';
+        if (choice.label.includes('Cancel') || choice.label.includes('Leave') || choice.label.includes('Retreat') || choice.label.includes('वापस')) {
+          btn.classList.add('choice-cancel');
+        }
         btn.innerHTML = choice.label;
         btn.addEventListener('click', (e) => {
           e.stopPropagation();

@@ -452,6 +452,14 @@ class NPCManager {
       });
     }
 
+    // 7. Cancel / Leave
+    choices.push({
+      label: '↩ Cancel / Leave (वापस जाएं)',
+      action: () => {
+        if (window.uiManager) window.uiManager.hideDialogue();
+      }
+    });
+
     // Initial greeting
     const greeting = npc.title 
       ? `You bow with deep reverence before ${npc.name} (${npc.title}).`
