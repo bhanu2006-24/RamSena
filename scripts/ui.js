@@ -700,12 +700,38 @@ class UIManager {
   openSevakaCard() {
     if (!window.player) return;
 
-    document.getElementById('card-hero-name').textContent = window.player.role;
-    document.getElementById('card-hp').textContent = `${window.player.hp}/${window.player.maxHp}`;
-    document.getElementById('card-atk').textContent = window.player.attackStat;
-    document.getElementById('card-def').textContent = window.player.defenseStat;
-    document.getElementById('card-agi').textContent = window.player.agilityStat;
-    document.getElementById('card-setu').textContent = window.mapManager ? window.mapManager.stonesDelivered : 0;
+    const isBear = window.player.typeId === 'riksha';
+    const avatarEl = document.getElementById('card-hero-avatar');
+    if (avatarEl) avatarEl.src = isBear ? 'assets/images/bear_front.png' : 'assets/images/vanar_front.png';
+
+    const hindiEl = document.getElementById('card-hero-hindi');
+    if (hindiEl) hindiEl.textContent = isBear ? 'ऋक्ष सेवक • Heavy Warrior' : 'वानर सेवक • Swift Scout';
+
+    const nameEl = document.getElementById('card-hero-name');
+    if (nameEl) nameEl.textContent = isBear ? 'RIKSHA SEVAKA 🐻' : 'VANAR SEVAKA 🐒';
+
+    const hpEl = document.getElementById('card-hp');
+    if (hpEl) hpEl.textContent = `${window.player.hp}/${window.player.maxHp}`;
+    
+    const atkEl = document.getElementById('card-atk');
+    if (atkEl) atkEl.textContent = window.player.attackStat;
+    
+    const defEl = document.getElementById('card-def');
+    if (defEl) defEl.textContent = window.player.defenseStat;
+    
+    const agiEl = document.getElementById('card-agi');
+    if (agiEl) agiEl.textContent = window.player.agilityStat;
+    
+    const delivered = window.mapManager ? (window.mapManager.stonesDelivered || 0) : 0;
+    const target = window.mapManager ? (window.mapManager.targetStones || 10) : 10;
+    const setuEl = document.getElementById('card-setu');
+    if (setuEl) setuEl.textContent = delivered;
+    
+    const barEl = document.getElementById('card-setu-bar');
+    if (barEl) {
+      const pct = Math.min(100, Math.round((delivered / target) * 100));
+      barEl.style.width = `${pct}%`;
+    }
 
     this.sevakaCardModal.classList.remove('hidden');
   }
@@ -721,19 +747,25 @@ class UIManager {
   getSpeakerImage(speaker) {
     if (!speaker) return null;
     const s = speaker.toLowerCase();
+
+    // Devotional / prayer / hail dialogue comes from the player devotee
+    if (s.includes('hail') || s.includes('devotional') || s.includes('prayer')) {
+      return (window.player && window.player.typeId === 'riksha') ? 'assets/images/bear_front.png' : 'assets/images/vanar_front.png';
+    }
+
     if (s.includes('rakshsa') || s.includes('demon') || s.includes('monster') || s.includes('sentry') || s.includes('commander') || s.includes('night-stalker') || s.includes('club-bearer')) {
       return 'assets/images/rakshsa.png';
     }
     if (s.includes('sushen')) return 'assets/images/sushena.png';
-    if (s.includes('ram') && !s.includes('sugreev') && !s.includes('balram')) return 'assets/images/ram.png';
+    if (/\bram\b/i.test(s) && !s.includes('sugreev') && !s.includes('balram')) return 'assets/images/ram.png';
     if (s.includes('laxman') || s.includes('lakshman') || s.includes('saumitri')) return 'assets/images/laxman.png';
     if (s.includes('hanuman') || s.includes('maruti') || s.includes('anjaneya') || s.includes('pavanputra')) return 'assets/images/hanuman.png';
     if (s.includes('sugreev') || s.includes('sugriva')) return 'assets/images/sugreev.png';
     if (s.includes('jambavan') || s.includes('jambvant') || s.includes('riksharaj')) return 'assets/images/jambavan.png';
     if (s.includes('vibhisan') || s.includes('vibhisana') || s.includes('vibhishan')) return 'assets/images/vibhisan.png';
-    if (s.includes('neel') && !s.includes('nal')) return 'assets/images/neel.png';
-    if (s.includes('nal')) return 'assets/images/nal.png';
-    if (s.includes('neel')) return 'assets/images/neel.png';
+    if (/\bneel\b/i.test(s) && !/\bnal\b/i.test(s)) return 'assets/images/neel.png';
+    if (/\bnal\b/i.test(s)) return 'assets/images/nal.png';
+    if (/\bneel\b/i.test(s)) return 'assets/images/neel.png';
     if (s.includes('bhaluu') || s.includes('bear warrior') || s.includes('bear soldier') || s.includes('stalwart bear') || s.includes('riksha warrior')) {
       return 'assets/images/bhaluu.png';
     }

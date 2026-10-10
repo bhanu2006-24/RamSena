@@ -194,19 +194,43 @@
     <div id="sevaka-card-modal" class="hidden">
       <div class="sevaka-card-frame">
         <div class="card-header">
-          <span class="card-title" id="card-hero-name">VANAR SEVAKA 🐒</span>
-          <span style="color: var(--saffron); font-family: var(--font-retro); font-size: 0.65rem;">ARMY OF RAM</span>
+          <div class="card-hero-meta">
+            <img id="card-hero-avatar" src="assets/images/vanar_front.png" alt="Devotee Avatar" class="card-hero-avatar">
+            <div>
+              <div class="card-title" id="card-hero-name">VANAR SEVAKA 🐒</div>
+              <div class="card-subtitle-hindi" id="card-hero-hindi">वानर सेवक • Swift Scout</div>
+            </div>
+          </div>
+          <span class="sevaka-army-badge">ARMY OF RAM</span>
         </div>
         <div class="card-stats-grid">
-          <div class="stat-box"><strong>HEALTH:</strong> <span id="card-hp">100/100</span></div>
-          <div class="stat-box"><strong>ATTACK:</strong> <span id="card-atk">22</span></div>
-          <div class="stat-box"><strong>DEFENSE:</strong> <span id="card-def">10</span></div>
-          <div class="stat-box"><strong>AGILITY:</strong> <span id="card-agi">26</span></div>
-          <div class="stat-box" style="grid-column: span 2;">
-            <strong>SETU SERVICE:</strong> <span id="card-setu">0</span> / 10 Stones Delivered
+          <div class="stat-box">
+            <span class="stat-label">❤️ HEALTH</span>
+            <span class="stat-value" id="card-hp">100/100</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-label">⚔️ ATTACK</span>
+            <span class="stat-value" id="card-atk">22</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-label">🛡️ DEFENSE</span>
+            <span class="stat-value" id="card-def">10</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-label">⚡ AGILITY</span>
+            <span class="stat-value" id="card-agi">26</span>
+          </div>
+          <div class="stat-box setu-stat-box" style="grid-column: span 2;">
+            <div class="setu-stat-header">
+              <span class="stat-label">🪨 SETU SERVICE (सेतु सेवा)</span>
+              <span class="setu-progress-count"><span id="card-setu">0</span> / 10 Stones</span>
+            </div>
+            <div class="setu-progress-bar-wrap">
+              <div class="setu-progress-bar-fill" id="card-setu-bar" style="width: 0%;"></div>
+            </div>
           </div>
         </div>
-        <button class="btn-retro-action" id="btn-close-sevaka-card" style="align-self: center; padding: 0.5rem 2rem;">
+        <button class="btn-retro-action btn-sevaka-close" id="btn-close-sevaka-card">
           <span class="btn-hero-text">↩ BACK</span> <span class="kbd-hint">[B / X / Esc]</span>
         </button>
       </div>

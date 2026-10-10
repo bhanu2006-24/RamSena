@@ -23,6 +23,9 @@ class Game {
     this.initCanvas();
     this.initInput();
     this.interactWithWorld = this.handleInteract.bind(this);
+    this.hailShriRam = () => {
+      if (window.audioManager) window.audioManager.hailShriRam();
+    };
   }
 
   calculateTileSize() {
